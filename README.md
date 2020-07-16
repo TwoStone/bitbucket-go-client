@@ -346,6 +346,7 @@ All URIs are relative to *https://example.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
 *DefaultApi* | [**GetProject**](docs/DefaultApi.md#getproject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
 *DefaultApi* | [**GetProjects**](docs/DefaultApi.md#getprojects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 *DefaultApi* | [**GetRepositories**](docs/DefaultApi.md#getrepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
@@ -355,6 +356,9 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [Branch](docs/Branch.md)
+ - [Branches](docs/Branches.md)
+ - [BranchesAllOf](docs/BranchesAllOf.md)
  - [Errors](docs/Errors.md)
  - [ErrorsErrors](docs/ErrorsErrors.md)
  - [Link](docs/Link.md)

@@ -574,6 +574,109 @@ paths:
       - usernamePassword: []
       summary: REST resource for searching through repositories
       tags: []
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches:
+    get:
+      description: |-
+        Retrieve the branches matching the supplied filterText param.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: getBranches
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: base branch or tag to compare each branch to (for the metadata
+          providers that uses that information)
+        explode: true
+        in: query
+        name: base
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: whether to retrieve plugin-provided metadata about each branch
+        explode: true
+        in: query
+        name: details
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: the text to match on
+        explode: true
+        in: query
+        name: filterText
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ordering of refs either ALPHABETICAL (by name) or MODIFICATION
+          (last updated)
+        explode: false
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          enum:
+          - ALPHABETICAL
+          - MODIFICATION
+          type: string
+        style: form
+      - description: controls whether exact and prefix matches will be boosted to
+          the top
+        explode: true
+        in: query
+        name: boostMatches
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/branches'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: Your GET endpoint
+      tags: []
 components:
   schemas:
     page:
@@ -754,6 +857,46 @@ components:
       allOf:
       - $ref: '#/components/schemas/page'
       - $ref: '#/components/schemas/repositories_allOf'
+    branch:
+      properties:
+        id:
+          type: string
+        displayId:
+          type: string
+        type:
+          enum:
+          - BRANCH
+          type: string
+        latestCommit:
+          pattern: '[A-Fa-f0-9]+'
+          type: string
+        latestChangeset:
+          pattern: '[A-Fa-f0-9]+'
+          type: string
+        isDefault:
+          type: boolean
+      required:
+      - displayId
+      - id
+      - isDefault
+      - latestChangeset
+      - latestCommit
+      - type
+      title: branch
+      type: object
+      x-examples:
+        branch:
+          id: refs/heads/master
+          displayId: master
+          type: BRANCH
+          latestCommit: 8d51122def5632836d1cb1026e879069e10a1e13
+          latestChangeset: 8d51122def5632836d1cb1026e879069e10a1e13
+          isDefault: true
+    branches:
+      allOf:
+      - $ref: '#/components/schemas/page'
+      - $ref: '#/components/schemas/branches_allOf'
+      title: branches
     project_links:
       example:
         self:
@@ -813,6 +956,12 @@ components:
           type: array
       required:
       - values
+    branches_allOf:
+      properties:
+        values:
+          items:
+            $ref: '#/components/schemas/'
+          type: array
   securitySchemes:
     usernamePassword:
       scheme: basic

@@ -26,6 +26,196 @@ var (
 // DefaultApiService DefaultApi service
 type DefaultApiService service
 
+type apiGetBranchesRequest struct {
+	ctx _context.Context
+	apiService *DefaultApiService
+	projectKey string
+	repositorySlug string
+	base *string
+	details *bool
+	filterText *string
+	orderBy *string
+	boostMatches *bool
+	start *int32
+	limit *int32
+}
+
+
+func (r apiGetBranchesRequest) Base(base string) apiGetBranchesRequest {
+	r.base = &base
+	return r
+}
+
+func (r apiGetBranchesRequest) Details(details bool) apiGetBranchesRequest {
+	r.details = &details
+	return r
+}
+
+func (r apiGetBranchesRequest) FilterText(filterText string) apiGetBranchesRequest {
+	r.filterText = &filterText
+	return r
+}
+
+func (r apiGetBranchesRequest) OrderBy(orderBy string) apiGetBranchesRequest {
+	r.orderBy = &orderBy
+	return r
+}
+
+func (r apiGetBranchesRequest) BoostMatches(boostMatches bool) apiGetBranchesRequest {
+	r.boostMatches = &boostMatches
+	return r
+}
+
+func (r apiGetBranchesRequest) Start(start int32) apiGetBranchesRequest {
+	r.start = &start
+	return r
+}
+
+func (r apiGetBranchesRequest) Limit(limit int32) apiGetBranchesRequest {
+	r.limit = &limit
+	return r
+}
+
+/*
+GetBranches Your GET endpoint
+Retrieve the branches matching the supplied filterText param.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiGetBranchesRequest
+*/
+func (a *DefaultApiService) GetBranches(ctx _context.Context, projectKey string, repositorySlug string) apiGetBranchesRequest {
+	return apiGetBranchesRequest{
+		apiService: a,
+		ctx: ctx,
+		projectKey: projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return Branches
+*/
+func (r apiGetBranchesRequest) Execute() (Branches, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Branches
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.GetBranches")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")) , -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	
+	
+							
+	if r.base != nil {
+		localVarQueryParams.Add("base", parameterToString(*r.base, ""))
+	}
+	if r.details != nil {
+		localVarQueryParams.Add("details", parameterToString(*r.details, ""))
+	}
+	if r.filterText != nil {
+		localVarQueryParams.Add("filterText", parameterToString(*r.filterText, ""))
+	}
+	if r.orderBy != nil {
+		localVarQueryParams.Add("orderBy", parameterToString(*r.orderBy, ""))
+	}
+	if r.boostMatches != nil {
+		localVarQueryParams.Add("boostMatches", parameterToString(*r.boostMatches, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
 type apiGetProjectRequest struct {
 	ctx _context.Context
 	apiService *DefaultApiService
