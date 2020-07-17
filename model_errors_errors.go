@@ -16,8 +16,8 @@ import (
 
 // ErrorsErrors struct for ErrorsErrors
 type ErrorsErrors struct {
-	Context *string `json:"context,omitempty"`
-	Message string `json:"message"`
+	Context       *string `json:"context,omitempty"`
+	Message       string  `json:"message"`
 	ExceptionName *string `json:"exceptionName,omitempty"`
 }
 
@@ -25,7 +25,7 @@ type ErrorsErrors struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewErrorsErrors(message string, ) *ErrorsErrors {
+func NewErrorsErrors(message string) *ErrorsErrors {
 	this := ErrorsErrors{}
 	this.Message = message
 	return &this
@@ -73,7 +73,7 @@ func (o *ErrorsErrors) SetContext(v string) {
 
 // GetMessage returns the Message field value
 func (o *ErrorsErrors) GetMessage() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -84,7 +84,7 @@ func (o *ErrorsErrors) GetMessage() string {
 // GetMessageOk returns a tuple with the Message field value
 // and a boolean to check if the value has been set.
 func (o *ErrorsErrors) GetMessageOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Message, true

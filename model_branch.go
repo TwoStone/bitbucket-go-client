@@ -16,19 +16,19 @@ import (
 
 // Branch struct for Branch
 type Branch struct {
-	Id string `json:"id"`
-	DisplayId string `json:"displayId"`
-	Type string `json:"type"`
-	LatestCommit string `json:"latestCommit"`
+	Id              string `json:"id"`
+	DisplayId       string `json:"displayId"`
+	Type            string `json:"type"`
+	LatestCommit    string `json:"latestCommit"`
 	LatestChangeset string `json:"latestChangeset"`
-	IsDefault bool `json:"isDefault"`
+	IsDefault       bool   `json:"isDefault"`
 }
 
 // NewBranch instantiates a new Branch object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool, ) *Branch {
+func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
 	this := Branch{}
 	this.Id = id
 	this.DisplayId = displayId
@@ -49,7 +49,7 @@ func NewBranchWithDefaults() *Branch {
 
 // GetId returns the Id field value
 func (o *Branch) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -60,7 +60,7 @@ func (o *Branch) GetId() string {
 // GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetIdOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Id, true
@@ -73,7 +73,7 @@ func (o *Branch) SetId(v string) {
 
 // GetDisplayId returns the DisplayId field value
 func (o *Branch) GetDisplayId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -84,7 +84,7 @@ func (o *Branch) GetDisplayId() string {
 // GetDisplayIdOk returns a tuple with the DisplayId field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetDisplayIdOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.DisplayId, true
@@ -97,7 +97,7 @@ func (o *Branch) SetDisplayId(v string) {
 
 // GetType returns the Type field value
 func (o *Branch) GetType() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -108,7 +108,7 @@ func (o *Branch) GetType() string {
 // GetTypeOk returns a tuple with the Type field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetTypeOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Type, true
@@ -121,7 +121,7 @@ func (o *Branch) SetType(v string) {
 
 // GetLatestCommit returns the LatestCommit field value
 func (o *Branch) GetLatestCommit() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -132,7 +132,7 @@ func (o *Branch) GetLatestCommit() string {
 // GetLatestCommitOk returns a tuple with the LatestCommit field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.LatestCommit, true
@@ -145,7 +145,7 @@ func (o *Branch) SetLatestCommit(v string) {
 
 // GetLatestChangeset returns the LatestChangeset field value
 func (o *Branch) GetLatestChangeset() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -156,7 +156,7 @@ func (o *Branch) GetLatestChangeset() string {
 // GetLatestChangesetOk returns a tuple with the LatestChangeset field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.LatestChangeset, true
@@ -169,7 +169,7 @@ func (o *Branch) SetLatestChangeset(v string) {
 
 // GetIsDefault returns the IsDefault field value
 func (o *Branch) GetIsDefault() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -180,7 +180,7 @@ func (o *Branch) GetIsDefault() bool {
 // GetIsDefaultOk returns a tuple with the IsDefault field value
 // and a boolean to check if the value has been set.
 func (o *Branch) GetIsDefaultOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.IsDefault, true

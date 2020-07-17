@@ -11,219 +11,175 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
-	"strings"
+	"encoding/json"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
+// Directory struct for Directory
+type Directory struct {
+	Path     *Path     `json:"path,omitempty"`
+	Revision *string   `json:"revision,omitempty"`
+	Children *Children `json:"children,omitempty"`
 }
 
-var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
-)
-
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// NewDirectory instantiates a new Directory object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewDirectory() *Directory {
+	this := Directory{}
+	return &this
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
+// NewDirectoryWithDefaults instantiates a new Directory object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewDirectoryWithDefaults() *Directory {
+	this := Directory{}
+	return &this
 }
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
-}
-
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
-}
-
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.0.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
+// GetPath returns the Path field value if set, zero value otherwise.
+func (o *Directory) GetPath() Path {
+	if o == nil || o.Path == nil {
+		var ret Path
+		return ret
 	}
-	return cfg
+	return *o.Path
 }
 
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
-
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
+// GetPathOk returns a tuple with the Path field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Directory) GetPathOk() (*Path, bool) {
+	if o == nil || o.Path == nil {
+		return nil, false
 	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
+	return o.Path, true
 }
 
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
+// HasPath returns a boolean if a field has been set.
+func (o *Directory) HasPath() bool {
+	if o != nil && o.Path != nil {
+		return true
 	}
 
-	if ctx == nil {
-		return sc.URL(0, nil)
+	return false
+}
+
+// SetPath gets a reference to the given Path and assigns it to the Path field.
+func (o *Directory) SetPath(v Path) {
+	o.Path = &v
+}
+
+// GetRevision returns the Revision field value if set, zero value otherwise.
+func (o *Directory) GetRevision() string {
+	if o == nil || o.Revision == nil {
+		var ret string
+		return ret
+	}
+	return *o.Revision
+}
+
+// GetRevisionOk returns a tuple with the Revision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Directory) GetRevisionOk() (*string, bool) {
+	if o == nil || o.Revision == nil {
+		return nil, false
+	}
+	return o.Revision, true
+}
+
+// HasRevision returns a boolean if a field has been set.
+func (o *Directory) HasRevision() bool {
+	if o != nil && o.Revision != nil {
+		return true
 	}
 
-	index, err := getServerOperationIndex(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return false
+}
+
+// SetRevision gets a reference to the given string and assigns it to the Revision field.
+func (o *Directory) SetRevision(v string) {
+	o.Revision = &v
+}
+
+// GetChildren returns the Children field value if set, zero value otherwise.
+func (o *Directory) GetChildren() Children {
+	if o == nil || o.Children == nil {
+		var ret Children
+		return ret
+	}
+	return *o.Children
+}
+
+// GetChildrenOk returns a tuple with the Children field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Directory) GetChildrenOk() (*Children, bool) {
+	if o == nil || o.Children == nil {
+		return nil, false
+	}
+	return o.Children, true
+}
+
+// HasChildren returns a boolean if a field has been set.
+func (o *Directory) HasChildren() bool {
+	if o != nil && o.Children != nil {
+		return true
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
-	if err != nil {
-		return "", err
-	}
+	return false
+}
 
-	return sc.URL(index, variables)
+// SetChildren gets a reference to the given Children and assigns it to the Children field.
+func (o *Directory) SetChildren(v Children) {
+	o.Children = &v
+}
+
+func (o Directory) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Path != nil {
+		toSerialize["path"] = o.Path
+	}
+	if o.Revision != nil {
+		toSerialize["revision"] = o.Revision
+	}
+	if o.Children != nil {
+		toSerialize["children"] = o.Children
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableDirectory struct {
+	value *Directory
+	isSet bool
+}
+
+func (v NullableDirectory) Get() *Directory {
+	return v.value
+}
+
+func (v *NullableDirectory) Set(val *Directory) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableDirectory) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableDirectory) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableDirectory(val *Directory) *NullableDirectory {
+	return &NullableDirectory{value: val, isSet: true}
+}
+
+func (v NullableDirectory) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableDirectory) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

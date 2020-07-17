@@ -16,25 +16,25 @@ import (
 
 // Repository struct for Repository
 type Repository struct {
-	Id *float32 `json:"id,omitempty"`
-	Slug string `json:"slug"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	HierarchyId *string `json:"hierarchyId,omitempty"`
-	ScmId *string `json:"scmId,omitempty"`
-	State *string `json:"state,omitempty"`
-	StatusMessage *string `json:"statusMessage,omitempty"`
-	Forkable bool `json:"forkable"`
-	Public bool `json:"public"`
-	Project Project `json:"project"`
-	Links *RepositoryLinks `json:"links,omitempty"`
+	Id            *float32         `json:"id,omitempty"`
+	Slug          string           `json:"slug"`
+	Name          string           `json:"name"`
+	Description   string           `json:"description"`
+	HierarchyId   *string          `json:"hierarchyId,omitempty"`
+	ScmId         *string          `json:"scmId,omitempty"`
+	State         *string          `json:"state,omitempty"`
+	StatusMessage *string          `json:"statusMessage,omitempty"`
+	Forkable      bool             `json:"forkable"`
+	Public        bool             `json:"public"`
+	Project       Project          `json:"project"`
+	Links         *RepositoryLinks `json:"links,omitempty"`
 }
 
 // NewRepository instantiates a new Repository object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRepository(slug string, name string, description string, forkable bool, public bool, project Project, ) *Repository {
+func NewRepository(slug string, name string, description string, forkable bool, public bool, project Project) *Repository {
 	this := Repository{}
 	this.Slug = slug
 	this.Name = name
@@ -87,7 +87,7 @@ func (o *Repository) SetId(v float32) {
 
 // GetSlug returns the Slug field value
 func (o *Repository) GetSlug() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -98,7 +98,7 @@ func (o *Repository) GetSlug() string {
 // GetSlugOk returns a tuple with the Slug field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetSlugOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Slug, true
@@ -111,7 +111,7 @@ func (o *Repository) SetSlug(v string) {
 
 // GetName returns the Name field value
 func (o *Repository) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -122,7 +122,7 @@ func (o *Repository) GetName() string {
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetNameOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Name, true
@@ -135,7 +135,7 @@ func (o *Repository) SetName(v string) {
 
 // GetDescription returns the Description field value
 func (o *Repository) GetDescription() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -146,7 +146,7 @@ func (o *Repository) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetDescriptionOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Description, true
@@ -287,7 +287,7 @@ func (o *Repository) SetStatusMessage(v string) {
 
 // GetForkable returns the Forkable field value
 func (o *Repository) GetForkable() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -298,7 +298,7 @@ func (o *Repository) GetForkable() bool {
 // GetForkableOk returns a tuple with the Forkable field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetForkableOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Forkable, true
@@ -311,7 +311,7 @@ func (o *Repository) SetForkable(v bool) {
 
 // GetPublic returns the Public field value
 func (o *Repository) GetPublic() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -322,7 +322,7 @@ func (o *Repository) GetPublic() bool {
 // GetPublicOk returns a tuple with the Public field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetPublicOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Public, true
@@ -335,7 +335,7 @@ func (o *Repository) SetPublic(v bool) {
 
 // GetProject returns the Project field value
 func (o *Repository) GetProject() Project {
-	if o == nil  {
+	if o == nil {
 		var ret Project
 		return ret
 	}
@@ -346,7 +346,7 @@ func (o *Repository) GetProject() Project {
 // GetProjectOk returns a tuple with the Project field value
 // and a boolean to check if the value has been set.
 func (o *Repository) GetProjectOk() (*Project, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Project, true

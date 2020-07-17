@@ -23,7 +23,7 @@ type ProjectsAllOf struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProjectsAllOf(values []Project, ) *ProjectsAllOf {
+func NewProjectsAllOf(values []Project) *ProjectsAllOf {
 	this := ProjectsAllOf{}
 	this.Values = values
 	return &this
@@ -39,7 +39,7 @@ func NewProjectsAllOfWithDefaults() *ProjectsAllOf {
 
 // GetValues returns the Values field value
 func (o *ProjectsAllOf) GetValues() []Project {
-	if o == nil  {
+	if o == nil {
 		var ret []Project
 		return ret
 	}
@@ -50,7 +50,7 @@ func (o *ProjectsAllOf) GetValues() []Project {
 // GetValuesOk returns a tuple with the Values field value
 // and a boolean to check if the value has been set.
 func (o *ProjectsAllOf) GetValuesOk() (*[]Project, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Values, true

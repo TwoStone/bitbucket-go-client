@@ -8,13 +8,13 @@ Name | Type | Description | Notes
 **Limit** | Pointer to **int32** |  | 
 **Start** | Pointer to **int32** |  | 
 **IsLastPage** | Pointer to **bool** |  | 
-**NextPageStart** | Pointer to **int32** |  | 
+**NextPageStart** | Pointer to **int32** |  | [optional] 
 
 ## Methods
 
 ### NewPage
 
-`func NewPage(size int32, limit int32, start int32, isLastPage bool, nextPageStart int32, ) *Page`
+`func NewPage(size int32, limit int32, start int32, isLastPage bool, ) *Page`
 
 NewPage instantiates a new Page object
 This constructor will assign default values to properties that have it defined,
@@ -128,6 +128,11 @@ and a boolean to check if the value has been set.
 
 SetNextPageStart sets NextPageStart field to given value.
 
+### HasNextPageStart
+
+`func (o *Page) HasNextPageStart() bool`
+
+HasNextPageStart returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

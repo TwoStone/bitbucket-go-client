@@ -346,6 +346,8 @@ All URIs are relative to *https://example.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**BrowseRepository**](docs/DefaultApi.md#browserepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
+*DefaultApi* | [**BrowseRepositoryPath**](docs/DefaultApi.md#browserepositorypath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 *DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
 *DefaultApi* | [**GetProject**](docs/DefaultApi.md#getproject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
 *DefaultApi* | [**GetProjects**](docs/DefaultApi.md#getprojects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
@@ -359,10 +361,18 @@ Class | Method | HTTP request | Description
  - [Branch](docs/Branch.md)
  - [Branches](docs/Branches.md)
  - [BranchesAllOf](docs/BranchesAllOf.md)
+ - [Children](docs/Children.md)
+ - [ChildrenAllOf](docs/ChildrenAllOf.md)
+ - [ChildrenAllOfValues](docs/ChildrenAllOfValues.md)
+ - [Directory](docs/Directory.md)
  - [Errors](docs/Errors.md)
  - [ErrorsErrors](docs/ErrorsErrors.md)
+ - [File](docs/File.md)
+ - [FileLines](docs/FileLines.md)
+ - [FileOrDirectory](docs/FileOrDirectory.md)
  - [Link](docs/Link.md)
  - [Page](docs/Page.md)
+ - [Path](docs/Path.md)
  - [Project](docs/Project.md)
  - [ProjectLinks](docs/ProjectLinks.md)
  - [Projects](docs/Projects.md)

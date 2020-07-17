@@ -16,20 +16,20 @@ import (
 
 // Project struct for Project
 type Project struct {
-	Id *float32 `json:"id,omitempty"`
-	Key string `json:"key"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Public bool `json:"public"`
-	Type string `json:"type"`
-	Links *ProjectLinks `json:"links,omitempty"`
+	Id          *float32      `json:"id,omitempty"`
+	Key         string        `json:"key"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Public      bool          `json:"public"`
+	Type        string        `json:"type"`
+	Links       *ProjectLinks `json:"links,omitempty"`
 }
 
 // NewProject instantiates a new Project object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProject(key string, name string, description string, public bool, type_ string, ) *Project {
+func NewProject(key string, name string, description string, public bool, type_ string) *Project {
 	this := Project{}
 	this.Key = key
 	this.Name = name
@@ -81,7 +81,7 @@ func (o *Project) SetId(v float32) {
 
 // GetKey returns the Key field value
 func (o *Project) GetKey() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -92,7 +92,7 @@ func (o *Project) GetKey() string {
 // GetKeyOk returns a tuple with the Key field value
 // and a boolean to check if the value has been set.
 func (o *Project) GetKeyOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Key, true
@@ -105,7 +105,7 @@ func (o *Project) SetKey(v string) {
 
 // GetName returns the Name field value
 func (o *Project) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -116,7 +116,7 @@ func (o *Project) GetName() string {
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
 func (o *Project) GetNameOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Name, true
@@ -129,7 +129,7 @@ func (o *Project) SetName(v string) {
 
 // GetDescription returns the Description field value
 func (o *Project) GetDescription() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -140,7 +140,7 @@ func (o *Project) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value
 // and a boolean to check if the value has been set.
 func (o *Project) GetDescriptionOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Description, true
@@ -153,7 +153,7 @@ func (o *Project) SetDescription(v string) {
 
 // GetPublic returns the Public field value
 func (o *Project) GetPublic() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -164,7 +164,7 @@ func (o *Project) GetPublic() bool {
 // GetPublicOk returns a tuple with the Public field value
 // and a boolean to check if the value has been set.
 func (o *Project) GetPublicOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Public, true
@@ -177,7 +177,7 @@ func (o *Project) SetPublic(v bool) {
 
 // GetType returns the Type field value
 func (o *Project) GetType() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -188,7 +188,7 @@ func (o *Project) GetType() string {
 // GetTypeOk returns a tuple with the Type field value
 // and a boolean to check if the value has been set.
 func (o *Project) GetTypeOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Type, true

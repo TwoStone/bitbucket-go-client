@@ -23,7 +23,7 @@ type RepositoriesAllOf struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRepositoriesAllOf(values []Repository, ) *RepositoriesAllOf {
+func NewRepositoriesAllOf(values []Repository) *RepositoriesAllOf {
 	this := RepositoriesAllOf{}
 	this.Values = values
 	return &this
@@ -39,7 +39,7 @@ func NewRepositoriesAllOfWithDefaults() *RepositoriesAllOf {
 
 // GetValues returns the Values field value
 func (o *RepositoriesAllOf) GetValues() []Repository {
-	if o == nil  {
+	if o == nil {
 		var ret []Repository
 		return ret
 	}
@@ -50,7 +50,7 @@ func (o *RepositoriesAllOf) GetValues() []Repository {
 // GetValuesOk returns a tuple with the Values field value
 // and a boolean to check if the value has been set.
 func (o *RepositoriesAllOf) GetValuesOk() (*[]Repository, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Values, true

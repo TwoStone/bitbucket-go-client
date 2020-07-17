@@ -11,219 +11,240 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
-	"strings"
+	"encoding/json"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
+// ChildrenAllOfValues struct for ChildrenAllOfValues
+type ChildrenAllOfValues struct {
+	Path      *Path   `json:"path,omitempty"`
+	ContentId *string `json:"contentId,omitempty"`
+	Type      string  `json:"type"`
+	Size      *string `json:"size,omitempty"`
+	Node      *string `json:"node,omitempty"`
 }
 
-var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
-)
-
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// NewChildrenAllOfValues instantiates a new ChildrenAllOfValues object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewChildrenAllOfValues(type_ string) *ChildrenAllOfValues {
+	this := ChildrenAllOfValues{}
+	this.Type = type_
+	return &this
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
+// NewChildrenAllOfValuesWithDefaults instantiates a new ChildrenAllOfValues object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewChildrenAllOfValuesWithDefaults() *ChildrenAllOfValues {
+	this := ChildrenAllOfValues{}
+	return &this
 }
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
-}
-
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
-}
-
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.0.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
+// GetPath returns the Path field value if set, zero value otherwise.
+func (o *ChildrenAllOfValues) GetPath() Path {
+	if o == nil || o.Path == nil {
+		var ret Path
+		return ret
 	}
-	return cfg
+	return *o.Path
 }
 
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
-
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
+// GetPathOk returns a tuple with the Path field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ChildrenAllOfValues) GetPathOk() (*Path, bool) {
+	if o == nil || o.Path == nil {
+		return nil, false
 	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
+	return o.Path, true
 }
 
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
+// HasPath returns a boolean if a field has been set.
+func (o *ChildrenAllOfValues) HasPath() bool {
+	if o != nil && o.Path != nil {
+		return true
 	}
 
-	if ctx == nil {
-		return sc.URL(0, nil)
+	return false
+}
+
+// SetPath gets a reference to the given Path and assigns it to the Path field.
+func (o *ChildrenAllOfValues) SetPath(v Path) {
+	o.Path = &v
+}
+
+// GetContentId returns the ContentId field value if set, zero value otherwise.
+func (o *ChildrenAllOfValues) GetContentId() string {
+	if o == nil || o.ContentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.ContentId
+}
+
+// GetContentIdOk returns a tuple with the ContentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ChildrenAllOfValues) GetContentIdOk() (*string, bool) {
+	if o == nil || o.ContentId == nil {
+		return nil, false
+	}
+	return o.ContentId, true
+}
+
+// HasContentId returns a boolean if a field has been set.
+func (o *ChildrenAllOfValues) HasContentId() bool {
+	if o != nil && o.ContentId != nil {
+		return true
 	}
 
-	index, err := getServerOperationIndex(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return false
+}
+
+// SetContentId gets a reference to the given string and assigns it to the ContentId field.
+func (o *ChildrenAllOfValues) SetContentId(v string) {
+	o.ContentId = &v
+}
+
+// GetType returns the Type field value
+func (o *ChildrenAllOfValues) GetType() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value
+// and a boolean to check if the value has been set.
+func (o *ChildrenAllOfValues) GetTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Type, true
+}
+
+// SetType sets field value
+func (o *ChildrenAllOfValues) SetType(v string) {
+	o.Type = v
+}
+
+// GetSize returns the Size field value if set, zero value otherwise.
+func (o *ChildrenAllOfValues) GetSize() string {
+	if o == nil || o.Size == nil {
+		var ret string
+		return ret
+	}
+	return *o.Size
+}
+
+// GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ChildrenAllOfValues) GetSizeOk() (*string, bool) {
+	if o == nil || o.Size == nil {
+		return nil, false
+	}
+	return o.Size, true
+}
+
+// HasSize returns a boolean if a field has been set.
+func (o *ChildrenAllOfValues) HasSize() bool {
+	if o != nil && o.Size != nil {
+		return true
 	}
 
-	return sc.URL(index, variables)
+	return false
+}
+
+// SetSize gets a reference to the given string and assigns it to the Size field.
+func (o *ChildrenAllOfValues) SetSize(v string) {
+	o.Size = &v
+}
+
+// GetNode returns the Node field value if set, zero value otherwise.
+func (o *ChildrenAllOfValues) GetNode() string {
+	if o == nil || o.Node == nil {
+		var ret string
+		return ret
+	}
+	return *o.Node
+}
+
+// GetNodeOk returns a tuple with the Node field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ChildrenAllOfValues) GetNodeOk() (*string, bool) {
+	if o == nil || o.Node == nil {
+		return nil, false
+	}
+	return o.Node, true
+}
+
+// HasNode returns a boolean if a field has been set.
+func (o *ChildrenAllOfValues) HasNode() bool {
+	if o != nil && o.Node != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNode gets a reference to the given string and assigns it to the Node field.
+func (o *ChildrenAllOfValues) SetNode(v string) {
+	o.Node = &v
+}
+
+func (o ChildrenAllOfValues) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Path != nil {
+		toSerialize["path"] = o.Path
+	}
+	if o.ContentId != nil {
+		toSerialize["contentId"] = o.ContentId
+	}
+	if true {
+		toSerialize["type"] = o.Type
+	}
+	if o.Size != nil {
+		toSerialize["size"] = o.Size
+	}
+	if o.Node != nil {
+		toSerialize["node"] = o.Node
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableChildrenAllOfValues struct {
+	value *ChildrenAllOfValues
+	isSet bool
+}
+
+func (v NullableChildrenAllOfValues) Get() *ChildrenAllOfValues {
+	return v.value
+}
+
+func (v *NullableChildrenAllOfValues) Set(val *ChildrenAllOfValues) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableChildrenAllOfValues) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableChildrenAllOfValues) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableChildrenAllOfValues(val *ChildrenAllOfValues) *NullableChildrenAllOfValues {
+	return &NullableChildrenAllOfValues{value: val, isSet: true}
+}
+
+func (v NullableChildrenAllOfValues) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableChildrenAllOfValues) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

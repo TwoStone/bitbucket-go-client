@@ -1,4 +1,4 @@
-# Projects
+# Children
 
 ## Properties
 
@@ -9,151 +9,156 @@ Name | Type | Description | Notes
 **Start** | Pointer to **int32** |  | 
 **IsLastPage** | Pointer to **bool** |  | 
 **NextPageStart** | Pointer to **int32** |  | [optional] 
-**Values** | Pointer to [**[]Project**](project.md) |  | 
+**Values** | Pointer to [**[]ChildrenAllOfValues**](children_allOf_values.md) |  | [optional] 
 
 ## Methods
 
-### NewProjects
+### NewChildren
 
-`func NewProjects(size int32, limit int32, start int32, isLastPage bool, values []Project, ) *Projects`
+`func NewChildren(size int32, limit int32, start int32, isLastPage bool, ) *Children`
 
-NewProjects instantiates a new Projects object
+NewChildren instantiates a new Children object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewProjectsWithDefaults
+### NewChildrenWithDefaults
 
-`func NewProjectsWithDefaults() *Projects`
+`func NewChildrenWithDefaults() *Children`
 
-NewProjectsWithDefaults instantiates a new Projects object
+NewChildrenWithDefaults instantiates a new Children object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetSize
 
-`func (o *Projects) GetSize() int32`
+`func (o *Children) GetSize() int32`
 
 GetSize returns the Size field if non-nil, zero value otherwise.
 
 ### GetSizeOk
 
-`func (o *Projects) GetSizeOk() (*int32, bool)`
+`func (o *Children) GetSizeOk() (*int32, bool)`
 
 GetSizeOk returns a tuple with the Size field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetSize
 
-`func (o *Projects) SetSize(v int32)`
+`func (o *Children) SetSize(v int32)`
 
 SetSize sets Size field to given value.
 
 
 ### GetLimit
 
-`func (o *Projects) GetLimit() int32`
+`func (o *Children) GetLimit() int32`
 
 GetLimit returns the Limit field if non-nil, zero value otherwise.
 
 ### GetLimitOk
 
-`func (o *Projects) GetLimitOk() (*int32, bool)`
+`func (o *Children) GetLimitOk() (*int32, bool)`
 
 GetLimitOk returns a tuple with the Limit field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLimit
 
-`func (o *Projects) SetLimit(v int32)`
+`func (o *Children) SetLimit(v int32)`
 
 SetLimit sets Limit field to given value.
 
 
 ### GetStart
 
-`func (o *Projects) GetStart() int32`
+`func (o *Children) GetStart() int32`
 
 GetStart returns the Start field if non-nil, zero value otherwise.
 
 ### GetStartOk
 
-`func (o *Projects) GetStartOk() (*int32, bool)`
+`func (o *Children) GetStartOk() (*int32, bool)`
 
 GetStartOk returns a tuple with the Start field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetStart
 
-`func (o *Projects) SetStart(v int32)`
+`func (o *Children) SetStart(v int32)`
 
 SetStart sets Start field to given value.
 
 
 ### GetIsLastPage
 
-`func (o *Projects) GetIsLastPage() bool`
+`func (o *Children) GetIsLastPage() bool`
 
 GetIsLastPage returns the IsLastPage field if non-nil, zero value otherwise.
 
 ### GetIsLastPageOk
 
-`func (o *Projects) GetIsLastPageOk() (*bool, bool)`
+`func (o *Children) GetIsLastPageOk() (*bool, bool)`
 
 GetIsLastPageOk returns a tuple with the IsLastPage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetIsLastPage
 
-`func (o *Projects) SetIsLastPage(v bool)`
+`func (o *Children) SetIsLastPage(v bool)`
 
 SetIsLastPage sets IsLastPage field to given value.
 
 
 ### GetNextPageStart
 
-`func (o *Projects) GetNextPageStart() int32`
+`func (o *Children) GetNextPageStart() int32`
 
 GetNextPageStart returns the NextPageStart field if non-nil, zero value otherwise.
 
 ### GetNextPageStartOk
 
-`func (o *Projects) GetNextPageStartOk() (*int32, bool)`
+`func (o *Children) GetNextPageStartOk() (*int32, bool)`
 
 GetNextPageStartOk returns a tuple with the NextPageStart field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetNextPageStart
 
-`func (o *Projects) SetNextPageStart(v int32)`
+`func (o *Children) SetNextPageStart(v int32)`
 
 SetNextPageStart sets NextPageStart field to given value.
 
 ### HasNextPageStart
 
-`func (o *Projects) HasNextPageStart() bool`
+`func (o *Children) HasNextPageStart() bool`
 
 HasNextPageStart returns a boolean if a field has been set.
 
 ### GetValues
 
-`func (o *Projects) GetValues() []Project`
+`func (o *Children) GetValues() []ChildrenAllOfValues`
 
 GetValues returns the Values field if non-nil, zero value otherwise.
 
 ### GetValuesOk
 
-`func (o *Projects) GetValuesOk() (*[]Project, bool)`
+`func (o *Children) GetValuesOk() (*[]ChildrenAllOfValues, bool)`
 
 GetValuesOk returns a tuple with the Values field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetValues
 
-`func (o *Projects) SetValues(v []Project)`
+`func (o *Children) SetValues(v []ChildrenAllOfValues)`
 
 SetValues sets Values field to given value.
 
+### HasValues
+
+`func (o *Children) HasValues() bool`
+
+HasValues returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

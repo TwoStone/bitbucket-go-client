@@ -8,14 +8,14 @@ Name | Type | Description | Notes
 **Limit** | Pointer to **int32** |  | 
 **Start** | Pointer to **int32** |  | 
 **IsLastPage** | Pointer to **bool** |  | 
-**NextPageStart** | Pointer to **int32** |  | 
+**NextPageStart** | Pointer to **int32** |  | [optional] 
 **Values** | Pointer to [**[]Repository**](repository.md) |  | 
 
 ## Methods
 
 ### NewRepositories
 
-`func NewRepositories(size int32, limit int32, start int32, isLastPage bool, nextPageStart int32, values []Repository, ) *Repositories`
+`func NewRepositories(size int32, limit int32, start int32, isLastPage bool, values []Repository, ) *Repositories`
 
 NewRepositories instantiates a new Repositories object
 This constructor will assign default values to properties that have it defined,
@@ -129,6 +129,11 @@ and a boolean to check if the value has been set.
 
 SetNextPageStart sets NextPageStart field to given value.
 
+### HasNextPageStart
+
+`func (o *Repositories) HasNextPageStart() bool`
+
+HasNextPageStart returns a boolean if a field has been set.
 
 ### GetValues
 

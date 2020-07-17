@@ -16,24 +16,23 @@ import (
 
 // Page struct for Page
 type Page struct {
-	Size int32 `json:"size"`
-	Limit int32 `json:"limit"`
-	Start int32 `json:"start"`
-	IsLastPage bool `json:"isLastPage"`
-	NextPageStart int32 `json:"nextPageStart"`
+	Size          int32  `json:"size"`
+	Limit         int32  `json:"limit"`
+	Start         int32  `json:"start"`
+	IsLastPage    bool   `json:"isLastPage"`
+	NextPageStart *int32 `json:"nextPageStart,omitempty"`
 }
 
 // NewPage instantiates a new Page object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPage(size int32, limit int32, start int32, isLastPage bool, nextPageStart int32, ) *Page {
+func NewPage(size int32, limit int32, start int32, isLastPage bool) *Page {
 	this := Page{}
 	this.Size = size
 	this.Limit = limit
 	this.Start = start
 	this.IsLastPage = isLastPage
-	this.NextPageStart = nextPageStart
 	return &this
 }
 
@@ -47,7 +46,7 @@ func NewPageWithDefaults() *Page {
 
 // GetSize returns the Size field value
 func (o *Page) GetSize() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -58,7 +57,7 @@ func (o *Page) GetSize() int32 {
 // GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
 func (o *Page) GetSizeOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Size, true
@@ -71,7 +70,7 @@ func (o *Page) SetSize(v int32) {
 
 // GetLimit returns the Limit field value
 func (o *Page) GetLimit() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -82,7 +81,7 @@ func (o *Page) GetLimit() int32 {
 // GetLimitOk returns a tuple with the Limit field value
 // and a boolean to check if the value has been set.
 func (o *Page) GetLimitOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Limit, true
@@ -95,7 +94,7 @@ func (o *Page) SetLimit(v int32) {
 
 // GetStart returns the Start field value
 func (o *Page) GetStart() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -106,7 +105,7 @@ func (o *Page) GetStart() int32 {
 // GetStartOk returns a tuple with the Start field value
 // and a boolean to check if the value has been set.
 func (o *Page) GetStartOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Start, true
@@ -119,7 +118,7 @@ func (o *Page) SetStart(v int32) {
 
 // GetIsLastPage returns the IsLastPage field value
 func (o *Page) GetIsLastPage() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -130,7 +129,7 @@ func (o *Page) GetIsLastPage() bool {
 // GetIsLastPageOk returns a tuple with the IsLastPage field value
 // and a boolean to check if the value has been set.
 func (o *Page) GetIsLastPageOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.IsLastPage, true
@@ -141,28 +140,36 @@ func (o *Page) SetIsLastPage(v bool) {
 	o.IsLastPage = v
 }
 
-// GetNextPageStart returns the NextPageStart field value
+// GetNextPageStart returns the NextPageStart field value if set, zero value otherwise.
 func (o *Page) GetNextPageStart() int32 {
-	if o == nil  {
+	if o == nil || o.NextPageStart == nil {
 		var ret int32
 		return ret
 	}
-
-	return o.NextPageStart
+	return *o.NextPageStart
 }
 
-// GetNextPageStartOk returns a tuple with the NextPageStart field value
+// GetNextPageStartOk returns a tuple with the NextPageStart field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Page) GetNextPageStartOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil || o.NextPageStart == nil {
 		return nil, false
 	}
-	return &o.NextPageStart, true
+	return o.NextPageStart, true
 }
 
-// SetNextPageStart sets field value
+// HasNextPageStart returns a boolean if a field has been set.
+func (o *Page) HasNextPageStart() bool {
+	if o != nil && o.NextPageStart != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNextPageStart gets a reference to the given int32 and assigns it to the NextPageStart field.
 func (o *Page) SetNextPageStart(v int32) {
-	o.NextPageStart = v
+	o.NextPageStart = &v
 }
 
 func (o Page) MarshalJSON() ([]byte, error) {
@@ -179,7 +186,7 @@ func (o Page) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["isLastPage"] = o.IsLastPage
 	}
-	if true {
+	if o.NextPageStart != nil {
 		toSerialize["nextPageStart"] = o.NextPageStart
 	}
 	return json.Marshal(toSerialize)

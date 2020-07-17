@@ -17,7 +17,7 @@ import (
 // RepositoryLinks struct for RepositoryLinks
 type RepositoryLinks struct {
 	Clone *[]Link `json:"clone,omitempty"`
-	Self *[]Link `json:"self,omitempty"`
+	Self  *[]Link `json:"self,omitempty"`
 }
 
 // NewRepositoryLinks instantiates a new RepositoryLinks object

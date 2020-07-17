@@ -8,14 +8,14 @@ Name | Type | Description | Notes
 **Limit** | Pointer to **int32** |  | 
 **Start** | Pointer to **int32** |  | 
 **IsLastPage** | Pointer to **bool** |  | 
-**NextPageStart** | Pointer to **int32** |  | 
-**Values** | Pointer to [**[]map[string]interface{}**](object.md) |  | [optional] 
+**NextPageStart** | Pointer to **int32** |  | [optional] 
+**Values** | Pointer to [**[]Branch**](branch.md) |  | [optional] 
 
 ## Methods
 
 ### NewBranches
 
-`func NewBranches(size int32, limit int32, start int32, isLastPage bool, nextPageStart int32, ) *Branches`
+`func NewBranches(size int32, limit int32, start int32, isLastPage bool, ) *Branches`
 
 NewBranches instantiates a new Branches object
 This constructor will assign default values to properties that have it defined,
@@ -129,23 +129,28 @@ and a boolean to check if the value has been set.
 
 SetNextPageStart sets NextPageStart field to given value.
 
+### HasNextPageStart
+
+`func (o *Branches) HasNextPageStart() bool`
+
+HasNextPageStart returns a boolean if a field has been set.
 
 ### GetValues
 
-`func (o *Branches) GetValues() []map[string]interface{}`
+`func (o *Branches) GetValues() []Branch`
 
 GetValues returns the Values field if non-nil, zero value otherwise.
 
 ### GetValuesOk
 
-`func (o *Branches) GetValuesOk() (*[]map[string]interface{}, bool)`
+`func (o *Branches) GetValuesOk() (*[]Branch, bool)`
 
 GetValuesOk returns a tuple with the Values field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetValues
 
-`func (o *Branches) SetValues(v []map[string]interface{})`
+`func (o *Branches) SetValues(v []Branch)`
 
 SetValues sets Values field to given value.
 

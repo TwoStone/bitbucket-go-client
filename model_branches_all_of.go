@@ -16,7 +16,7 @@ import (
 
 // BranchesAllOf struct for BranchesAllOf
 type BranchesAllOf struct {
-	Values *[]map[string]interface{} `json:"values,omitempty"`
+	Values *[]Branch `json:"values,omitempty"`
 }
 
 // NewBranchesAllOf instantiates a new BranchesAllOf object
@@ -37,9 +37,9 @@ func NewBranchesAllOfWithDefaults() *BranchesAllOf {
 }
 
 // GetValues returns the Values field value if set, zero value otherwise.
-func (o *BranchesAllOf) GetValues() []map[string]interface{} {
+func (o *BranchesAllOf) GetValues() []Branch {
 	if o == nil || o.Values == nil {
-		var ret []map[string]interface{}
+		var ret []Branch
 		return ret
 	}
 	return *o.Values
@@ -47,7 +47,7 @@ func (o *BranchesAllOf) GetValues() []map[string]interface{} {
 
 // GetValuesOk returns a tuple with the Values field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BranchesAllOf) GetValuesOk() (*[]map[string]interface{}, bool) {
+func (o *BranchesAllOf) GetValuesOk() (*[]Branch, bool) {
 	if o == nil || o.Values == nil {
 		return nil, false
 	}
@@ -63,8 +63,8 @@ func (o *BranchesAllOf) HasValues() bool {
 	return false
 }
 
-// SetValues gets a reference to the given []map[string]interface{} and assigns it to the Values field.
-func (o *BranchesAllOf) SetValues(v []map[string]interface{}) {
+// SetValues gets a reference to the given []Branch and assigns it to the Values field.
+func (o *BranchesAllOf) SetValues(v []Branch) {
 	o.Values = &v
 }
 

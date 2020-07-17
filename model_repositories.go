@@ -16,25 +16,24 @@ import (
 
 // Repositories struct for Repositories
 type Repositories struct {
-	Size int32 `json:"size"`
-	Limit int32 `json:"limit"`
-	Start int32 `json:"start"`
-	IsLastPage bool `json:"isLastPage"`
-	NextPageStart int32 `json:"nextPageStart"`
-	Values []Repository `json:"values"`
+	Size          int32        `json:"size"`
+	Limit         int32        `json:"limit"`
+	Start         int32        `json:"start"`
+	IsLastPage    bool         `json:"isLastPage"`
+	NextPageStart *int32       `json:"nextPageStart,omitempty"`
+	Values        []Repository `json:"values"`
 }
 
 // NewRepositories instantiates a new Repositories object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRepositories(size int32, limit int32, start int32, isLastPage bool, nextPageStart int32, values []Repository, ) *Repositories {
+func NewRepositories(size int32, limit int32, start int32, isLastPage bool, values []Repository) *Repositories {
 	this := Repositories{}
 	this.Size = size
 	this.Limit = limit
 	this.Start = start
 	this.IsLastPage = isLastPage
-	this.NextPageStart = nextPageStart
 	this.Values = values
 	return &this
 }
@@ -49,7 +48,7 @@ func NewRepositoriesWithDefaults() *Repositories {
 
 // GetSize returns the Size field value
 func (o *Repositories) GetSize() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -60,7 +59,7 @@ func (o *Repositories) GetSize() int32 {
 // GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetSizeOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Size, true
@@ -73,7 +72,7 @@ func (o *Repositories) SetSize(v int32) {
 
 // GetLimit returns the Limit field value
 func (o *Repositories) GetLimit() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -84,7 +83,7 @@ func (o *Repositories) GetLimit() int32 {
 // GetLimitOk returns a tuple with the Limit field value
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetLimitOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Limit, true
@@ -97,7 +96,7 @@ func (o *Repositories) SetLimit(v int32) {
 
 // GetStart returns the Start field value
 func (o *Repositories) GetStart() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -108,7 +107,7 @@ func (o *Repositories) GetStart() int32 {
 // GetStartOk returns a tuple with the Start field value
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetStartOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Start, true
@@ -121,7 +120,7 @@ func (o *Repositories) SetStart(v int32) {
 
 // GetIsLastPage returns the IsLastPage field value
 func (o *Repositories) GetIsLastPage() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -132,7 +131,7 @@ func (o *Repositories) GetIsLastPage() bool {
 // GetIsLastPageOk returns a tuple with the IsLastPage field value
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetIsLastPageOk() (*bool, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.IsLastPage, true
@@ -143,33 +142,41 @@ func (o *Repositories) SetIsLastPage(v bool) {
 	o.IsLastPage = v
 }
 
-// GetNextPageStart returns the NextPageStart field value
+// GetNextPageStart returns the NextPageStart field value if set, zero value otherwise.
 func (o *Repositories) GetNextPageStart() int32 {
-	if o == nil  {
+	if o == nil || o.NextPageStart == nil {
 		var ret int32
 		return ret
 	}
-
-	return o.NextPageStart
+	return *o.NextPageStart
 }
 
-// GetNextPageStartOk returns a tuple with the NextPageStart field value
+// GetNextPageStartOk returns a tuple with the NextPageStart field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetNextPageStartOk() (*int32, bool) {
-	if o == nil  {
+	if o == nil || o.NextPageStart == nil {
 		return nil, false
 	}
-	return &o.NextPageStart, true
+	return o.NextPageStart, true
 }
 
-// SetNextPageStart sets field value
+// HasNextPageStart returns a boolean if a field has been set.
+func (o *Repositories) HasNextPageStart() bool {
+	if o != nil && o.NextPageStart != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNextPageStart gets a reference to the given int32 and assigns it to the NextPageStart field.
 func (o *Repositories) SetNextPageStart(v int32) {
-	o.NextPageStart = v
+	o.NextPageStart = &v
 }
 
 // GetValues returns the Values field value
 func (o *Repositories) GetValues() []Repository {
-	if o == nil  {
+	if o == nil {
 		var ret []Repository
 		return ret
 	}
@@ -180,7 +187,7 @@ func (o *Repositories) GetValues() []Repository {
 // GetValuesOk returns a tuple with the Values field value
 // and a boolean to check if the value has been set.
 func (o *Repositories) GetValuesOk() (*[]Repository, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Values, true
@@ -205,7 +212,7 @@ func (o Repositories) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["isLastPage"] = o.IsLastPage
 	}
-	if true {
+	if o.NextPageStart != nil {
 		toSerialize["nextPageStart"] = o.NextPageStart
 	}
 	if true {

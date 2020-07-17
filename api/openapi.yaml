@@ -284,6 +284,7 @@ servers:
 - url: https://example.com
 security:
 - credentials: []
+tags: []
 paths:
   /rest/api/1.0/projects:
     get:
@@ -337,6 +338,7 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Bad Request
       summary: REST resource for working with projects
+      tags: []
   /rest/api/1.0/projects/{projectKey}:
     get:
       description: |-
@@ -375,6 +377,7 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: REST resource for working with projects
+      tags: []
   /rest/api/1.0/projects/{projectKey}/repos:
     get:
       description: |-
@@ -677,6 +680,156 @@ paths:
           description: Not Found
       summary: Your GET endpoint
       tags: []
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse:
+    get:
+      description: |-
+        Retrieve a page of content for a file path at a specified revision.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: browseRepository
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: the commit ID or ref to retrieve the content for.
+        explode: true
+        in: query
+        name: at
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/directory'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: browseRepository
+      tags: []
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}:
+    get:
+      description: |-
+        Retrieve a page of content for a file path at a specified revision.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: browseRepositoryPath
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: path
+        required: true
+        schema:
+          pattern: .*
+          type: string
+        style: simple
+      - description: the commit ID or ref to retrieve the content for.
+        explode: true
+        in: query
+        name: at
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileOrDirectory'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: browseRepositoryPath
+      tags: []
 components:
   schemas:
     page:
@@ -694,7 +847,6 @@ components:
       required:
       - isLastPage
       - limit
-      - nextPageStart
       - size
       - start
       title: page
@@ -897,6 +1049,74 @@ components:
       - $ref: '#/components/schemas/page'
       - $ref: '#/components/schemas/branches_allOf'
       title: branches
+    file:
+      properties:
+        start:
+          type: integer
+        size:
+          type: integer
+        isLastPage:
+          type: boolean
+        lines:
+          items:
+            $ref: '#/components/schemas/file_lines'
+          type: array
+      title: file
+      type: object
+    directory:
+      example:
+        path:
+          parent: parent
+          components:
+          - components
+          - components
+          extension: extension
+          name: name
+          toString: toString
+        revision: revision
+      properties:
+        path:
+          $ref: '#/components/schemas/path'
+        revision:
+          type: string
+        children:
+          $ref: '#/components/schemas/children'
+      title: directory
+      type: object
+    path:
+      example:
+        parent: parent
+        components:
+        - components
+        - components
+        extension: extension
+        name: name
+        toString: toString
+      properties:
+        components:
+          items:
+            type: string
+          type: array
+        parent:
+          type: string
+        name:
+          type: string
+        extension:
+          type: string
+        toString:
+          type: string
+      title: path
+      type: object
+    fileOrDirectory:
+      allOf:
+      - $ref: '#/components/schemas/file'
+      - $ref: '#/components/schemas/directory'
+      title: fileOrDirectory
+    children:
+      allOf:
+      - $ref: '#/components/schemas/page'
+      - $ref: '#/components/schemas/children_allOf'
+      title: children
     project_links:
       example:
         self:
@@ -960,7 +1180,33 @@ components:
       properties:
         values:
           items:
-            $ref: '#/components/schemas/'
+            $ref: '#/components/schemas/branch'
+          type: array
+    file_lines:
+      properties:
+        text:
+          type: string
+    children_allOf_values:
+      properties:
+        path:
+          $ref: '#/components/schemas/path'
+        contentId:
+          type: string
+        type:
+          enum:
+          - FILE
+          type: string
+        size:
+          type: string
+        node:
+          type: string
+      required:
+      - type
+    children_allOf:
+      properties:
+        values:
+          items:
+            $ref: '#/components/schemas/children_allOf_values'
           type: array
   securitySchemes:
     usernamePassword:

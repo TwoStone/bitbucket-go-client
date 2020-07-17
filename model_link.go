@@ -16,7 +16,7 @@ import (
 
 // Link struct for Link
 type Link struct {
-	Href string `json:"href"`
+	Href string  `json:"href"`
 	Name *string `json:"name,omitempty"`
 }
 
@@ -24,7 +24,7 @@ type Link struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewLink(href string, ) *Link {
+func NewLink(href string) *Link {
 	this := Link{}
 	this.Href = href
 	return &this
@@ -40,7 +40,7 @@ func NewLinkWithDefaults() *Link {
 
 // GetHref returns the Href field value
 func (o *Link) GetHref() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -51,7 +51,7 @@ func (o *Link) GetHref() string {
 // GetHrefOk returns a tuple with the Href field value
 // and a boolean to check if the value has been set.
 func (o *Link) GetHrefOk() (*string, bool) {
-	if o == nil  {
+	if o == nil {
 		return nil, false
 	}
 	return &o.Href, true

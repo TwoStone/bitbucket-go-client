@@ -26,20 +26,347 @@ var (
 // DefaultApiService DefaultApi service
 type DefaultApiService service
 
-type apiGetBranchesRequest struct {
-	ctx _context.Context
-	apiService *DefaultApiService
-	projectKey string
+type apiBrowseRepositoryRequest struct {
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
 	repositorySlug string
-	base *string
-	details *bool
-	filterText *string
-	orderBy *string
-	boostMatches *bool
-	start *int32
-	limit *int32
+	at             *string
+	start          *int32
+	limit          *int32
 }
 
+func (r apiBrowseRepositoryRequest) At(at string) apiBrowseRepositoryRequest {
+	r.at = &at
+	return r
+}
+
+func (r apiBrowseRepositoryRequest) Start(start int32) apiBrowseRepositoryRequest {
+	r.start = &start
+	return r
+}
+
+func (r apiBrowseRepositoryRequest) Limit(limit int32) apiBrowseRepositoryRequest {
+	r.limit = &limit
+	return r
+}
+
+/*
+BrowseRepository browseRepository
+Retrieve a page of content for a file path at a specified revision.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiBrowseRepositoryRequest
+*/
+func (a *DefaultApiService) BrowseRepository(ctx _context.Context, projectKey string, repositorySlug string) apiBrowseRepositoryRequest {
+	return apiBrowseRepositoryRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return Directory
+*/
+func (r apiBrowseRepositoryRequest) Execute() (Directory, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Directory
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.BrowseRepository")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.at != nil {
+		localVarQueryParams.Add("at", parameterToString(*r.at, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiBrowseRepositoryPathRequest struct {
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
+	repositorySlug string
+	path           string
+	at             *string
+	start          *int32
+	limit          *int32
+}
+
+func (r apiBrowseRepositoryPathRequest) At(at string) apiBrowseRepositoryPathRequest {
+	r.at = &at
+	return r
+}
+
+func (r apiBrowseRepositoryPathRequest) Start(start int32) apiBrowseRepositoryPathRequest {
+	r.start = &start
+	return r
+}
+
+func (r apiBrowseRepositoryPathRequest) Limit(limit int32) apiBrowseRepositoryPathRequest {
+	r.limit = &limit
+	return r
+}
+
+/*
+BrowseRepositoryPath browseRepositoryPath
+Retrieve a page of content for a file path at a specified revision.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+ * @param path
+@return apiBrowseRepositoryPathRequest
+*/
+func (a *DefaultApiService) BrowseRepositoryPath(ctx _context.Context, projectKey string, repositorySlug string, path string) apiBrowseRepositoryPathRequest {
+	return apiBrowseRepositoryPathRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+		path:           path,
+	}
+}
+
+/*
+Execute executes the request
+ @return FileOrDirectory
+*/
+func (r apiBrowseRepositoryPathRequest) Execute() (FileOrDirectory, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  FileOrDirectory
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.BrowseRepositoryPath")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", _neturl.QueryEscape(parameterToString(r.path, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.at != nil {
+		localVarQueryParams.Add("at", parameterToString(*r.at, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiGetBranchesRequest struct {
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
+	repositorySlug string
+	base           *string
+	details        *bool
+	filterText     *string
+	orderBy        *string
+	boostMatches   *bool
+	start          *int32
+	limit          *int32
+}
 
 func (r apiGetBranchesRequest) Base(base string) apiGetBranchesRequest {
 	r.base = &base
@@ -88,9 +415,9 @@ The authenticated user must have REPO_READ permission for the specified reposito
 */
 func (a *DefaultApiService) GetBranches(ctx _context.Context, projectKey string, repositorySlug string) apiGetBranchesRequest {
 	return apiGetBranchesRequest{
-		apiService: a,
-		ctx: ctx,
-		projectKey: projectKey,
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
 	}
 }
@@ -115,15 +442,13 @@ func (r apiGetBranchesRequest) Execute() (Branches, *_nethttp.Response, error) {
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")) , -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	
-	
-							
+
 	if r.base != nil {
 		localVarQueryParams.Add("base", parameterToString(*r.base, ""))
 	}
@@ -216,12 +541,12 @@ func (r apiGetBranchesRequest) Execute() (Branches, *_nethttp.Response, error) {
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
+
 type apiGetProjectRequest struct {
-	ctx _context.Context
+	ctx        _context.Context
 	apiService *DefaultApiService
 	projectKey string
 }
-
 
 /*
 GetProject REST resource for working with projects
@@ -235,7 +560,7 @@ The authenticated user must have PROJECT_VIEW permission for the specified proje
 func (a *DefaultApiService) GetProject(ctx _context.Context, projectKey string) apiGetProjectRequest {
 	return apiGetProjectRequest{
 		apiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		projectKey: projectKey,
 	}
 }
@@ -260,12 +585,11 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -338,15 +662,15 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
-type apiGetProjectsRequest struct {
-	ctx _context.Context
-	apiService *DefaultApiService
-	name *string
-	permission *string
-	start *int32
-	limit *int32
-}
 
+type apiGetProjectsRequest struct {
+	ctx        _context.Context
+	apiService *DefaultApiService
+	name       *string
+	permission *string
+	start      *int32
+	limit      *int32
+}
 
 func (r apiGetProjectsRequest) Name(name string) apiGetProjectsRequest {
 	r.name = &name
@@ -379,7 +703,7 @@ Only projects for which the authenticated user has the PROJECT_VIEW permission w
 func (a *DefaultApiService) GetProjects(ctx _context.Context) apiGetProjectsRequest {
 	return apiGetProjectsRequest{
 		apiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
@@ -407,7 +731,7 @@ func (r apiGetProjectsRequest) Execute() (Projects, *_nethttp.Response, error) {
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-				
+
 	if r.name != nil {
 		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
 	}
@@ -481,14 +805,14 @@ func (r apiGetProjectsRequest) Execute() (Projects, *_nethttp.Response, error) {
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
+
 type apiGetRepositoriesRequest struct {
-	ctx _context.Context
+	ctx        _context.Context
 	apiService *DefaultApiService
 	projectKey string
-	limit *int32
-	start *int32
+	limit      *int32
+	start      *int32
 }
-
 
 func (r apiGetRepositoriesRequest) Limit(limit int32) apiGetRepositoriesRequest {
 	r.limit = &limit
@@ -513,7 +837,7 @@ The authenticated user must have REPO_READ permission for the specified project 
 func (a *DefaultApiService) GetRepositories(ctx _context.Context, projectKey string) apiGetRepositoriesRequest {
 	return apiGetRepositoriesRequest{
 		apiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		projectKey: projectKey,
 	}
 }
@@ -538,13 +862,12 @@ func (r apiGetRepositoriesRequest) Execute() (Repositories, *_nethttp.Response, 
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	
-		
+
 	if r.limit != nil {
 		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
 	}
@@ -622,13 +945,13 @@ func (r apiGetRepositoriesRequest) Execute() (Repositories, *_nethttp.Response, 
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
+
 type apiGetRepositoryRequest struct {
-	ctx _context.Context
-	apiService *DefaultApiService
-	projectKey string
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
 	repositorySlug string
 }
-
 
 /*
 GetRepository REST resource for working with repositories
@@ -642,9 +965,9 @@ The authenticated user must have REPO_READ permission for the specified reposito
 */
 func (a *DefaultApiService) GetRepository(ctx _context.Context, projectKey string, repositorySlug string) apiGetRepositoryRequest {
 	return apiGetRepositoryRequest{
-		apiService: a,
-		ctx: ctx,
-		projectKey: projectKey,
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
 	}
 }
@@ -669,14 +992,12 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")) , -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-	
-	
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -749,18 +1070,18 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
-type apiSearchRepositoriesRequest struct {
-	ctx _context.Context
-	apiService *DefaultApiService
-	name *string
-	projectname *string
-	permission *string
-	state *string
-	visibility *string
-	start *int32
-	limit *int32
-}
 
+type apiSearchRepositoriesRequest struct {
+	ctx         _context.Context
+	apiService  *DefaultApiService
+	name        *string
+	projectname *string
+	permission  *string
+	state       *string
+	visibility  *string
+	start       *int32
+	limit       *int32
+}
 
 func (r apiSearchRepositoriesRequest) Name(name string) apiSearchRepositoriesRequest {
 	r.name = &name
@@ -810,7 +1131,7 @@ Note on permissions. In absence of the permission query parameter the implicit '
 func (a *DefaultApiService) SearchRepositories(ctx _context.Context) apiSearchRepositoriesRequest {
 	return apiSearchRepositoriesRequest{
 		apiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
@@ -838,7 +1159,7 @@ func (r apiSearchRepositoriesRequest) Execute() (Repositories, *_nethttp.Respons
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
-							
+
 	if r.name != nil {
 		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
 	}
