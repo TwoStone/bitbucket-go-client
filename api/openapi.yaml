@@ -890,6 +890,40 @@ paths:
         "200":
           description: OK
       summary: Delete post webhook
+  /rest/build-status/1.0/commits/:commitHash:
+    post:
+      description: |-
+        Associates a build status with a commit.
+
+        The state, the key and the url are mandatory. The name and description fields are optional.
+
+        All fields (mandatory or optional) are limited to 255 characters, except for the url, which is limited to 450 characters.
+
+        Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
+
+        The authenticated user must have LICENSED permission or higher to call this resource.
+      operationId: postBuildResult
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/buildResult'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+      summary: Post build-result
 components:
   schemas:
     page:
@@ -1263,6 +1297,37 @@ components:
           prCreated: true
           prCommented: false
           buildStatus: false
+    buildResult:
+      properties:
+        state:
+          enum:
+          - SUCCESSFUL
+          - FAILED
+          - INPROGRESS
+          type: string
+        key:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+      required:
+      - description
+      - key
+      - name
+      - state
+      - url
+      title: buildResult
+      type: object
+      x-examples:
+        example-1:
+          state: SUCCESSFUL
+          key: REPO-MASTER
+          name: REPO-MASTER-42
+          url: https://bamboo.example.com/browse/REPO-MASTER-42
+          description: Changes by John Doe
     project_links:
       example:
         self:

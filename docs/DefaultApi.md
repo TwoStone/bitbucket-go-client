@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**GetProjects**](DefaultApi.md#GetProjects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 [**GetRepositories**](DefaultApi.md#GetRepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
 [**GetRepository**](DefaultApi.md#GetRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | REST resource for working with repositories
+[**PostBuildResult**](DefaultApi.md#PostBuildResult) | **Post** /rest/build-status/1.0/commits/:commitHash | Post build-result
 [**SearchRepositories**](DefaultApi.md#SearchRepositories) | **Get** /rest/api/1.0/repos | REST resource for searching through repositories
 
 
@@ -694,6 +695,70 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostBuildResult
+
+> PostBuildResult(ctx).BuildResult(buildResult).Execute()
+
+Post build-result
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    buildResult := openapiclient.buildResult{State: "State_example", Key: "Key_example", Name: "Name_example", Url: "Url_example", Description: "Description_example"} // BuildResult |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.PostBuildResult(context.Background(), ).BuildResult(buildResult).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.PostBuildResult``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostBuildResultRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **buildResult** | [**BuildResult**](BuildResult.md) |  | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
