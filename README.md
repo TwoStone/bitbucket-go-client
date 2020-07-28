@@ -348,7 +348,9 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *DefaultApi* | [**BrowseRepository**](docs/DefaultApi.md#browserepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 *DefaultApi* | [**BrowseRepositoryPath**](docs/DefaultApi.md#browserepositorypath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
+*DefaultApi* | [**DeletePostWebhook**](docs/DefaultApi.md#deletepostwebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
 *DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+*DefaultApi* | [**GetPostWebhooks**](docs/DefaultApi.md#getpostwebhooks) | **Get** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations | Get Post Webhooks
 *DefaultApi* | [**GetProject**](docs/DefaultApi.md#getproject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
 *DefaultApi* | [**GetProjects**](docs/DefaultApi.md#getprojects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 *DefaultApi* | [**GetRepositories**](docs/DefaultApi.md#getrepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
@@ -373,6 +375,7 @@ Class | Method | HTTP request | Description
  - [Link](docs/Link.md)
  - [Page](docs/Page.md)
  - [Path](docs/Path.md)
+ - [PostWebhook](docs/PostWebhook.md)
  - [Project](docs/Project.md)
  - [ProjectLinks](docs/ProjectLinks.md)
  - [Projects](docs/Projects.md)

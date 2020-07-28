@@ -6,7 +6,9 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**BrowseRepository**](DefaultApi.md#BrowseRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 [**BrowseRepositoryPath**](DefaultApi.md#BrowseRepositoryPath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
+[**DeletePostWebhook**](DefaultApi.md#DeletePostWebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
 [**GetBranches**](DefaultApi.md#GetBranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+[**GetPostWebhooks**](DefaultApi.md#GetPostWebhooks) | **Get** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations | Get Post Webhooks
 [**GetProject**](DefaultApi.md#GetProject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
 [**GetProjects**](DefaultApi.md#GetProjects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 [**GetRepositories**](DefaultApi.md#GetRepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
@@ -176,6 +178,80 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## DeletePostWebhook
+
+> DeletePostWebhook(ctx, projectKey, repositorySlug, iD).Execute()
+
+Delete post webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    iD := 987 // float32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.DeletePostWebhook(context.Background(), projectKey, repositorySlug, iD).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.DeletePostWebhook``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+**iD** | **float32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeletePostWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetBranches
 
 > Branches GetBranches(ctx, projectKey, repositorySlug).Base(base).Details(details).FilterText(filterText).OrderBy(orderBy).BoostMatches(boostMatches).Start(start).Limit(limit).Execute()
@@ -248,6 +324,79 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Branches**](branches.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetPostWebhooks
+
+> []PostWebhook GetPostWebhooks(ctx, projectKey, repositorySlug).Execute()
+
+Get Post Webhooks
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.GetPostWebhooks(context.Background(), projectKey, repositorySlug).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.GetPostWebhooks``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetPostWebhooks`: []PostWebhook
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.GetPostWebhooks`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetPostWebhooksRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**[]PostWebhook**](postWebhook.md)
 
 ### Authorization
 

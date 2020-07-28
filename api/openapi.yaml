@@ -830,6 +830,66 @@ paths:
           description: Not Found
       summary: browseRepositoryPath
       tags: []
+  /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations:
+    get:
+      description: Returns the registered post webhooks for the repository.
+      operationId: getPostWebhooks
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/postWebhook'
+                type: array
+          description: OK
+      summary: Get Post Webhooks
+      tags: []
+  /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID}:
+    delete:
+      description: Deletes the post webhook from the repository
+      operationId: deletePostWebhook
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          description: OK
+      summary: Delete post webhook
 components:
   schemas:
     page:
@@ -1117,6 +1177,92 @@ components:
       - $ref: '#/components/schemas/page'
       - $ref: '#/components/schemas/children_allOf'
       title: children
+    postWebhook:
+      example:
+        branchesToIgnore: branchesToIgnore
+        prDeclined: true
+        prCommented: true
+        prReopened: true
+        title: title
+        enabled: true
+        url: url
+        buildStatus: true
+        prUpdated: true
+        prRescoped: true
+        repoPush: true
+        branchCreated: true
+        committersToIgnore: committersToIgnore
+        branchDeleted: true
+        id: 0
+        prCreated: true
+        tagCreated: true
+        prMerged: true
+      properties:
+        branchCreated:
+          type: boolean
+        branchDeleted:
+          type: boolean
+        branchesToIgnore:
+          type: string
+        buildStatus:
+          type: boolean
+        committersToIgnore:
+          type: string
+        enabled:
+          type: boolean
+        id:
+          type: integer
+        prCommented:
+          type: boolean
+        prCreated:
+          type: boolean
+        prDeclined:
+          type: boolean
+        prMerged:
+          type: boolean
+        prReopened:
+          type: boolean
+        prRescoped:
+          type: boolean
+        prUpdated:
+          type: boolean
+        repoPush:
+          type: boolean
+        tagCreated:
+          type: boolean
+        title:
+          type: string
+        url:
+          type: string
+      required:
+      - branchesToIgnore
+      - committersToIgnore
+      - enabled
+      - id
+      - title
+      - url
+      title: Post Webhook
+      type: object
+      x-examples:
+        example:
+          id: 1136
+          title: Jenkins hook
+          url: https://jenkins.core.build.vwn.cloud/bitbucket-scmsource-hook/notify
+          committersToIgnore: ""
+          branchesToIgnore: ""
+          enabled: true
+          tagCreated: false
+          branchDeleted: true
+          branchCreated: true
+          repoPush: true
+          prDeclined: true
+          prRescoped: true
+          prMerged: true
+          prReopened: true
+          prUpdated: true
+          prCreated: true
+          prCommented: false
+          buildStatus: false
     project_links:
       example:
         self:
