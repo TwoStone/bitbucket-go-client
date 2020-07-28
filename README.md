@@ -355,7 +355,7 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**GetProjects**](docs/DefaultApi.md#getprojects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 *DefaultApi* | [**GetRepositories**](docs/DefaultApi.md#getrepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
 *DefaultApi* | [**GetRepository**](docs/DefaultApi.md#getrepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | REST resource for working with repositories
-*DefaultApi* | [**PostBuildResult**](docs/DefaultApi.md#postbuildresult) | **Post** /rest/build-status/1.0/commits/:commitHash | Post build-result
+*DefaultApi* | [**PostBuildResult**](docs/DefaultApi.md#postbuildresult) | **Post** /rest/build-status/1.0/commits/{commitHash} | Post build-result
 *DefaultApi* | [**SearchRepositories**](docs/DefaultApi.md#searchrepositories) | **Get** /rest/api/1.0/repos | REST resource for searching through repositories
 
 

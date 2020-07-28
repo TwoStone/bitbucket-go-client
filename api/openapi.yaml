@@ -890,7 +890,7 @@ paths:
         "200":
           description: OK
       summary: Delete post webhook
-  /rest/build-status/1.0/commits/:commitHash:
+  /rest/build-status/1.0/commits/{commitHash}:
     post:
       description: |-
         Associates a build status with a commit.
@@ -903,6 +903,14 @@ paths:
 
         The authenticated user must have LICENSED permission or higher to call this resource.
       operationId: postBuildResult
+      parameters:
+      - explode: false
+        in: path
+        name: commitHash
+        required: true
+        schema:
+          type: string
+        style: simple
       requestBody:
         content:
           application/json:

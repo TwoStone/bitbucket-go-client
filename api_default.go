@@ -1276,6 +1276,7 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 type apiPostBuildResultRequest struct {
 	ctx         _context.Context
 	apiService  *DefaultApiService
+	commitHash  string
 	buildResult *BuildResult
 }
 
@@ -1296,12 +1297,14 @@ Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
 
 The authenticated user must have LICENSED permission or higher to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param commitHash
 @return apiPostBuildResultRequest
 */
-func (a *DefaultApiService) PostBuildResult(ctx _context.Context) apiPostBuildResultRequest {
+func (a *DefaultApiService) PostBuildResult(ctx _context.Context, commitHash string) apiPostBuildResultRequest {
 	return apiPostBuildResultRequest{
 		apiService: a,
 		ctx:        ctx,
+		commitHash: commitHash,
 	}
 }
 
@@ -1323,7 +1326,8 @@ func (r apiPostBuildResultRequest) Execute() (*_nethttp.Response, error) {
 		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/rest/build-status/1.0/commits/:commitHash"
+	localVarPath := localBasePath + "/rest/build-status/1.0/commits/{commitHash}"
+	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.QueryEscape(parameterToString(r.commitHash, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}

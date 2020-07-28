@@ -13,7 +13,7 @@ Method | HTTP request | Description
 [**GetProjects**](DefaultApi.md#GetProjects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 [**GetRepositories**](DefaultApi.md#GetRepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
 [**GetRepository**](DefaultApi.md#GetRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | REST resource for working with repositories
-[**PostBuildResult**](DefaultApi.md#PostBuildResult) | **Post** /rest/build-status/1.0/commits/:commitHash | Post build-result
+[**PostBuildResult**](DefaultApi.md#PostBuildResult) | **Post** /rest/build-status/1.0/commits/{commitHash} | Post build-result
 [**SearchRepositories**](DefaultApi.md#SearchRepositories) | **Get** /rest/api/1.0/repos | REST resource for searching through repositories
 
 
@@ -704,7 +704,7 @@ No authorization required
 
 ## PostBuildResult
 
-> PostBuildResult(ctx).BuildResult(buildResult).Execute()
+> PostBuildResult(ctx, commitHash).BuildResult(buildResult).Execute()
 
 Post build-result
 
@@ -723,11 +723,12 @@ import (
 )
 
 func main() {
+    commitHash := "commitHash_example" // string | 
     buildResult := openapiclient.buildResult{State: "State_example", Key: "Key_example", Name: "Name_example", Url: "Url_example", Description: "Description_example"} // BuildResult |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DefaultApi.PostBuildResult(context.Background(), ).BuildResult(buildResult).Execute()
+    resp, r, err := api_client.DefaultApi.PostBuildResult(context.Background(), commitHash).BuildResult(buildResult).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.PostBuildResult``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -738,6 +739,10 @@ func main() {
 ### Path Parameters
 
 
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**commitHash** | **string** |  | 
 
 ### Other Parameters
 
@@ -746,6 +751,7 @@ Other parameters are passed through a pointer to a apiPostBuildResultRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+
  **buildResult** | [**BuildResult**](BuildResult.md) |  | 
 
 ### Return type
