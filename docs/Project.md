@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **float32** |  | [optional] 
+**Id** | Pointer to **int32** |  | [optional] 
 **Key** | Pointer to **string** |  | 
 **Name** | Pointer to **string** |  | 
 **Description** | Pointer to **string** |  | 
@@ -33,20 +33,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetId
 
-`func (o *Project) GetId() float32`
+`func (o *Project) GetId() int32`
 
 GetId returns the Id field if non-nil, zero value otherwise.
 
 ### GetIdOk
 
-`func (o *Project) GetIdOk() (*float32, bool)`
+`func (o *Project) GetIdOk() (*int32, bool)`
 
 GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetId
 
-`func (o *Project) SetId(v float32)`
+`func (o *Project) SetId(v int32)`
 
 SetId sets Id field to given value.
 

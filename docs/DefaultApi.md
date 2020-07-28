@@ -202,7 +202,7 @@ import (
 func main() {
     projectKey := "projectKey_example" // string | 
     repositorySlug := "repositorySlug_example" // string | 
-    iD := 987 // float32 | 
+    iD := 987 // int32 | 
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -222,7 +222,7 @@ Name | Type | Description  | Notes
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **projectKey** | **string** |  | 
 **repositorySlug** | **string** |  | 
-**iD** | **float32** |  | 
+**iD** | **int32** |  | 
 
 ### Other Parameters
 

@@ -16,7 +16,7 @@ import (
 
 // Repository struct for Repository
 type Repository struct {
-	Id            *float32         `json:"id,omitempty"`
+	Id            *int32           `json:"id,omitempty"`
 	Slug          string           `json:"slug"`
 	Name          string           `json:"name"`
 	Description   string           `json:"description"`
@@ -54,9 +54,9 @@ func NewRepositoryWithDefaults() *Repository {
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
-func (o *Repository) GetId() float32 {
+func (o *Repository) GetId() int32 {
 	if o == nil || o.Id == nil {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.Id
@@ -64,7 +64,7 @@ func (o *Repository) GetId() float32 {
 
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Repository) GetIdOk() (*float32, bool) {
+func (o *Repository) GetIdOk() (*int32, bool) {
 	if o == nil || o.Id == nil {
 		return nil, false
 	}
@@ -80,8 +80,8 @@ func (o *Repository) HasId() bool {
 	return false
 }
 
-// SetId gets a reference to the given float32 and assigns it to the Id field.
-func (o *Repository) SetId(v float32) {
+// SetId gets a reference to the given int32 and assigns it to the Id field.
+func (o *Repository) SetId(v int32) {
 	o.Id = &v
 }
 

@@ -359,7 +359,7 @@ type apiDeletePostWebhookRequest struct {
 	apiService     *DefaultApiService
 	projectKey     string
 	repositorySlug string
-	iD             float32
+	iD             int32
 }
 
 /*
@@ -371,7 +371,7 @@ Deletes the post webhook from the repository
  * @param iD
 @return apiDeletePostWebhookRequest
 */
-func (a *DefaultApiService) DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD float32) apiDeletePostWebhookRequest {
+func (a *DefaultApiService) DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD int32) apiDeletePostWebhookRequest {
 	return apiDeletePostWebhookRequest{
 		apiService:     a,
 		ctx:            ctx,

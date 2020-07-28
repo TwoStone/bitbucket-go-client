@@ -884,7 +884,7 @@ paths:
         name: ID
         required: true
         schema:
-          type: number
+          type: integer
         style: simple
       responses:
         "200":
@@ -964,12 +964,12 @@ components:
             href: href
           - name: name
             href: href
-        id: 0.8008281904610115
+        id: 0
         type: type
         key: key
       properties:
         id:
-          type: number
+          type: integer
         key:
           type: string
         name:
@@ -1041,7 +1041,7 @@ components:
               href: href
             - name: name
               href: href
-          id: 0.8008281904610115
+          id: 0
           type: type
           key: key
         links:
@@ -1055,14 +1055,14 @@ components:
             href: href
           - name: name
             href: href
-        id: 0.8008281904610115
+        id: 0
         scmId: scmId
         state: state
         slug: slug
         statusMessage: statusMessage
       properties:
         id:
-          type: number
+          type: integer
         slug:
           type: string
         name:
