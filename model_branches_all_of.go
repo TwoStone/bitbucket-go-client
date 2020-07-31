@@ -16,15 +16,16 @@ import (
 
 // BranchesAllOf struct for BranchesAllOf
 type BranchesAllOf struct {
-	Values *[]Branch `json:"values,omitempty"`
+	Values []Branch `json:"values"`
 }
 
 // NewBranchesAllOf instantiates a new BranchesAllOf object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranchesAllOf() *BranchesAllOf {
+func NewBranchesAllOf(values []Branch) *BranchesAllOf {
 	this := BranchesAllOf{}
+	this.Values = values
 	return &this
 }
 
@@ -36,41 +37,33 @@ func NewBranchesAllOfWithDefaults() *BranchesAllOf {
 	return &this
 }
 
-// GetValues returns the Values field value if set, zero value otherwise.
+// GetValues returns the Values field value
 func (o *BranchesAllOf) GetValues() []Branch {
-	if o == nil || o.Values == nil {
+	if o == nil {
 		var ret []Branch
 		return ret
 	}
-	return *o.Values
+
+	return o.Values
 }
 
-// GetValuesOk returns a tuple with the Values field value if set, nil otherwise
+// GetValuesOk returns a tuple with the Values field value
 // and a boolean to check if the value has been set.
 func (o *BranchesAllOf) GetValuesOk() (*[]Branch, bool) {
-	if o == nil || o.Values == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Values, true
+	return &o.Values, true
 }
 
-// HasValues returns a boolean if a field has been set.
-func (o *BranchesAllOf) HasValues() bool {
-	if o != nil && o.Values != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetValues gets a reference to the given []Branch and assigns it to the Values field.
+// SetValues sets field value
 func (o *BranchesAllOf) SetValues(v []Branch) {
-	o.Values = &v
+	o.Values = v
 }
 
 func (o BranchesAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Values != nil {
+	if true {
 		toSerialize["values"] = o.Values
 	}
 	return json.Marshal(toSerialize)

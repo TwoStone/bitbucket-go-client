@@ -1453,6 +1453,8 @@ components:
           items:
             $ref: '#/components/schemas/branch'
           type: array
+      required:
+      - values
     file_lines:
       properties:
         text:
