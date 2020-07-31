@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**BrowseRepositoryPath**](DefaultApi.md#BrowseRepositoryPath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 [**DeletePostWebhook**](DefaultApi.md#DeletePostWebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
 [**GetBranches**](DefaultApi.md#GetBranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+[**GetDefaultBranch**](DefaultApi.md#GetDefaultBranch) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default | Get default branch
 [**GetPostWebhooks**](DefaultApi.md#GetPostWebhooks) | **Get** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations | Get Post Webhooks
 [**GetProject**](DefaultApi.md#GetProject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
 [**GetProjects**](DefaultApi.md#GetProjects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
@@ -325,6 +326,79 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Branches**](branches.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetDefaultBranch
+
+> Branch GetDefaultBranch(ctx, projectKey, repositorySlug).Execute()
+
+Get default branch
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.GetDefaultBranch(context.Background(), projectKey, repositorySlug).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.GetDefaultBranch``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetDefaultBranch`: Branch
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.GetDefaultBranch`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDefaultBranchRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**Branch**](branch.md)
 
 ### Authorization
 
