@@ -932,6 +932,51 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Unauthorized
       summary: Post build-result
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default:
+    get:
+      description: |-
+        Get the default branch of the repository.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: getDefaultBranch
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/branch'
+          description: OK
+        "204":
+          description: No Content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: Get default branch
+      tags: []
 components:
   schemas:
     page:
@@ -1112,6 +1157,13 @@ components:
       - $ref: '#/components/schemas/page'
       - $ref: '#/components/schemas/repositories_allOf'
     branch:
+      example:
+        latestCommit: latestCommit
+        isDefault: true
+        latestChangeset: latestChangeset
+        id: id
+        displayId: displayId
+        type: BRANCH
       properties:
         id:
           type: string
