@@ -16,24 +16,25 @@ import (
 
 // Branches struct for Branches
 type Branches struct {
-	Size          int32     `json:"size"`
-	Limit         int32     `json:"limit"`
-	Start         int32     `json:"start"`
-	IsLastPage    bool      `json:"isLastPage"`
-	NextPageStart *int32    `json:"nextPageStart,omitempty"`
-	Values        *[]Branch `json:"values,omitempty"`
+	Size          int32    `json:"size"`
+	Limit         int32    `json:"limit"`
+	Start         int32    `json:"start"`
+	IsLastPage    bool     `json:"isLastPage"`
+	NextPageStart *int32   `json:"nextPageStart,omitempty"`
+	Values        []Branch `json:"values"`
 }
 
 // NewBranches instantiates a new Branches object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranches(size int32, limit int32, start int32, isLastPage bool) *Branches {
+func NewBranches(size int32, limit int32, start int32, isLastPage bool, values []Branch) *Branches {
 	this := Branches{}
 	this.Size = size
 	this.Limit = limit
 	this.Start = start
 	this.IsLastPage = isLastPage
+	this.Values = values
 	return &this
 }
 
@@ -173,36 +174,28 @@ func (o *Branches) SetNextPageStart(v int32) {
 	o.NextPageStart = &v
 }
 
-// GetValues returns the Values field value if set, zero value otherwise.
+// GetValues returns the Values field value
 func (o *Branches) GetValues() []Branch {
-	if o == nil || o.Values == nil {
+	if o == nil {
 		var ret []Branch
 		return ret
 	}
-	return *o.Values
+
+	return o.Values
 }
 
-// GetValuesOk returns a tuple with the Values field value if set, nil otherwise
+// GetValuesOk returns a tuple with the Values field value
 // and a boolean to check if the value has been set.
 func (o *Branches) GetValuesOk() (*[]Branch, bool) {
-	if o == nil || o.Values == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Values, true
+	return &o.Values, true
 }
 
-// HasValues returns a boolean if a field has been set.
-func (o *Branches) HasValues() bool {
-	if o != nil && o.Values != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetValues gets a reference to the given []Branch and assigns it to the Values field.
+// SetValues sets field value
 func (o *Branches) SetValues(v []Branch) {
-	o.Values = &v
+	o.Values = v
 }
 
 func (o Branches) MarshalJSON() ([]byte, error) {
@@ -222,7 +215,7 @@ func (o Branches) MarshalJSON() ([]byte, error) {
 	if o.NextPageStart != nil {
 		toSerialize["nextPageStart"] = o.NextPageStart
 	}
-	if o.Values != nil {
+	if true {
 		toSerialize["values"] = o.Values
 	}
 	return json.Marshal(toSerialize)

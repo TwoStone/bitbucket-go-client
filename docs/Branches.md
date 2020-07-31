@@ -9,13 +9,13 @@ Name | Type | Description | Notes
 **Start** | Pointer to **int32** |  | 
 **IsLastPage** | Pointer to **bool** |  | 
 **NextPageStart** | Pointer to **int32** |  | [optional] 
-**Values** | Pointer to [**[]Branch**](branch.md) |  | [optional] 
+**Values** | Pointer to [**[]Branch**](branch.md) |  | 
 
 ## Methods
 
 ### NewBranches
 
-`func NewBranches(size int32, limit int32, start int32, isLastPage bool, ) *Branches`
+`func NewBranches(size int32, limit int32, start int32, isLastPage bool, values []Branch, ) *Branches`
 
 NewBranches instantiates a new Branches object
 This constructor will assign default values to properties that have it defined,
@@ -154,11 +154,6 @@ and a boolean to check if the value has been set.
 
 SetValues sets Values field to given value.
 
-### HasValues
-
-`func (o *Branches) HasValues() bool`
-
-HasValues returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
