@@ -1593,7 +1593,7 @@ components:
     commit:
       description: A commit
       example:
-        commiterTimestamp: commiterTimestamp
+        commiterTimestamp: 6
         author:
           emailAddress: emailAddress
           name: name
@@ -1621,7 +1621,7 @@ components:
         commiter:
           $ref: '#/components/schemas/user'
         commiterTimestamp:
-          type: string
+          type: integer
         message:
           type: string
         parents:
