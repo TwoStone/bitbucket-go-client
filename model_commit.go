@@ -21,7 +21,7 @@ type Commit struct {
 	Author            User             `json:"author"`
 	AuthorTimestamp   int32            `json:"authorTimestamp"`
 	Commiter          User             `json:"commiter"`
-	CommiterTimestamp string           `json:"commiterTimestamp"`
+	CommiterTimestamp int32            `json:"commiterTimestamp"`
 	Message           string           `json:"message"`
 	Parents           *[]CommitParents `json:"parents,omitempty"`
 }
@@ -30,7 +30,7 @@ type Commit struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp string, message string) *Commit {
+func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp int32, message string) *Commit {
 	this := Commit{}
 	this.Id = id
 	this.DisplayId = displayId
@@ -171,9 +171,9 @@ func (o *Commit) SetCommiter(v User) {
 }
 
 // GetCommiterTimestamp returns the CommiterTimestamp field value
-func (o *Commit) GetCommiterTimestamp() string {
+func (o *Commit) GetCommiterTimestamp() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
@@ -182,7 +182,7 @@ func (o *Commit) GetCommiterTimestamp() string {
 
 // GetCommiterTimestampOk returns a tuple with the CommiterTimestamp field value
 // and a boolean to check if the value has been set.
-func (o *Commit) GetCommiterTimestampOk() (*string, bool) {
+func (o *Commit) GetCommiterTimestampOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -190,7 +190,7 @@ func (o *Commit) GetCommiterTimestampOk() (*string, bool) {
 }
 
 // SetCommiterTimestamp sets field value
-func (o *Commit) SetCommiterTimestamp(v string) {
+func (o *Commit) SetCommiterTimestamp(v int32) {
 	o.CommiterTimestamp = v
 }
 
