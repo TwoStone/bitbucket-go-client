@@ -4,7 +4,15 @@ import "context"
 
 const bitbucketDefaultPageLimit = int32(25) //nolint:gomnd
 
-func (a *DefaultApiService) SearchAllRepositories(ctx context.Context) ([]Repository, error) {
+type Service struct {
+	*DefaultApiService
+}
+
+func NewService(api *DefaultApiService) *Service {
+	return &Service{DefaultApiService: api}
+}
+
+func (a *Service) SearchAllRepositories(ctx context.Context) ([]Repository, error) {
 	repositories := []Repository{}
 
 	start := int32(0)
@@ -28,7 +36,7 @@ func (a *DefaultApiService) SearchAllRepositories(ctx context.Context) ([]Reposi
 	return repositories, nil
 }
 
-func (a *DefaultApiService) GetAllProjects(ctx context.Context) ([]Project, error) {
+func (a *Service) GetAllProjects(ctx context.Context) ([]Project, error) {
 	projects := []Project{}
 
 	start := int32(0)
@@ -52,7 +60,7 @@ func (a *DefaultApiService) GetAllProjects(ctx context.Context) ([]Project, erro
 	return projects, nil
 }
 
-func (a *DefaultApiService) GetAllRepositories(ctx context.Context, projectKey string) ([]Repository, error) {
+func (a *Service) GetAllRepositories(ctx context.Context, projectKey string) ([]Repository, error) {
 	repositories := []Repository{}
 
 	start := int32(0)
@@ -76,7 +84,7 @@ func (a *DefaultApiService) GetAllRepositories(ctx context.Context, projectKey s
 	return repositories, nil
 }
 
-func (a DefaultApiService) GetAllBranches(ctx context.Context, projectKey string, repositorySlug string) ([]Branch, error) {
+func (a *Service) GetAllBranches(ctx context.Context, projectKey string, repositorySlug string) ([]Branch, error) {
 	branches := []Branch{}
 
 	start := int32(0)
