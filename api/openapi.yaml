@@ -977,6 +977,208 @@ paths:
           description: Not Found
       summary: Get default branch
       tags: []
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}:
+    get:
+      description: |-
+        This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+        Retrieve a single commit identified by its ID. In general, that ID is a SHA1. From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: getCommit
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: commitId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: an optional path to filter the commit by. If supplied the details
+          returned may not be for the specified commit. Instead, starting from the
+          specified commit, they will be the details for the first commit affecting
+          the specified path.
+        explode: true
+        in: query
+        name: path
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commit'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: Get commit
+      tags: []
+  /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits:
+    get:
+      description: |-
+        This is a paged API. This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+        Retrieve a page of commits from a given starting commit or "between" two commits. If no explicit commit is specified, the tip of the repository's default branch is assumed. commits may be identified by branch or tag name or by ID. A path may be supplied to restrict the returned commits to only those which affect that path.
+
+        The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+      operationId: getCommits
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: if true, the commit history of the specified file will be followed
+          past renames. Only valid for a path to a single file.
+        explode: true
+        in: query
+        name: followRenames
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: true to ignore missing commits, false otherwise
+        explode: true
+        in: query
+        name: ignoreMissing
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: "\t\nif present, controls how merge commits should be filtered.\
+          \ Can be either exclude, to exclude merge commits, include, to include both\
+          \ merge commits and non-merge commits or only, to only return merge commits."
+        explode: true
+        in: query
+        name: merges
+        required: false
+        schema:
+          enum:
+          - exclude
+          - include
+          - only
+          type: string
+        style: form
+      - description: an optional path to filter commits by
+        explode: true
+        in: query
+        name: path
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: the commit ID or ref (exclusively) to retrieve commits after
+        explode: true
+        in: query
+        name: since
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: the commit ID (SHA1) or ref (inclusively) to retrieve commits
+          before
+        explode: true
+        in: query
+        name: until
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: optionally include the total number of commits and total number
+          of unique authors
+        explode: true
+        in: query
+        name: withCounts
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commits'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Not Found
+      summary: Get commits
+      tags: []
 components:
   schemas:
     page:
@@ -1388,6 +1590,90 @@ components:
           name: REPO-MASTER-42
           url: https://bamboo.example.com/browse/REPO-MASTER-42
           description: Changes by John Doe
+    commit:
+      description: A commit
+      example:
+        commiterTimestamp: commiterTimestamp
+        author:
+          emailAddress: emailAddress
+          name: name
+        authorTimestamp: 0
+        id: id
+        displayId: displayId
+        message: message
+        commiter:
+          emailAddress: emailAddress
+          name: name
+        parents:
+        - id: id
+          displayId: displayId
+        - id: id
+          displayId: displayId
+      properties:
+        id:
+          type: string
+        displayId:
+          type: string
+        author:
+          $ref: '#/components/schemas/user'
+        authorTimestamp:
+          type: integer
+        commiter:
+          $ref: '#/components/schemas/user'
+        commiterTimestamp:
+          type: string
+        message:
+          type: string
+        parents:
+          items:
+            $ref: '#/components/schemas/commit_parents'
+          type: array
+      required:
+      - author
+      - authorTimestamp
+      - commiter
+      - commiterTimestamp
+      - displayId
+      - id
+      - message
+      title: commit
+      type: object
+      x-examples:
+        example:
+          id: abcdef0123abcdef4567abcdef8987abcdef6543
+          displayId: abcdef0123a
+          author:
+            name: charlie
+            emailAddress: charlie@example.com
+          authorTimestamp: 1597071215598
+          committer:
+            name: charlie
+            emailAddress: charlie@example.com
+          committerTimestamp: 1597071215598
+          message: WIP on feature 1
+          parents:
+          - id: abcdef0123abcdef4567abcdef8987abcdef6543
+            displayId: abcdef0
+    user:
+      example:
+        emailAddress: emailAddress
+        name: name
+      properties:
+        name:
+          type: string
+        emailAddress:
+          type: string
+      required:
+      - emailAddress
+      - name
+      title: user
+      type: object
+    commits:
+      allOf:
+      - $ref: '#/components/schemas/page'
+      - $ref: '#/components/schemas/commits_allOf'
+      description: A list of commits
+      title: commits
     project_links:
       example:
         self:
@@ -1481,6 +1767,27 @@ components:
           items:
             $ref: '#/components/schemas/children_allOf_values'
           type: array
+    commit_parents:
+      example:
+        id: id
+        displayId: displayId
+      properties:
+        id:
+          type: string
+        displayId:
+          type: string
+    commits_allOf:
+      properties:
+        values:
+          items:
+            $ref: '#/components/schemas/commit'
+          type: array
+        authorCount:
+          type: integer
+        totalCount:
+          type: integer
+      required:
+      - values
   securitySchemes:
     usernamePassword:
       scheme: basic

@@ -640,6 +640,374 @@ func (r apiGetBranchesRequest) Execute() (Branches, *_nethttp.Response, error) {
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type apiGetCommitRequest struct {
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
+	repositorySlug string
+	commitId       string
+	path           *string
+}
+
+func (r apiGetCommitRequest) Path(path string) apiGetCommitRequest {
+	r.path = &path
+	return r
+}
+
+/*
+GetCommit Get commit
+This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+Retrieve a single commit identified by its ID. In general, that ID is a SHA1. From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+ * @param commitId
+@return apiGetCommitRequest
+*/
+func (a *DefaultApiService) GetCommit(ctx _context.Context, projectKey string, repositorySlug string, commitId string) apiGetCommitRequest {
+	return apiGetCommitRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+		commitId:       commitId,
+	}
+}
+
+/*
+Execute executes the request
+ @return Commit
+*/
+func (r apiGetCommitRequest) Execute() (Commit, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Commit
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.GetCommit")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"commitId"+"}", _neturl.QueryEscape(parameterToString(r.commitId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.path != nil {
+		localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiGetCommitsRequest struct {
+	ctx            _context.Context
+	apiService     *DefaultApiService
+	projectKey     string
+	repositorySlug string
+	followRenames  *bool
+	ignoreMissing  *bool
+	merges         *string
+	path           *string
+	since          *string
+	until          *string
+	withCounts     *bool
+	limit          *int32
+	start          *int32
+}
+
+func (r apiGetCommitsRequest) FollowRenames(followRenames bool) apiGetCommitsRequest {
+	r.followRenames = &followRenames
+	return r
+}
+
+func (r apiGetCommitsRequest) IgnoreMissing(ignoreMissing bool) apiGetCommitsRequest {
+	r.ignoreMissing = &ignoreMissing
+	return r
+}
+
+func (r apiGetCommitsRequest) Merges(merges string) apiGetCommitsRequest {
+	r.merges = &merges
+	return r
+}
+
+func (r apiGetCommitsRequest) Path(path string) apiGetCommitsRequest {
+	r.path = &path
+	return r
+}
+
+func (r apiGetCommitsRequest) Since(since string) apiGetCommitsRequest {
+	r.since = &since
+	return r
+}
+
+func (r apiGetCommitsRequest) Until(until string) apiGetCommitsRequest {
+	r.until = &until
+	return r
+}
+
+func (r apiGetCommitsRequest) WithCounts(withCounts bool) apiGetCommitsRequest {
+	r.withCounts = &withCounts
+	return r
+}
+
+func (r apiGetCommitsRequest) Limit(limit int32) apiGetCommitsRequest {
+	r.limit = &limit
+	return r
+}
+
+func (r apiGetCommitsRequest) Start(start int32) apiGetCommitsRequest {
+	r.start = &start
+	return r
+}
+
+/*
+GetCommits Get commits
+This is a paged API. This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+Retrieve a page of commits from a given starting commit or "between" two commits. If no explicit commit is specified, the tip of the repository's default branch is assumed. commits may be identified by branch or tag name or by ID. A path may be supplied to restrict the returned commits to only those which affect that path.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiGetCommitsRequest
+*/
+func (a *DefaultApiService) GetCommits(ctx _context.Context, projectKey string, repositorySlug string) apiGetCommitsRequest {
+	return apiGetCommitsRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return Commits
+*/
+func (r apiGetCommitsRequest) Execute() (Commits, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Commits
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.GetCommits")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.followRenames != nil {
+		localVarQueryParams.Add("followRenames", parameterToString(*r.followRenames, ""))
+	}
+	if r.ignoreMissing != nil {
+		localVarQueryParams.Add("ignoreMissing", parameterToString(*r.ignoreMissing, ""))
+	}
+	if r.merges != nil {
+		localVarQueryParams.Add("merges", parameterToString(*r.merges, ""))
+	}
+	if r.path != nil {
+		localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	}
+	if r.since != nil {
+		localVarQueryParams.Add("since", parameterToString(*r.since, ""))
+	}
+	if r.until != nil {
+		localVarQueryParams.Add("until", parameterToString(*r.until, ""))
+	}
+	if r.withCounts != nil {
+		localVarQueryParams.Add("withCounts", parameterToString(*r.withCounts, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type apiGetDefaultBranchRequest struct {
 	ctx            _context.Context
 	apiService     *DefaultApiService

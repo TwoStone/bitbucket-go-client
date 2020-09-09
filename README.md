@@ -350,6 +350,8 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**BrowseRepositoryPath**](docs/DefaultApi.md#browserepositorypath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 *DefaultApi* | [**DeletePostWebhook**](docs/DefaultApi.md#deletepostwebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
 *DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+*DefaultApi* | [**GetCommit**](docs/DefaultApi.md#getcommit) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId} | Get commit
+*DefaultApi* | [**GetCommits**](docs/DefaultApi.md#getcommits) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits | Get commits
 *DefaultApi* | [**GetDefaultBranch**](docs/DefaultApi.md#getdefaultbranch) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default | Get default branch
 *DefaultApi* | [**GetPostWebhooks**](docs/DefaultApi.md#getpostwebhooks) | **Get** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations | Get Post Webhooks
 *DefaultApi* | [**GetProject**](docs/DefaultApi.md#getproject) | **Get** /rest/api/1.0/projects/{projectKey} | REST resource for working with projects
@@ -369,6 +371,10 @@ Class | Method | HTTP request | Description
  - [Children](docs/Children.md)
  - [ChildrenAllOf](docs/ChildrenAllOf.md)
  - [ChildrenAllOfValues](docs/ChildrenAllOfValues.md)
+ - [Commit](docs/Commit.md)
+ - [CommitParents](docs/CommitParents.md)
+ - [Commits](docs/Commits.md)
+ - [CommitsAllOf](docs/CommitsAllOf.md)
  - [Directory](docs/Directory.md)
  - [Errors](docs/Errors.md)
  - [ErrorsErrors](docs/ErrorsErrors.md)
@@ -387,6 +393,7 @@ Class | Method | HTTP request | Description
  - [RepositoriesAllOf](docs/RepositoriesAllOf.md)
  - [Repository](docs/Repository.md)
  - [RepositoryLinks](docs/RepositoryLinks.md)
+ - [User](docs/User.md)
 
 
 ## Documentation For Authorization
