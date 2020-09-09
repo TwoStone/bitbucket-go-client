@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **Author** | Pointer to [**User**](user.md) |  | 
 **AuthorTimestamp** | Pointer to **int32** |  | 
 **Commiter** | Pointer to [**User**](user.md) |  | 
-**CommiterTimestamp** | Pointer to **string** |  | 
+**CommiterTimestamp** | Pointer to **int32** |  | 
 **Message** | Pointer to **string** |  | 
 **Parents** | Pointer to [**[]CommitParents**](commit_parents.md) |  | [optional] 
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewCommit
 
-`func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp string, message string, ) *Commit`
+`func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp int32, message string, ) *Commit`
 
 NewCommit instantiates a new Commit object
 This constructor will assign default values to properties that have it defined,
@@ -134,20 +134,20 @@ SetCommiter sets Commiter field to given value.
 
 ### GetCommiterTimestamp
 
-`func (o *Commit) GetCommiterTimestamp() string`
+`func (o *Commit) GetCommiterTimestamp() int32`
 
 GetCommiterTimestamp returns the CommiterTimestamp field if non-nil, zero value otherwise.
 
 ### GetCommiterTimestampOk
 
-`func (o *Commit) GetCommiterTimestampOk() (*string, bool)`
+`func (o *Commit) GetCommiterTimestampOk() (*int32, bool)`
 
 GetCommiterTimestampOk returns a tuple with the CommiterTimestamp field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCommiterTimestamp
 
-`func (o *Commit) SetCommiterTimestamp(v string)`
+`func (o *Commit) SetCommiterTimestamp(v int32)`
 
 SetCommiterTimestamp sets CommiterTimestamp field to given value.
 
