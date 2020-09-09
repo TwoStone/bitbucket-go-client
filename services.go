@@ -107,3 +107,27 @@ func (a *Service) GetAllBranches(ctx context.Context, projectKey string, reposit
 
 	return branches, nil
 }
+
+func (a Service) GetAllCommits(ctx context.Context, projectKey string, repositorySlug string) ([]Commit, error) {
+	commits := []Commit{}
+
+	start := int32(0)
+	limit := bitbucketDefaultPageLimit
+	morePages := true
+
+	for morePages {
+		result, _, err := a.GetCommits(ctx, projectKey, repositorySlug).Limit(limit).Start(start).Execute()
+		if err != nil {
+			return nil, err
+		}
+
+		commits = append(commits, result.Values...)
+
+		morePages = !result.IsLastPage
+		if morePages {
+			start = *result.NextPageStart
+		}
+	}
+
+	return commits, nil
+}
