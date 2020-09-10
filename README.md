@@ -348,6 +348,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *DefaultApi* | [**BrowseRepository**](docs/DefaultApi.md#browserepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 *DefaultApi* | [**BrowseRepositoryPath**](docs/DefaultApi.md#browserepositorypath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
+*DefaultApi* | [**CreateRepository**](docs/DefaultApi.md#createrepository) | **Post** /rest/api/1.0/projects/{projectKey}/repos | Create repository
 *DefaultApi* | [**DeletePostWebhook**](docs/DefaultApi.md#deletepostwebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
 *DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
 *DefaultApi* | [**GetCommit**](docs/DefaultApi.md#getcommit) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId} | Get commit
@@ -375,6 +376,7 @@ Class | Method | HTTP request | Description
  - [CommitParents](docs/CommitParents.md)
  - [Commits](docs/Commits.md)
  - [CommitsAllOf](docs/CommitsAllOf.md)
+ - [CreateRepository](docs/CreateRepository.md)
  - [Directory](docs/Directory.md)
  - [Errors](docs/Errors.md)
  - [ErrorsErrors](docs/ErrorsErrors.md)
