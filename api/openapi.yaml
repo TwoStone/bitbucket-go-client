@@ -429,6 +429,58 @@ paths:
           description: Not Found
       summary: REST resource for working with repositories
       tags: []
+    post:
+      description: |-
+        Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
+
+        The authenticated user must have PROJECT_ADMIN permission for the context project to call this resource.
+      operationId: createRepository
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example:
+                value:
+                  name: My repo
+                  scmId: git
+                  forkable: true
+                  defaultBranch: main
+            schema:
+              $ref: '#/components/schemas/createRepository'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/repository'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Conflict
+      summary: Create repository
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}:
     get:
       description: |-
@@ -1674,6 +1726,35 @@ components:
       - $ref: '#/components/schemas/commits_allOf'
       description: A list of commits
       title: commits
+    createRepository:
+      properties:
+        name:
+          type: string
+        scmId:
+          default: git
+          enum:
+          - git
+          - mercurial
+          type: string
+        forkable:
+          type: boolean
+        defaultBranch:
+          type: string
+        public:
+          type: boolean
+        description:
+          type: string
+      required:
+      - name
+      title: createRepository
+      type: object
+      x-examples:
+        example:
+          value:
+            name: My repo
+            scmId: git
+            forkable: true
+            defaultBranch: main
     project_links:
       example:
         self:
