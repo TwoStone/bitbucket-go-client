@@ -1,10 +1,12 @@
+API_VERSION=v1.0.6
+
 generate:
 	GO_POST_PROCESS_FILE="go fmt" \
 	openapi-generator generate \
 	--git-user-id TwoStone \
 	--git-repo-id bitbucket-go-client \
   	--generator-name go-experimental \
-  	--input-spec https://raw.githubusercontent.com/TwoStone/bitbucket-server-api/v1.0.4/bitbucket-server-api.yaml \
+  	--input-spec https://raw.githubusercontent.com/TwoStone/bitbucket-server-api/${API_VERSION}/bitbucket-server-api.yaml \
   	--config hack/generator-config.yaml \
   	--api-package bitbucket \
   	--enable-post-process-file
