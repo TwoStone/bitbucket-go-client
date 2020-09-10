@@ -1,6 +1,9 @@
 package bitbucket
 
-import "context"
+import (
+	"context"
+	"github.com/ae6rt/retry"
+)
 
 const bitbucketDefaultPageLimit = int32(25) //nolint:gomnd
 
@@ -19,17 +22,27 @@ func (a *Service) SearchAllRepositories(ctx context.Context) ([]Repository, erro
 	limit := bitbucketDefaultPageLimit
 	morePages := true
 
+	try := retry.New(3, retry.DefaultBackoffFunc)
+
 	for morePages {
-		result, _, err := a.SearchRepositories(ctx).Limit(limit).Start(start).Execute()
+		work := func() error {
+			result, _, err := a.SearchRepositories(ctx).Limit(limit).Start(start).Execute()
+			if err != nil {
+				return err
+			}
+
+			repositories = append(repositories, result.Values...)
+
+			morePages = !result.IsLastPage
+			if morePages {
+				start = *result.NextPageStart
+			}
+
+			return nil
+		}
+		err := try.Try(work)
 		if err != nil {
 			return nil, err
-		}
-
-		repositories = append(repositories, result.Values...)
-
-		morePages = !result.IsLastPage
-		if morePages {
-			start = *result.NextPageStart
 		}
 	}
 
