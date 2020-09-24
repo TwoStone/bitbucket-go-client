@@ -7,8 +7,10 @@ Method | HTTP request | Description
 [**BrowseRepository**](DefaultApi.md#BrowseRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 [**BrowseRepositoryPath**](DefaultApi.md#BrowseRepositoryPath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 [**CreateRepository**](DefaultApi.md#CreateRepository) | **Post** /rest/api/1.0/projects/{projectKey}/repos | Create repository
+[**CreateWebhook**](DefaultApi.md#CreateWebhook) | **Post** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks | Create webhook
 [**DeletePostWebhook**](DefaultApi.md#DeletePostWebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
-[**GetBranches**](DefaultApi.md#GetBranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+[**DeleteWebhook**](DefaultApi.md#DeleteWebhook) | **Delete** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Delete Webhook
+[**GetBranches**](DefaultApi.md#GetBranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Get Branches
 [**GetCommit**](DefaultApi.md#GetCommit) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId} | Get commit
 [**GetCommits**](DefaultApi.md#GetCommits) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits | Get commits
 [**GetDefaultBranch**](DefaultApi.md#GetDefaultBranch) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default | Get default branch
@@ -17,8 +19,11 @@ Method | HTTP request | Description
 [**GetProjects**](DefaultApi.md#GetProjects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 [**GetRepositories**](DefaultApi.md#GetRepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
 [**GetRepository**](DefaultApi.md#GetRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | REST resource for working with repositories
+[**GetWebhook**](DefaultApi.md#GetWebhook) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Get Webhook
+[**GetWebhooks**](DefaultApi.md#GetWebhooks) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks | Get webhooks
 [**PostBuildResult**](DefaultApi.md#PostBuildResult) | **Post** /rest/build-status/1.0/commits/{commitHash} | Post build-result
 [**SearchRepositories**](DefaultApi.md#SearchRepositories) | **Get** /rest/api/1.0/repos | REST resource for searching through repositories
+[**UpdateWebhook**](DefaultApi.md#UpdateWebhook) | **Put** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Update webhook
 
 
 
@@ -255,6 +260,81 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## CreateWebhook
+
+> Webhook CreateWebhook(ctx, projectKey, repositorySlug).Webhook(webhook).Execute()
+
+Create webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: 123, UpdatedDate: 123, Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.CreateWebhook(context.Background(), projectKey, repositorySlug).Webhook(webhook).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.CreateWebhook``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `CreateWebhook`: Webhook
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.CreateWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **webhook** | [**Webhook**](Webhook.md) |  | 
+
+### Return type
+
+[**Webhook**](webhook.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## DeletePostWebhook
 
 > DeletePostWebhook(ctx, projectKey, repositorySlug, iD).Execute()
@@ -329,11 +409,85 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## DeleteWebhook
+
+> DeleteWebhook(ctx, projectKey, repositorySlug, webhookId).Execute()
+
+Delete Webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    webhookId := 987 // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.DeleteWebhook(context.Background(), projectKey, repositorySlug, webhookId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.DeleteWebhook``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+**webhookId** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetBranches
 
 > Branches GetBranches(ctx, projectKey, repositorySlug).Base(base).Details(details).FilterText(filterText).OrderBy(orderBy).BoostMatches(boostMatches).Start(start).Limit(limit).Execute()
 
-Your GET endpoint
+Get Branches
 
 
 
@@ -1020,6 +1174,161 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## GetWebhook
+
+> Webhook GetWebhook(ctx, projectKey, repositorySlug, webhookId).Execute()
+
+Get Webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    webhookId := 987 // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.GetWebhook(context.Background(), projectKey, repositorySlug, webhookId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.GetWebhook``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetWebhook`: Webhook
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.GetWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+**webhookId** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+
+### Return type
+
+[**Webhook**](webhook.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetWebhooks
+
+> Webhooks GetWebhooks(ctx, projectKey, repositorySlug).Start(start).Limit(limit).Event(event).Execute()
+
+Get webhooks
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    start := 987 // int32 |  (optional)
+    limit := 987 // int32 |  (optional)
+    event := "event_example" // string | list of {@link com.atlassian.webhooks.WebhookEvent} ids to filter for (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.GetWebhooks(context.Background(), projectKey, repositorySlug).Start(start).Limit(limit).Event(event).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.GetWebhooks``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetWebhooks`: Webhooks
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.GetWebhooks`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetWebhooksRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **start** | **int32** |  | 
+ **limit** | **int32** |  | 
+ **event** | **string** | list of {@link com.atlassian.webhooks.WebhookEvent} ids to filter for | 
+
+### Return type
+
+[**Webhooks**](webhooks.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## PostBuildResult
 
 > PostBuildResult(ctx, commitHash).BuildResult(buildResult).Execute()
@@ -1161,6 +1470,84 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateWebhook
+
+> Webhook UpdateWebhook(ctx, projectKey, repositorySlug, webhookId).Webhook(webhook).Execute()
+
+Update webhook
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    webhookId := 987 // int32 | 
+    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: 123, UpdatedDate: 123, Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.DefaultApi.UpdateWebhook(context.Background(), projectKey, repositorySlug, webhookId).Webhook(webhook).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `DefaultApi.UpdateWebhook``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `UpdateWebhook`: Webhook
+    fmt.Fprintf(os.Stdout, "Response from `DefaultApi.UpdateWebhook`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+**webhookId** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateWebhookRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+ **webhook** | [**Webhook**](Webhook.md) |  | 
+
+### Return type
+
+[**Webhook**](webhook.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

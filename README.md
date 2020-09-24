@@ -349,8 +349,10 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**BrowseRepository**](docs/DefaultApi.md#browserepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 *DefaultApi* | [**BrowseRepositoryPath**](docs/DefaultApi.md#browserepositorypath) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 *DefaultApi* | [**CreateRepository**](docs/DefaultApi.md#createrepository) | **Post** /rest/api/1.0/projects/{projectKey}/repos | Create repository
+*DefaultApi* | [**CreateWebhook**](docs/DefaultApi.md#createwebhook) | **Post** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks | Create webhook
 *DefaultApi* | [**DeletePostWebhook**](docs/DefaultApi.md#deletepostwebhook) | **Delete** /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID} | Delete post webhook
-*DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Your GET endpoint
+*DefaultApi* | [**DeleteWebhook**](docs/DefaultApi.md#deletewebhook) | **Delete** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Delete Webhook
+*DefaultApi* | [**GetBranches**](docs/DefaultApi.md#getbranches) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches | Get Branches
 *DefaultApi* | [**GetCommit**](docs/DefaultApi.md#getcommit) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId} | Get commit
 *DefaultApi* | [**GetCommits**](docs/DefaultApi.md#getcommits) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits | Get commits
 *DefaultApi* | [**GetDefaultBranch**](docs/DefaultApi.md#getdefaultbranch) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default | Get default branch
@@ -359,8 +361,11 @@ Class | Method | HTTP request | Description
 *DefaultApi* | [**GetProjects**](docs/DefaultApi.md#getprojects) | **Get** /rest/api/1.0/projects | REST resource for working with projects
 *DefaultApi* | [**GetRepositories**](docs/DefaultApi.md#getrepositories) | **Get** /rest/api/1.0/projects/{projectKey}/repos | REST resource for working with repositories
 *DefaultApi* | [**GetRepository**](docs/DefaultApi.md#getrepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | REST resource for working with repositories
+*DefaultApi* | [**GetWebhook**](docs/DefaultApi.md#getwebhook) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Get Webhook
+*DefaultApi* | [**GetWebhooks**](docs/DefaultApi.md#getwebhooks) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks | Get webhooks
 *DefaultApi* | [**PostBuildResult**](docs/DefaultApi.md#postbuildresult) | **Post** /rest/build-status/1.0/commits/{commitHash} | Post build-result
 *DefaultApi* | [**SearchRepositories**](docs/DefaultApi.md#searchrepositories) | **Get** /rest/api/1.0/repos | REST resource for searching through repositories
+*DefaultApi* | [**UpdateWebhook**](docs/DefaultApi.md#updatewebhook) | **Put** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId} | Update webhook
 
 
 ## Documentation For Models
@@ -396,6 +401,11 @@ Class | Method | HTTP request | Description
  - [Repository](docs/Repository.md)
  - [RepositoryLinks](docs/RepositoryLinks.md)
  - [User](docs/User.md)
+ - [Webhook](docs/Webhook.md)
+ - [WebhookConfiguration](docs/WebhookConfiguration.md)
+ - [WebhookEvent](docs/WebhookEvent.md)
+ - [Webhooks](docs/Webhooks.md)
+ - [WebhooksAllOf](docs/WebhooksAllOf.md)
 
 
 ## Documentation For Authorization

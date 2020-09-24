@@ -1,4 +1,10 @@
-API_VERSION=v1.0.6
+API_VERSION=v1.0.8
+
+fmt:
+	go fmt ./...
+
+vet:
+	go vet ./...
 
 generate:
 	GO_POST_PROCESS_FILE="go fmt" \
@@ -11,7 +17,7 @@ generate:
   	--api-package bitbucket \
   	--enable-post-process-file
 
-build: 
+build: generate fmt
 	go mod download
 	go build -v ./
 
