@@ -17,7 +17,7 @@ generate:
   	--api-package bitbucket \
   	--enable-post-process-file
 
-build: generate fmt
+build: generate fmt vet
 	go mod download
 	go build -v ./
 
