@@ -2191,6 +2191,7 @@ components:
       required:
       - events
       - name
+      - url
       title: webhook
       type: object
       x-examples:
