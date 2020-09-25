@@ -284,7 +284,21 @@ servers:
 - url: https://example.com
 security:
 - credentials: []
-tags: []
+tags:
+- description: Operations focusing on projects
+  name: projects
+- description: Operations focusing on repositories
+  name: repositories
+- description: Operations focusing on webhooks
+  name: webhook
+- description: Operations focusing on branches
+  name: branches
+- description: Operations focusing on commits
+  name: commits
+- description: Operations focusing on buildStatus
+  name: buildStatus
+- description: Operations focusing on postWebhooks
+  name: postWebhook
 paths:
   /rest/api/1.0/projects:
     get:
@@ -292,7 +306,7 @@ paths:
         Retrieve a page of projects.
 
         Only projects for which the authenticated user has the PROJECT_VIEW permission will be returned.
-      operationId: getProjects
+      operationId: getProjectsPaged
       parameters:
       - description: name to filter by
         explode: true
@@ -329,7 +343,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/projects'
+                $ref: '#/components/schemas/projectsPage'
           description: OK
         "400":
           content:
@@ -337,8 +351,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/errors'
           description: Bad Request
-      summary: REST resource for working with projects
-      tags: []
+      summary: Get Projects
+      tags:
+      - projects
   /rest/api/1.0/projects/{projectKey}:
     get:
       description: |-
@@ -377,7 +392,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: REST resource for working with projects
-      tags: []
+      tags:
+      - projects
   /rest/api/1.0/projects/{projectKey}/repos:
     get:
       description: |-
@@ -385,7 +401,7 @@ paths:
 
 
         The authenticated user must have REPO_READ permission for the specified project to call this resource.
-      operationId: getRepositories
+      operationId: getRepositoriesPaged
       parameters:
       - explode: false
         in: path
@@ -413,7 +429,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/repositories'
+                $ref: '#/components/schemas/repositoriesPage'
           description: OK
         "401":
           content:
@@ -427,8 +443,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/errors'
           description: Not Found
-      summary: REST resource for working with repositories
-      tags: []
+      summary: Get Repositories
+      tags:
+      - repositories
     post:
       description: |-
         Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
@@ -481,6 +498,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Conflict
       summary: Create repository
+      tags:
+      - repositories
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}:
     get:
       description: |-
@@ -522,8 +541,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/errors'
           description: Not Found
-      summary: REST resource for working with repositories
-      tags: []
+      summary: Get Repository
+      tags:
+      - repositories
   /rest/api/1.0/repos:
     get:
       description: |-
@@ -532,7 +552,7 @@ paths:
         This resource is anonymously accessible.
 
         Note on permissions. In absence of the permission query parameter the implicit 'read' permission is assumed. Please note that this permission is lower than the REPO_READ permission rather than being equal to it. The implicit 'read' permission for a given repository is assigned to any user that has any of the higher permissions, such as REPO_READ, as well as to anonymous users if the repository is marked as public. The important implication of the above is that an anonymous request to this resource with a permission level REPO_READ is guaranteed to receive an empty list of repositories as a result. For anonymous requests it is therefore recommended to not specify the permission parameter at all.
-      operationId: searchRepositories
+      operationId: searchRepositoriesPaged
       parameters:
       - description: (optional) if specified, this will limit the resulting repository
           list to ones whose name matches this parameter's value. The match will be
@@ -617,7 +637,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/repositories'
+                $ref: '#/components/schemas/repositoriesPage'
           description: OK
         "400":
           content:
@@ -627,15 +647,16 @@ paths:
           description: Bad Request
       security:
       - usernamePassword: []
-      summary: REST resource for searching through repositories
-      tags: []
+      summary: Search repositories
+      tags:
+      - repositories
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches:
     get:
       description: |-
         Retrieve the branches matching the supplied filterText param.
 
         The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-      operationId: getBranches
+      operationId: getBranchesPaged
       parameters:
       - explode: false
         in: path
@@ -716,7 +737,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/branches'
+                $ref: '#/components/schemas/branchesPage'
           description: OK
         "401":
           content:
@@ -731,14 +752,15 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get Branches
-      tags: []
+      tags:
+      - branches
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse:
     get:
       description: |-
         Retrieve a page of content for a file path at a specified revision.
 
         The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-      operationId: browseRepository
+      operationId: browseRepositoryPaged
       parameters:
       - explode: false
         in: path
@@ -802,14 +824,15 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: browseRepository
-      tags: []
+      tags:
+      - repositories
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}:
     get:
       description: |-
         Retrieve a page of content for a file path at a specified revision.
 
         The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-      operationId: browseRepositoryPath
+      operationId: browseRepositoryPathPaged
       parameters:
       - explode: false
         in: path
@@ -881,7 +904,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: browseRepositoryPath
-      tags: []
+      tags:
+      - repositories
   /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations:
     get:
       description: Returns the registered post webhooks for the repository.
@@ -911,7 +935,8 @@ paths:
                 type: array
           description: OK
       summary: Get Post Webhooks
-      tags: []
+      tags:
+      - postWebhook
   /rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID}:
     delete:
       description: Deletes the post webhook from the repository
@@ -942,7 +967,63 @@ paths:
         "200":
           description: OK
       summary: Delete post webhook
+      tags:
+      - postWebhook
   /rest/build-status/1.0/commits/{commitHash}:
+    get:
+      description: Gets the build statuses associated with a commit.
+      operationId: getBuildStatusesPaged
+      parameters:
+      - explode: false
+        in: path
+        name: commitHash
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: how the results should be ordered. Options are NEWEST, OLDEST,
+          STATUS. Defaults to NEWEST if not provided.
+        explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          enum:
+          - newest
+          - oldest
+          - status
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/buildStatusPage'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+      summary: Get build statuses
+      tags:
+      - buildStatus
     post:
       description: |-
         Associates a build status with a commit.
@@ -967,7 +1048,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/buildResult'
+              $ref: '#/components/schemas/buildStatus'
+        description: |-
+          Associates a build status with a commit.
+
+          The state, the key and the url are mandatory. The name and description fields are optional.
+
+          All fields (mandatory or optional) are limited to 255 characters, except for the url, which is limited to 450 characters.
+
+          Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
+
+          The authenticated user must have LICENSED permission or higher to call this resource.
       responses:
         "204":
           description: No Content
@@ -984,6 +1075,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Unauthorized
       summary: Post build-result
+      tags:
+      - buildStatus
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default:
     get:
       description: |-
@@ -1028,7 +1121,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get default branch
-      tags: []
+      tags:
+      - branches
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}:
     get:
       description: |-
@@ -1097,7 +1191,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get commit
-      tags: []
+      tags:
+      - commits
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits:
     get:
       description: |-
@@ -1106,7 +1201,7 @@ paths:
         Retrieve a page of commits from a given starting commit or "between" two commits. If no explicit commit is specified, the tip of the repository's default branch is assumed. commits may be identified by branch or tag name or by ID. A path may be supplied to restrict the returned commits to only those which affect that path.
 
         The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-      operationId: getCommits
+      operationId: getCommitsPaged
       parameters:
       - explode: false
         in: path
@@ -1209,7 +1304,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/commits'
+                $ref: '#/components/schemas/commitsPage'
           description: OK
         "400":
           content:
@@ -1230,7 +1325,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get commits
-      tags: []
+      tags:
+      - commits
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks:
     get:
       description: |-
@@ -1239,7 +1335,7 @@ paths:
         Find webhooks in this repository.
 
         The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-      operationId: getWebhooks
+      operationId: getWebhooksPaged
       parameters:
       - explode: false
         in: path
@@ -1304,7 +1400,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/webhooks'
+                $ref: '#/components/schemas/webhooksPage'
           description: OK
         "401":
           content:
@@ -1319,7 +1415,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get webhooks
-      tags: []
+      tags:
+      - webhook
     post:
       description: |-
         This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
@@ -1374,6 +1471,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Create webhook
+      tags:
+      - webhook
   /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId}:
     delete:
       description: |-
@@ -1421,6 +1520,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Delete Webhook
+      tags:
+      - webhook
     get:
       description: |-
         This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
@@ -1471,7 +1572,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Get Webhook
-      tags: []
+      tags:
+      - webhook
     put:
       description: |+
         This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
@@ -1529,6 +1631,8 @@ paths:
                 $ref: '#/components/schemas/errors'
           description: Not Found
       summary: Update webhook
+      tags:
+      - webhook
 components:
   schemas:
     page:
@@ -1587,10 +1691,10 @@ components:
       - type
       title: project
       type: object
-    projects:
+    projectsPage:
       allOf:
       - $ref: '#/components/schemas/page'
-      - $ref: '#/components/schemas/projects_allOf'
+      - $ref: '#/components/schemas/projectsPage_allOf'
       description: A page of projects.
       title: projects
       x-examples:
@@ -1704,10 +1808,11 @@ components:
       - href
       title: link
       type: object
-    repositories:
+    repositoriesPage:
       allOf:
       - $ref: '#/components/schemas/page'
-      - $ref: '#/components/schemas/repositories_allOf'
+      - $ref: '#/components/schemas/repositoriesPage_allOf'
+      title: repositoriesPage
     branch:
       example:
         latestCommit: latestCommit
@@ -1750,10 +1855,10 @@ components:
           latestCommit: 8d51122def5632836d1cb1026e879069e10a1e13
           latestChangeset: 8d51122def5632836d1cb1026e879069e10a1e13
           isDefault: true
-    branches:
+    branchesPage:
       allOf:
       - $ref: '#/components/schemas/page'
-      - $ref: '#/components/schemas/branches_allOf'
+      - $ref: '#/components/schemas/branchesPage_allOf'
       title: branches
     file:
       properties:
@@ -1909,7 +2014,7 @@ components:
           prCreated: true
           prCommented: false
           buildStatus: false
-    buildResult:
+    buildStatus:
       properties:
         state:
           enum:
@@ -1931,7 +2036,7 @@ components:
       - name
       - state
       - url
-      title: buildResult
+      title: buildStatus
       type: object
       x-examples:
         example-1:
@@ -2018,10 +2123,10 @@ components:
       - name
       title: user
       type: object
-    commits:
+    commitsPage:
       allOf:
       - $ref: '#/components/schemas/page'
-      - $ref: '#/components/schemas/commits_allOf'
+      - $ref: '#/components/schemas/commitsPage_allOf'
       description: A list of commits
       title: commits
     createRepository:
@@ -2125,12 +2230,17 @@ components:
       - pr:comment:deleted
       title: webhookEvent
       type: string
-    webhooks:
+    webhooksPage:
       allOf:
       - $ref: '#/components/schemas/page'
-      - $ref: '#/components/schemas/webhooks_allOf'
+      - $ref: '#/components/schemas/webhooksPage_allOf'
       description: A list of webhooks
       title: webhooks
+    buildStatusPage:
+      allOf:
+      - $ref: '#/components/schemas/page'
+      - $ref: '#/components/schemas/buildStatusPage_allOf'
+      title: buildStatusPage
     project_links:
       example:
         self:
@@ -2143,7 +2253,7 @@ components:
           items:
             $ref: '#/components/schemas/link'
           type: array
-    projects_allOf:
+    projectsPage_allOf:
       properties:
         values:
           items:
@@ -2182,7 +2292,7 @@ components:
           items:
             $ref: '#/components/schemas/link'
           type: array
-    repositories_allOf:
+    repositoriesPage_allOf:
       properties:
         values:
           items:
@@ -2190,7 +2300,7 @@ components:
           type: array
       required:
       - values
-    branches_allOf:
+    branchesPage_allOf:
       properties:
         values:
           items:
@@ -2233,7 +2343,7 @@ components:
           type: string
         displayId:
           type: string
-    commits_allOf:
+    commitsPage_allOf:
       properties:
         values:
           items:
@@ -2251,11 +2361,19 @@ components:
       properties:
         secret:
           type: string
-    webhooks_allOf:
+    webhooksPage_allOf:
       properties:
         values:
           items:
             $ref: '#/components/schemas/webhook'
+          type: array
+      required:
+      - values
+    buildStatusPage_allOf:
+      properties:
+        values:
+          items:
+            $ref: '#/components/schemas/buildStatus'
           type: array
       required:
       - values

@@ -1,4 +1,4 @@
-API_VERSION=v1.0.8
+API_VERSION=release/2.0.0
 
 fmt:
 	go fmt ./...
