@@ -22,17 +22,18 @@ type Webhook struct {
 	UpdatedDate   *int32                `json:"updatedDate,omitempty"`
 	Events        []WebhookEvent        `json:"events"`
 	Configuration *WebhookConfiguration `json:"configuration,omitempty"`
-	Url           *string               `json:"url,omitempty"`
+	Url           string                `json:"url"`
 }
 
 // NewWebhook instantiates a new Webhook object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewWebhook(name string, events []WebhookEvent) *Webhook {
+func NewWebhook(name string, events []WebhookEvent, url string) *Webhook {
 	this := Webhook{}
 	this.Name = name
 	this.Events = events
+	this.Url = url
 	return &this
 }
 
@@ -220,36 +221,28 @@ func (o *Webhook) SetConfiguration(v WebhookConfiguration) {
 	o.Configuration = &v
 }
 
-// GetUrl returns the Url field value if set, zero value otherwise.
+// GetUrl returns the Url field value
 func (o *Webhook) GetUrl() string {
-	if o == nil || o.Url == nil {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Url
+
+	return o.Url
 }
 
-// GetUrlOk returns a tuple with the Url field value if set, nil otherwise
+// GetUrlOk returns a tuple with the Url field value
 // and a boolean to check if the value has been set.
 func (o *Webhook) GetUrlOk() (*string, bool) {
-	if o == nil || o.Url == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Url, true
+	return &o.Url, true
 }
 
-// HasUrl returns a boolean if a field has been set.
-func (o *Webhook) HasUrl() bool {
-	if o != nil && o.Url != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetUrl gets a reference to the given string and assigns it to the Url field.
+// SetUrl sets field value
 func (o *Webhook) SetUrl(v string) {
-	o.Url = &v
+	o.Url = v
 }
 
 func (o Webhook) MarshalJSON() ([]byte, error) {
@@ -272,7 +265,7 @@ func (o Webhook) MarshalJSON() ([]byte, error) {
 	if o.Configuration != nil {
 		toSerialize["configuration"] = o.Configuration
 	}
-	if o.Url != nil {
+	if true {
 		toSerialize["url"] = o.Url
 	}
 	return json.Marshal(toSerialize)
