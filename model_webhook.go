@@ -11,219 +11,305 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
-	"strings"
+	"encoding/json"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
+// Webhook struct for Webhook
+type Webhook struct {
+	Id            *int32                `json:"id,omitempty"`
+	Name          string                `json:"name"`
+	CreateDate    *int32                `json:"createDate,omitempty"`
+	UpdatedDate   *int32                `json:"updatedDate,omitempty"`
+	Events        []WebhookEvent        `json:"events"`
+	Configuration *WebhookConfiguration `json:"configuration,omitempty"`
+	Url           *string               `json:"url,omitempty"`
 }
 
-var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
-)
-
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// NewWebhook instantiates a new Webhook object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewWebhook(name string, events []WebhookEvent) *Webhook {
+	this := Webhook{}
+	this.Name = name
+	this.Events = events
+	return &this
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
+// NewWebhookWithDefaults instantiates a new Webhook object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewWebhookWithDefaults() *Webhook {
+	this := Webhook{}
+	return &this
 }
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
-}
-
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
-}
-
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.1.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *Webhook) GetId() int32 {
+	if o == nil || o.Id == nil {
+		var ret int32
+		return ret
 	}
-	return cfg
+	return *o.Id
 }
 
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
-
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetIdOk() (*int32, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
 	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
+	return o.Id, true
 }
 
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
+// HasId returns a boolean if a field has been set.
+func (o *Webhook) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
 	}
 
-	if ctx == nil {
-		return sc.URL(0, nil)
+	return false
+}
+
+// SetId gets a reference to the given int32 and assigns it to the Id field.
+func (o *Webhook) SetId(v int32) {
+	o.Id = &v
+}
+
+// GetName returns the Name field value
+func (o *Webhook) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	index, err := getServerOperationIndex(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *Webhook) SetName(v string) {
+	o.Name = v
+}
+
+// GetCreateDate returns the CreateDate field value if set, zero value otherwise.
+func (o *Webhook) GetCreateDate() int32 {
+	if o == nil || o.CreateDate == nil {
+		var ret int32
+		return ret
+	}
+	return *o.CreateDate
+}
+
+// GetCreateDateOk returns a tuple with the CreateDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetCreateDateOk() (*int32, bool) {
+	if o == nil || o.CreateDate == nil {
+		return nil, false
+	}
+	return o.CreateDate, true
+}
+
+// HasCreateDate returns a boolean if a field has been set.
+func (o *Webhook) HasCreateDate() bool {
+	if o != nil && o.CreateDate != nil {
+		return true
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return false
+}
+
+// SetCreateDate gets a reference to the given int32 and assigns it to the CreateDate field.
+func (o *Webhook) SetCreateDate(v int32) {
+	o.CreateDate = &v
+}
+
+// GetUpdatedDate returns the UpdatedDate field value if set, zero value otherwise.
+func (o *Webhook) GetUpdatedDate() int32 {
+	if o == nil || o.UpdatedDate == nil {
+		var ret int32
+		return ret
+	}
+	return *o.UpdatedDate
+}
+
+// GetUpdatedDateOk returns a tuple with the UpdatedDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetUpdatedDateOk() (*int32, bool) {
+	if o == nil || o.UpdatedDate == nil {
+		return nil, false
+	}
+	return o.UpdatedDate, true
+}
+
+// HasUpdatedDate returns a boolean if a field has been set.
+func (o *Webhook) HasUpdatedDate() bool {
+	if o != nil && o.UpdatedDate != nil {
+		return true
 	}
 
-	return sc.URL(index, variables)
+	return false
+}
+
+// SetUpdatedDate gets a reference to the given int32 and assigns it to the UpdatedDate field.
+func (o *Webhook) SetUpdatedDate(v int32) {
+	o.UpdatedDate = &v
+}
+
+// GetEvents returns the Events field value
+func (o *Webhook) GetEvents() []WebhookEvent {
+	if o == nil {
+		var ret []WebhookEvent
+		return ret
+	}
+
+	return o.Events
+}
+
+// GetEventsOk returns a tuple with the Events field value
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetEventsOk() (*[]WebhookEvent, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Events, true
+}
+
+// SetEvents sets field value
+func (o *Webhook) SetEvents(v []WebhookEvent) {
+	o.Events = v
+}
+
+// GetConfiguration returns the Configuration field value if set, zero value otherwise.
+func (o *Webhook) GetConfiguration() WebhookConfiguration {
+	if o == nil || o.Configuration == nil {
+		var ret WebhookConfiguration
+		return ret
+	}
+	return *o.Configuration
+}
+
+// GetConfigurationOk returns a tuple with the Configuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetConfigurationOk() (*WebhookConfiguration, bool) {
+	if o == nil || o.Configuration == nil {
+		return nil, false
+	}
+	return o.Configuration, true
+}
+
+// HasConfiguration returns a boolean if a field has been set.
+func (o *Webhook) HasConfiguration() bool {
+	if o != nil && o.Configuration != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetConfiguration gets a reference to the given WebhookConfiguration and assigns it to the Configuration field.
+func (o *Webhook) SetConfiguration(v WebhookConfiguration) {
+	o.Configuration = &v
+}
+
+// GetUrl returns the Url field value if set, zero value otherwise.
+func (o *Webhook) GetUrl() string {
+	if o == nil || o.Url == nil {
+		var ret string
+		return ret
+	}
+	return *o.Url
+}
+
+// GetUrlOk returns a tuple with the Url field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Webhook) GetUrlOk() (*string, bool) {
+	if o == nil || o.Url == nil {
+		return nil, false
+	}
+	return o.Url, true
+}
+
+// HasUrl returns a boolean if a field has been set.
+func (o *Webhook) HasUrl() bool {
+	if o != nil && o.Url != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetUrl gets a reference to the given string and assigns it to the Url field.
+func (o *Webhook) SetUrl(v string) {
+	o.Url = &v
+}
+
+func (o Webhook) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
+	if true {
+		toSerialize["name"] = o.Name
+	}
+	if o.CreateDate != nil {
+		toSerialize["createDate"] = o.CreateDate
+	}
+	if o.UpdatedDate != nil {
+		toSerialize["updatedDate"] = o.UpdatedDate
+	}
+	if true {
+		toSerialize["events"] = o.Events
+	}
+	if o.Configuration != nil {
+		toSerialize["configuration"] = o.Configuration
+	}
+	if o.Url != nil {
+		toSerialize["url"] = o.Url
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableWebhook struct {
+	value *Webhook
+	isSet bool
+}
+
+func (v NullableWebhook) Get() *Webhook {
+	return v.value
+}
+
+func (v *NullableWebhook) Set(val *Webhook) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableWebhook) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableWebhook) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableWebhook(val *Webhook) *NullableWebhook {
+	return &NullableWebhook{value: val, isSet: true}
+}
+
+func (v NullableWebhook) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableWebhook) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

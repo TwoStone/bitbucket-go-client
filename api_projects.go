@@ -11,219 +11,281 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
+	_context "context"
+	_ioutil "io/ioutil"
+	_nethttp "net/http"
+	_neturl "net/url"
 	"strings"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
-}
-
+// Linger please
 var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
+	_ _context.Context
 )
 
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// ProjectsApiService ProjectsApi service
+type ProjectsApiService service
+
+type apiGetProjectRequest struct {
+	ctx        _context.Context
+	apiService *ProjectsApiService
+	projectKey string
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
-}
+/*
+GetProject REST resource for working with projects
+Retrieve the project matching the supplied projectKey.
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
-}
-
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
-}
-
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.1.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
+The authenticated user must have PROJECT_VIEW permission for the specified project to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+@return apiGetProjectRequest
+*/
+func (a *ProjectsApiService) GetProject(ctx _context.Context, projectKey string) apiGetProjectRequest {
+	return apiGetProjectRequest{
+		apiService: a,
+		ctx:        ctx,
+		projectKey: projectKey,
 	}
-	return cfg
 }
 
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
+/*
+Execute executes the request
+ @return Project
+*/
+func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Project
+	)
 
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
-	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
-}
-
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
-	}
-
-	if ctx == nil {
-		return sc.URL(0, nil)
-	}
-
-	index, err := getServerOperationIndex(ctx, endpoint)
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProject")
 	if err != nil {
-		return "", err
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json", "application/xml"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		return "", err
+		return localVarReturnValue, nil, err
 	}
 
-	return sc.URL(index, variables)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiGetProjectsPagedRequest struct {
+	ctx        _context.Context
+	apiService *ProjectsApiService
+	name       *string
+	permission *string
+	start      *int32
+	limit      *int32
+}
+
+func (r apiGetProjectsPagedRequest) Name(name string) apiGetProjectsPagedRequest {
+	r.name = &name
+	return r
+}
+
+func (r apiGetProjectsPagedRequest) Permission(permission string) apiGetProjectsPagedRequest {
+	r.permission = &permission
+	return r
+}
+
+func (r apiGetProjectsPagedRequest) Start(start int32) apiGetProjectsPagedRequest {
+	r.start = &start
+	return r
+}
+
+func (r apiGetProjectsPagedRequest) Limit(limit int32) apiGetProjectsPagedRequest {
+	r.limit = &limit
+	return r
+}
+
+/*
+GetProjectsPaged Get Projects
+Retrieve a page of projects.
+
+Only projects for which the authenticated user has the PROJECT_VIEW permission will be returned.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+@return apiGetProjectsPagedRequest
+*/
+func (a *ProjectsApiService) GetProjectsPaged(ctx _context.Context) apiGetProjectsPagedRequest {
+	return apiGetProjectsPagedRequest{
+		apiService: a,
+		ctx:        ctx,
+	}
+}
+
+/*
+Execute executes the request
+ @return ProjectsPage
+*/
+func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  ProjectsPage
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProjectsPaged")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.name != nil {
+		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
+	}
+	if r.permission != nil {
+		localVarQueryParams.Add("permission", parameterToString(*r.permission, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

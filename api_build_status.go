@@ -11,219 +11,278 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
+	_context "context"
+	_ioutil "io/ioutil"
+	_nethttp "net/http"
+	_neturl "net/url"
 	"strings"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
-}
-
+// Linger please
 var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
+	_ _context.Context
 )
 
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// BuildStatusApiService BuildStatusApi service
+type BuildStatusApiService service
+
+type apiGetBuildStatusesPagedRequest struct {
+	ctx        _context.Context
+	apiService *BuildStatusApiService
+	commitHash string
+	orderBy    *string
+	limit      *int32
+	start      *int32
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
+func (r apiGetBuildStatusesPagedRequest) OrderBy(orderBy string) apiGetBuildStatusesPagedRequest {
+	r.orderBy = &orderBy
+	return r
 }
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
+func (r apiGetBuildStatusesPagedRequest) Limit(limit int32) apiGetBuildStatusesPagedRequest {
+	r.limit = &limit
+	return r
 }
 
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
+func (r apiGetBuildStatusesPagedRequest) Start(start int32) apiGetBuildStatusesPagedRequest {
+	r.start = &start
+	return r
 }
 
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.1.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
+/*
+GetBuildStatusesPaged Get build statuses
+Gets the build statuses associated with a commit.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param commitHash
+@return apiGetBuildStatusesPagedRequest
+*/
+func (a *BuildStatusApiService) GetBuildStatusesPaged(ctx _context.Context, commitHash string) apiGetBuildStatusesPagedRequest {
+	return apiGetBuildStatusesPagedRequest{
+		apiService: a,
+		ctx:        ctx,
+		commitHash: commitHash,
 	}
-	return cfg
 }
 
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
+/*
+Execute executes the request
+ @return BuildStatusPage
+*/
+func (r apiGetBuildStatusesPagedRequest) Execute() (BuildStatusPage, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  BuildStatusPage
+	)
 
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
-	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
-}
-
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
-	}
-
-	if ctx == nil {
-		return sc.URL(0, nil)
-	}
-
-	index, err := getServerOperationIndex(ctx, endpoint)
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.GetBuildStatusesPaged")
 	if err != nil {
-		return "", err
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
+	localVarPath := localBasePath + "/rest/build-status/1.0/commits/{commitHash}"
+	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.QueryEscape(parameterToString(r.commitHash, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.orderBy != nil {
+		localVarQueryParams.Add("orderBy", parameterToString(*r.orderBy, ""))
+	}
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		return "", err
+		return localVarReturnValue, nil, err
 	}
 
-	return sc.URL(index, variables)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiPostBuildResultRequest struct {
+	ctx         _context.Context
+	apiService  *BuildStatusApiService
+	commitHash  string
+	buildStatus *BuildStatus
+}
+
+func (r apiPostBuildResultRequest) BuildStatus(buildStatus BuildStatus) apiPostBuildResultRequest {
+	r.buildStatus = &buildStatus
+	return r
+}
+
+/*
+PostBuildResult Post build-result
+Associates a build status with a commit.
+
+The state, the key and the url are mandatory. The name and description fields are optional.
+
+All fields (mandatory or optional) are limited to 255 characters, except for the url, which is limited to 450 characters.
+
+Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
+
+The authenticated user must have LICENSED permission or higher to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param commitHash
+@return apiPostBuildResultRequest
+*/
+func (a *BuildStatusApiService) PostBuildResult(ctx _context.Context, commitHash string) apiPostBuildResultRequest {
+	return apiPostBuildResultRequest{
+		apiService: a,
+		ctx:        ctx,
+		commitHash: commitHash,
+	}
+}
+
+/*
+Execute executes the request
+
+*/
+func (r apiPostBuildResultRequest) Execute() (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.PostBuildResult")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/build-status/1.0/commits/{commitHash}"
+	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.QueryEscape(parameterToString(r.commitHash, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.buildStatus
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
 }

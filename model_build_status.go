@@ -11,219 +11,212 @@
 package bitbucket
 
 import (
-	"context"
-	"fmt"
-	"net/http"
-	"strings"
+	"encoding/json"
 )
 
-// contextKeys are used to identify the type of value in the context.
-// Since these are string, it is possible to get a short description of the
-// context key for logging and debugging using key.String().
-
-type contextKey string
-
-func (c contextKey) String() string {
-	return "auth " + string(c)
+// BuildStatus struct for BuildStatus
+type BuildStatus struct {
+	State       string `json:"state"`
+	Key         string `json:"key"`
+	Name        string `json:"name"`
+	Url         string `json:"url"`
+	Description string `json:"description"`
 }
 
-var (
-	// ContextOAuth2 takes an oauth2.TokenSource as authentication for the request.
-	ContextOAuth2 = contextKey("token")
-
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
-	// ContextAccessToken takes a string oauth2 access token as authentication for the request.
-	ContextAccessToken = contextKey("accesstoken")
-
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
-
-	// ContextHttpSignatureAuth takes HttpSignatureAuth as authentication for the request.
-	ContextHttpSignatureAuth = contextKey("httpsignature")
-
-	// ContextServerIndex uses a server configuration from the index.
-	ContextServerIndex = contextKey("serverIndex")
-
-	// ContextOperationServerIndices uses a server configuration from the index mapping.
-	ContextOperationServerIndices = contextKey("serverOperationIndices")
-
-	// ContextServerVariables overrides a server configuration variables.
-	ContextServerVariables = contextKey("serverVariables")
-
-	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
-	ContextOperationServerVariables = contextKey("serverOperationVariables")
-)
-
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
+// NewBuildStatus instantiates a new BuildStatus object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBuildStatus(state string, key string, name string, url string, description string) *BuildStatus {
+	this := BuildStatus{}
+	this.State = state
+	this.Key = key
+	this.Name = name
+	this.Url = url
+	this.Description = description
+	return &this
 }
 
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
+// NewBuildStatusWithDefaults instantiates a new BuildStatus object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBuildStatusWithDefaults() *BuildStatus {
+	this := BuildStatus{}
+	return &this
 }
 
-// ServerVariable stores the information about a server variable
-type ServerVariable struct {
-	Description  string
-	DefaultValue string
-	EnumValues   []string
-}
-
-// ServerConfiguration stores the information about a server
-type ServerConfiguration struct {
-	URL         string
-	Description string
-	Variables   map[string]ServerVariable
-}
-
-// ServerConfigurations stores multiple ServerConfiguration items
-type ServerConfigurations []ServerConfiguration
-
-// Configuration stores the configuration of the API client
-type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
-	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
-	UserAgent        string            `json:"userAgent,omitempty"`
-	Debug            bool              `json:"debug,omitempty"`
-	Servers          ServerConfigurations
-	OperationServers map[string]ServerConfigurations
-	HTTPClient       *http.Client
-}
-
-// NewConfiguration returns a new Configuration object
-func NewConfiguration() *Configuration {
-	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.1.0/go",
-		Debug:         false,
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://example.com",
-				Description: "No description provided",
-			},
-		},
-		OperationServers: map[string]ServerConfigurations{},
-	}
-	return cfg
-}
-
-// AddDefaultHeader adds a new HTTP header to the default header in the request
-func (c *Configuration) AddDefaultHeader(key string, value string) {
-	c.DefaultHeader[key] = value
-}
-
-// URL formats template on a index using given variables
-func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
-	if index < 0 || len(sc) <= index {
-		return "", fmt.Errorf("Index %v out of range %v", index, len(sc)-1)
-	}
-	server := sc[index]
-	url := server.URL
-
-	// go through variables and replace placeholders
-	for name, variable := range server.Variables {
-		if value, ok := variables[name]; ok {
-			found := bool(len(variable.EnumValues) == 0)
-			for _, enumValue := range variable.EnumValues {
-				if value == enumValue {
-					found = true
-				}
-			}
-			if !found {
-				return "", fmt.Errorf("The variable %s in the server URL has invalid value %v. Must be %v", name, value, variable.EnumValues)
-			}
-			url = strings.Replace(url, "{"+name+"}", value, -1)
-		} else {
-			url = strings.Replace(url, "{"+name+"}", variable.DefaultValue, -1)
-		}
-	}
-	return url, nil
-}
-
-// ServerURL returns URL based on server settings
-func (c *Configuration) ServerURL(index int, variables map[string]string) (string, error) {
-	return c.Servers.URL(index, variables)
-}
-
-func getServerIndex(ctx context.Context) (int, error) {
-	si := ctx.Value(ContextServerIndex)
-	if si != nil {
-		if index, ok := si.(int); ok {
-			return index, nil
-		}
-		return 0, reportError("Invalid type %T should be int", si)
-	}
-	return 0, nil
-}
-
-func getServerOperationIndex(ctx context.Context, endpoint string) (int, error) {
-	osi := ctx.Value(ContextOperationServerIndices)
-	if osi != nil {
-		if operationIndices, ok := osi.(map[string]int); !ok {
-			return 0, reportError("Invalid type %T should be map[string]int", osi)
-		} else {
-			index, ok := operationIndices[endpoint]
-			if ok {
-				return index, nil
-			}
-		}
-	}
-	return getServerIndex(ctx)
-}
-
-func getServerVariables(ctx context.Context) (map[string]string, error) {
-	sv := ctx.Value(ContextServerVariables)
-	if sv != nil {
-		if variables, ok := sv.(map[string]string); ok {
-			return variables, nil
-		}
-		return nil, reportError("ctx value of ContextServerVariables has invalid type %T should be map[string]string", sv)
-	}
-	return nil, nil
-}
-
-func getServerOperationVariables(ctx context.Context, endpoint string) (map[string]string, error) {
-	osv := ctx.Value(ContextOperationServerVariables)
-	if osv != nil {
-		if operationVariables, ok := osv.(map[string]map[string]string); !ok {
-			return nil, reportError("ctx value of ContextOperationServerVariables has invalid type %T should be map[string]map[string]string", osv)
-		} else {
-			variables, ok := operationVariables[endpoint]
-			if ok {
-				return variables, nil
-			}
-		}
-	}
-	return getServerVariables(ctx)
-}
-
-// ServerURLWithContext returns a new server URL given an endpoint
-func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint string) (string, error) {
-	sc, ok := c.OperationServers[endpoint]
-	if !ok {
-		sc = c.Servers
+// GetState returns the State field value
+func (o *BuildStatus) GetState() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	if ctx == nil {
-		return sc.URL(0, nil)
+	return o.State
+}
+
+// GetStateOk returns a tuple with the State field value
+// and a boolean to check if the value has been set.
+func (o *BuildStatus) GetStateOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.State, true
+}
+
+// SetState sets field value
+func (o *BuildStatus) SetState(v string) {
+	o.State = v
+}
+
+// GetKey returns the Key field value
+func (o *BuildStatus) GetKey() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	index, err := getServerOperationIndex(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return o.Key
+}
+
+// GetKeyOk returns a tuple with the Key field value
+// and a boolean to check if the value has been set.
+func (o *BuildStatus) GetKeyOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Key, true
+}
+
+// SetKey sets field value
+func (o *BuildStatus) SetKey(v string) {
+	o.Key = v
+}
+
+// GetName returns the Name field value
+func (o *BuildStatus) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	variables, err := getServerOperationVariables(ctx, endpoint)
-	if err != nil {
-		return "", err
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *BuildStatus) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *BuildStatus) SetName(v string) {
+	o.Name = v
+}
+
+// GetUrl returns the Url field value
+func (o *BuildStatus) GetUrl() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
 
-	return sc.URL(index, variables)
+	return o.Url
+}
+
+// GetUrlOk returns a tuple with the Url field value
+// and a boolean to check if the value has been set.
+func (o *BuildStatus) GetUrlOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Url, true
+}
+
+// SetUrl sets field value
+func (o *BuildStatus) SetUrl(v string) {
+	o.Url = v
+}
+
+// GetDescription returns the Description field value
+func (o *BuildStatus) GetDescription() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value
+// and a boolean to check if the value has been set.
+func (o *BuildStatus) GetDescriptionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Description, true
+}
+
+// SetDescription sets field value
+func (o *BuildStatus) SetDescription(v string) {
+	o.Description = v
+}
+
+func (o BuildStatus) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if true {
+		toSerialize["state"] = o.State
+	}
+	if true {
+		toSerialize["key"] = o.Key
+	}
+	if true {
+		toSerialize["name"] = o.Name
+	}
+	if true {
+		toSerialize["url"] = o.Url
+	}
+	if true {
+		toSerialize["description"] = o.Description
+	}
+	return json.Marshal(toSerialize)
+}
+
+type NullableBuildStatus struct {
+	value *BuildStatus
+	isSet bool
+}
+
+func (v NullableBuildStatus) Get() *BuildStatus {
+	return v.value
+}
+
+func (v *NullableBuildStatus) Set(val *BuildStatus) {
+	v.value = val
+	v.isSet = true
+}
+
+func (v NullableBuildStatus) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableBuildStatus) Unset() {
+	v.value = nil
+	v.isSet = false
+}
+
+func NewNullableBuildStatus(val *BuildStatus) *NullableBuildStatus {
+	return &NullableBuildStatus{value: val, isSet: true}
+}
+
+func (v NullableBuildStatus) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableBuildStatus) UnmarshalJSON(src []byte) error {
+	v.isSet = true
+	return json.Unmarshal(src, &v.value)
 }

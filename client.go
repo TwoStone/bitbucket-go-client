@@ -48,7 +48,19 @@ type APIClient struct {
 
 	// API Services
 
-	DefaultApi *DefaultApiService
+	BranchesApi *BranchesApiService
+
+	BuildStatusApi *BuildStatusApiService
+
+	CommitsApi *CommitsApiService
+
+	PostWebhookApi *PostWebhookApiService
+
+	ProjectsApi *ProjectsApiService
+
+	RepositoriesApi *RepositoriesApiService
+
+	WebhookApi *WebhookApiService
 }
 
 type service struct {
@@ -67,7 +79,13 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.DefaultApi = (*DefaultApiService)(&c.common)
+	c.BranchesApi = (*BranchesApiService)(&c.common)
+	c.BuildStatusApi = (*BuildStatusApiService)(&c.common)
+	c.CommitsApi = (*CommitsApiService)(&c.common)
+	c.PostWebhookApi = (*PostWebhookApiService)(&c.common)
+	c.ProjectsApi = (*ProjectsApiService)(&c.common)
+	c.RepositoriesApi = (*RepositoriesApiService)(&c.common)
+	c.WebhookApi = (*WebhookApiService)(&c.common)
 
 	return c
 }
