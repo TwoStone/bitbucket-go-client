@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **string** |  | 
-**DisplayId** | Pointer to **string** |  | 
-**Author** | Pointer to [**User**](user.md) |  | 
-**AuthorTimestamp** | Pointer to **int32** |  | 
-**Commiter** | Pointer to [**User**](user.md) |  | 
-**CommiterTimestamp** | Pointer to **int32** |  | 
-**Message** | Pointer to **string** |  | 
+**Id** | **string** |  | 
+**DisplayId** | **string** |  | 
+**Author** | [**User**](user.md) |  | 
+**AuthorTimestamp** | **int32** |  | 
+**Commiter** | [**User**](user.md) |  | 
+**CommiterTimestamp** | **int32** |  | 
+**Message** | **string** |  | 
 **Parents** | Pointer to [**[]CommitParents**](commit_parents.md) |  | [optional] 
 
 ## Methods

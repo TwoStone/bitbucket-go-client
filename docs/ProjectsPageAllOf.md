@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | Pointer to [**[]Project**](project.md) |  | 
+**Values** | [**[]Project**](project.md) |  | 
 
 ## Methods
 

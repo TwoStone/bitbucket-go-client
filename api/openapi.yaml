@@ -2254,6 +2254,7 @@ components:
           items:
             $ref: '#/components/schemas/link'
           type: array
+      type: object
     projectsPage_allOf:
       properties:
         values:
@@ -2262,6 +2263,7 @@ components:
           type: array
       required:
       - values
+      type: object
     errors_errors:
       properties:
         context:
@@ -2272,6 +2274,7 @@ components:
           type: string
       required:
       - message
+      type: object
     repository_links:
       example:
         clone:
@@ -2293,6 +2296,7 @@ components:
           items:
             $ref: '#/components/schemas/link'
           type: array
+      type: object
     repositoriesPage_allOf:
       properties:
         values:
@@ -2301,6 +2305,7 @@ components:
           type: array
       required:
       - values
+      type: object
     branchesPage_allOf:
       properties:
         values:
@@ -2309,10 +2314,12 @@ components:
           type: array
       required:
       - values
+      type: object
     file_lines:
       properties:
         text:
           type: string
+      type: object
     children_allOf_values:
       properties:
         path:
@@ -2329,12 +2336,14 @@ components:
           type: string
       required:
       - type
+      type: object
     children_allOf:
       properties:
         values:
           items:
             $ref: '#/components/schemas/children_allOf_values'
           type: array
+      type: object
     commit_parents:
       example:
         id: id
@@ -2344,6 +2353,7 @@ components:
           type: string
         displayId:
           type: string
+      type: object
     commitsPage_allOf:
       properties:
         values:
@@ -2356,12 +2366,14 @@ components:
           type: integer
       required:
       - values
+      type: object
     webhook_configuration:
       example:
         secret: secret
       properties:
         secret:
           type: string
+      type: object
     webhooksPage_allOf:
       properties:
         values:
@@ -2370,6 +2382,7 @@ components:
           type: array
       required:
       - values
+      type: object
     buildStatusPage_allOf:
       properties:
         values:
@@ -2378,6 +2391,7 @@ components:
           type: array
       required:
       - values
+      type: object
   securitySchemes:
     usernamePassword:
       scheme: basic

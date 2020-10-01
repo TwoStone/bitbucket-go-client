@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Size** | Pointer to **int32** |  | 
-**Limit** | Pointer to **int32** |  | 
-**Start** | Pointer to **int32** |  | 
-**IsLastPage** | Pointer to **bool** |  | 
+**Size** | **int32** |  | 
+**Limit** | **int32** |  | 
+**Start** | **int32** |  | 
+**IsLastPage** | **bool** |  | 
 **NextPageStart** | Pointer to **int32** |  | [optional] 
-**Values** | Pointer to [**[]BuildStatus**](buildStatus.md) |  | 
+**Values** | [**[]BuildStatus**](buildStatus.md) |  | 
 
 ## Methods
 

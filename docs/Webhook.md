@@ -5,12 +5,12 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **int32** |  | [optional] 
-**Name** | Pointer to **string** |  | 
+**Name** | **string** |  | 
 **CreateDate** | Pointer to **int32** |  | [optional] 
 **UpdatedDate** | Pointer to **int32** |  | [optional] 
-**Events** | Pointer to [**[]WebhookEvent**](webhookEvent.md) |  | 
+**Events** | [**[]WebhookEvent**](webhookEvent.md) |  | 
 **Configuration** | Pointer to [**WebhookConfiguration**](webhook_configuration.md) |  | [optional] 
-**Url** | Pointer to **string** |  | 
+**Url** | **string** |  | 
 
 ## Methods
 

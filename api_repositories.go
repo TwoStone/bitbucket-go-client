@@ -23,12 +23,123 @@ var (
 	_ _context.Context
 )
 
+type RepositoriesApi interface {
+
+	/*
+		   * BrowseRepositoryPaged browseRepository
+		   * Retrieve a page of content for a file path at a specified revision.
+
+		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @param repositorySlug
+		   * @return ApiBrowseRepositoryPagedRequest
+	*/
+	BrowseRepositoryPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiBrowseRepositoryPagedRequest
+
+	/*
+	 * BrowseRepositoryPagedExecute executes the request
+	 * @return Directory
+	 */
+	BrowseRepositoryPagedExecute(r ApiBrowseRepositoryPagedRequest) (Directory, *_nethttp.Response, error)
+
+	/*
+		   * BrowseRepositoryPathPaged browseRepositoryPath
+		   * Retrieve a page of content for a file path at a specified revision.
+
+		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @param repositorySlug
+		   * @param path
+		   * @return ApiBrowseRepositoryPathPagedRequest
+	*/
+	BrowseRepositoryPathPaged(ctx _context.Context, projectKey string, repositorySlug string, path string) ApiBrowseRepositoryPathPagedRequest
+
+	/*
+	 * BrowseRepositoryPathPagedExecute executes the request
+	 * @return FileOrDirectory
+	 */
+	BrowseRepositoryPathPagedExecute(r ApiBrowseRepositoryPathPagedRequest) (FileOrDirectory, *_nethttp.Response, error)
+
+	/*
+		   * CreateRepository Create repository
+		   * Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
+
+		The authenticated user must have PROJECT_ADMIN permission for the context project to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @return ApiCreateRepositoryRequest
+	*/
+	CreateRepository(ctx _context.Context, projectKey string) ApiCreateRepositoryRequest
+
+	/*
+	 * CreateRepositoryExecute executes the request
+	 * @return Repository
+	 */
+	CreateRepositoryExecute(r ApiCreateRepositoryRequest) (Repository, *_nethttp.Response, error)
+
+	/*
+		   * GetRepositoriesPaged Get Repositories
+		   * Retrieve repositories from the project corresponding to the supplied projectKey.
+
+
+		The authenticated user must have REPO_READ permission for the specified project to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @return ApiGetRepositoriesPagedRequest
+	*/
+	GetRepositoriesPaged(ctx _context.Context, projectKey string) ApiGetRepositoriesPagedRequest
+
+	/*
+	 * GetRepositoriesPagedExecute executes the request
+	 * @return RepositoriesPage
+	 */
+	GetRepositoriesPagedExecute(r ApiGetRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error)
+
+	/*
+		   * GetRepository Get Repository
+		   * Retrieve the repository matching the supplied projectKey and repositorySlug.
+
+		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @param repositorySlug
+		   * @return ApiGetRepositoryRequest
+	*/
+	GetRepository(ctx _context.Context, projectKey string, repositorySlug string) ApiGetRepositoryRequest
+
+	/*
+	 * GetRepositoryExecute executes the request
+	 * @return Repository
+	 */
+	GetRepositoryExecute(r ApiGetRepositoryRequest) (Repository, *_nethttp.Response, error)
+
+	/*
+		   * SearchRepositoriesPaged Search repositories
+		   * Retrieve a page of repositories based on query parameters that control the search. See the documentation of the parameters for more details.
+
+		This resource is anonymously accessible.
+
+		Note on permissions. In absence of the permission query parameter the implicit 'read' permission is assumed. Please note that this permission is lower than the REPO_READ permission rather than being equal to it. The implicit 'read' permission for a given repository is assigned to any user that has any of the higher permissions, such as REPO_READ, as well as to anonymous users if the repository is marked as public. The important implication of the above is that an anonymous request to this resource with a permission level REPO_READ is guaranteed to receive an empty list of repositories as a result. For anonymous requests it is therefore recommended to not specify the permission parameter at all.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @return ApiSearchRepositoriesPagedRequest
+	*/
+	SearchRepositoriesPaged(ctx _context.Context) ApiSearchRepositoriesPagedRequest
+
+	/*
+	 * SearchRepositoriesPagedExecute executes the request
+	 * @return RepositoriesPage
+	 */
+	SearchRepositoriesPagedExecute(r ApiSearchRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error)
+}
+
 // RepositoriesApiService RepositoriesApi service
 type RepositoriesApiService service
 
-type apiBrowseRepositoryPagedRequest struct {
+type ApiBrowseRepositoryPagedRequest struct {
 	ctx            _context.Context
-	apiService     *RepositoriesApiService
+	ApiService     RepositoriesApi
 	projectKey     string
 	repositorySlug string
 	at             *string
@@ -36,34 +147,36 @@ type apiBrowseRepositoryPagedRequest struct {
 	limit          *int32
 }
 
-func (r apiBrowseRepositoryPagedRequest) At(at string) apiBrowseRepositoryPagedRequest {
+func (r ApiBrowseRepositoryPagedRequest) At(at string) ApiBrowseRepositoryPagedRequest {
 	r.at = &at
 	return r
 }
-
-func (r apiBrowseRepositoryPagedRequest) Start(start int32) apiBrowseRepositoryPagedRequest {
+func (r ApiBrowseRepositoryPagedRequest) Start(start int32) ApiBrowseRepositoryPagedRequest {
 	r.start = &start
 	return r
 }
-
-func (r apiBrowseRepositoryPagedRequest) Limit(limit int32) apiBrowseRepositoryPagedRequest {
+func (r ApiBrowseRepositoryPagedRequest) Limit(limit int32) ApiBrowseRepositoryPagedRequest {
 	r.limit = &limit
 	return r
 }
 
+func (r ApiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Response, error) {
+	return r.ApiService.BrowseRepositoryPagedExecute(r)
+}
+
 /*
-BrowseRepositoryPaged browseRepository
-Retrieve a page of content for a file path at a specified revision.
+ * BrowseRepositoryPaged browseRepository
+ * Retrieve a page of content for a file path at a specified revision.
 
 The authenticated user must have REPO_READ permission for the specified repository to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
-@return apiBrowseRepositoryPagedRequest
+ * @return ApiBrowseRepositoryPagedRequest
 */
-func (a *RepositoriesApiService) BrowseRepositoryPaged(ctx _context.Context, projectKey string, repositorySlug string) apiBrowseRepositoryPagedRequest {
-	return apiBrowseRepositoryPagedRequest{
-		apiService:     a,
+func (a *RepositoriesApiService) BrowseRepositoryPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiBrowseRepositoryPagedRequest {
+	return ApiBrowseRepositoryPagedRequest{
+		ApiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -71,10 +184,10 @@ func (a *RepositoriesApiService) BrowseRepositoryPaged(ctx _context.Context, pro
 }
 
 /*
-Execute executes the request
- @return Directory
-*/
-func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return Directory
+ */
+func (a *RepositoriesApiService) BrowseRepositoryPagedExecute(r ApiBrowseRepositoryPagedRequest) (Directory, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -84,14 +197,14 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 		localVarReturnValue  Directory
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.BrowseRepositoryPaged")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.BrowseRepositoryPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -123,12 +236,12 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -146,7 +259,7 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -156,7 +269,7 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -166,7 +279,7 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -176,7 +289,7 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -188,9 +301,9 @@ func (r apiBrowseRepositoryPagedRequest) Execute() (Directory, *_nethttp.Respons
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiBrowseRepositoryPathPagedRequest struct {
+type ApiBrowseRepositoryPathPagedRequest struct {
 	ctx            _context.Context
-	apiService     *RepositoriesApiService
+	ApiService     RepositoriesApi
 	projectKey     string
 	repositorySlug string
 	path           string
@@ -199,35 +312,37 @@ type apiBrowseRepositoryPathPagedRequest struct {
 	limit          *int32
 }
 
-func (r apiBrowseRepositoryPathPagedRequest) At(at string) apiBrowseRepositoryPathPagedRequest {
+func (r ApiBrowseRepositoryPathPagedRequest) At(at string) ApiBrowseRepositoryPathPagedRequest {
 	r.at = &at
 	return r
 }
-
-func (r apiBrowseRepositoryPathPagedRequest) Start(start int32) apiBrowseRepositoryPathPagedRequest {
+func (r ApiBrowseRepositoryPathPagedRequest) Start(start int32) ApiBrowseRepositoryPathPagedRequest {
 	r.start = &start
 	return r
 }
-
-func (r apiBrowseRepositoryPathPagedRequest) Limit(limit int32) apiBrowseRepositoryPathPagedRequest {
+func (r ApiBrowseRepositoryPathPagedRequest) Limit(limit int32) ApiBrowseRepositoryPathPagedRequest {
 	r.limit = &limit
 	return r
 }
 
+func (r ApiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_nethttp.Response, error) {
+	return r.ApiService.BrowseRepositoryPathPagedExecute(r)
+}
+
 /*
-BrowseRepositoryPathPaged browseRepositoryPath
-Retrieve a page of content for a file path at a specified revision.
+ * BrowseRepositoryPathPaged browseRepositoryPath
+ * Retrieve a page of content for a file path at a specified revision.
 
 The authenticated user must have REPO_READ permission for the specified repository to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
  * @param path
-@return apiBrowseRepositoryPathPagedRequest
+ * @return ApiBrowseRepositoryPathPagedRequest
 */
-func (a *RepositoriesApiService) BrowseRepositoryPathPaged(ctx _context.Context, projectKey string, repositorySlug string, path string) apiBrowseRepositoryPathPagedRequest {
-	return apiBrowseRepositoryPathPagedRequest{
-		apiService:     a,
+func (a *RepositoriesApiService) BrowseRepositoryPathPaged(ctx _context.Context, projectKey string, repositorySlug string, path string) ApiBrowseRepositoryPathPagedRequest {
+	return ApiBrowseRepositoryPathPagedRequest{
+		ApiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -236,10 +351,10 @@ func (a *RepositoriesApiService) BrowseRepositoryPathPaged(ctx _context.Context,
 }
 
 /*
-Execute executes the request
- @return FileOrDirectory
-*/
-func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return FileOrDirectory
+ */
+func (a *RepositoriesApiService) BrowseRepositoryPathPagedExecute(r ApiBrowseRepositoryPathPagedRequest) (FileOrDirectory, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -249,15 +364,15 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 		localVarReturnValue  FileOrDirectory
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.BrowseRepositoryPathPaged")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.BrowseRepositoryPathPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", _neturl.QueryEscape(parameterToString(r.path, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", _neturl.PathEscape(parameterToString(r.path, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -289,12 +404,12 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -312,7 +427,7 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -322,7 +437,7 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -332,7 +447,7 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -342,7 +457,7 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -354,40 +469,44 @@ func (r apiBrowseRepositoryPathPagedRequest) Execute() (FileOrDirectory, *_netht
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiCreateRepositoryRequest struct {
+type ApiCreateRepositoryRequest struct {
 	ctx              _context.Context
-	apiService       *RepositoriesApiService
+	ApiService       RepositoriesApi
 	projectKey       string
 	createRepository *CreateRepository
 }
 
-func (r apiCreateRepositoryRequest) CreateRepository(createRepository CreateRepository) apiCreateRepositoryRequest {
+func (r ApiCreateRepositoryRequest) CreateRepository(createRepository CreateRepository) ApiCreateRepositoryRequest {
 	r.createRepository = &createRepository
 	return r
 }
 
+func (r ApiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, error) {
+	return r.ApiService.CreateRepositoryExecute(r)
+}
+
 /*
-CreateRepository Create repository
-Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
+ * CreateRepository Create repository
+ * Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
 
 The authenticated user must have PROJECT_ADMIN permission for the context project to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
-@return apiCreateRepositoryRequest
+ * @return ApiCreateRepositoryRequest
 */
-func (a *RepositoriesApiService) CreateRepository(ctx _context.Context, projectKey string) apiCreateRepositoryRequest {
-	return apiCreateRepositoryRequest{
-		apiService: a,
+func (a *RepositoriesApiService) CreateRepository(ctx _context.Context, projectKey string) ApiCreateRepositoryRequest {
+	return ApiCreateRepositoryRequest{
+		ApiService: a,
 		ctx:        ctx,
 		projectKey: projectKey,
 	}
 }
 
 /*
-Execute executes the request
- @return Repository
-*/
-func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return Repository
+ */
+func (a *RepositoriesApiService) CreateRepositoryExecute(r ApiCreateRepositoryRequest) (Repository, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -397,13 +516,13 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 		localVarReturnValue  Repository
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.CreateRepository")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.CreateRepository")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -428,12 +547,12 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 	}
 	// body params
 	localVarPostBody = r.createRepository
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -451,7 +570,7 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -461,7 +580,7 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -471,7 +590,7 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 		}
 		if localVarHTTPResponse.StatusCode == 409 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -481,7 +600,7 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -493,47 +612,50 @@ func (r apiCreateRepositoryRequest) Execute() (Repository, *_nethttp.Response, e
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiGetRepositoriesPagedRequest struct {
+type ApiGetRepositoriesPagedRequest struct {
 	ctx        _context.Context
-	apiService *RepositoriesApiService
+	ApiService RepositoriesApi
 	projectKey string
 	limit      *int32
 	start      *int32
 }
 
-func (r apiGetRepositoriesPagedRequest) Limit(limit int32) apiGetRepositoriesPagedRequest {
+func (r ApiGetRepositoriesPagedRequest) Limit(limit int32) ApiGetRepositoriesPagedRequest {
 	r.limit = &limit
 	return r
 }
-
-func (r apiGetRepositoriesPagedRequest) Start(start int32) apiGetRepositoriesPagedRequest {
+func (r ApiGetRepositoriesPagedRequest) Start(start int32) ApiGetRepositoriesPagedRequest {
 	r.start = &start
 	return r
 }
 
+func (r ApiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.Response, error) {
+	return r.ApiService.GetRepositoriesPagedExecute(r)
+}
+
 /*
-GetRepositoriesPaged Get Repositories
-Retrieve repositories from the project corresponding to the supplied projectKey.
+ * GetRepositoriesPaged Get Repositories
+ * Retrieve repositories from the project corresponding to the supplied projectKey.
 
 
 The authenticated user must have REPO_READ permission for the specified project to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
-@return apiGetRepositoriesPagedRequest
+ * @return ApiGetRepositoriesPagedRequest
 */
-func (a *RepositoriesApiService) GetRepositoriesPaged(ctx _context.Context, projectKey string) apiGetRepositoriesPagedRequest {
-	return apiGetRepositoriesPagedRequest{
-		apiService: a,
+func (a *RepositoriesApiService) GetRepositoriesPaged(ctx _context.Context, projectKey string) ApiGetRepositoriesPagedRequest {
+	return ApiGetRepositoriesPagedRequest{
+		ApiService: a,
 		ctx:        ctx,
 		projectKey: projectKey,
 	}
 }
 
 /*
-Execute executes the request
- @return RepositoriesPage
-*/
-func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return RepositoriesPage
+ */
+func (a *RepositoriesApiService) GetRepositoriesPagedExecute(r ApiGetRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -543,13 +665,13 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 		localVarReturnValue  RepositoriesPage
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.GetRepositoriesPaged")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.GetRepositoriesPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -578,12 +700,12 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -601,7 +723,7 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -611,7 +733,7 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -621,7 +743,7 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -633,26 +755,30 @@ func (r apiGetRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.R
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiGetRepositoryRequest struct {
+type ApiGetRepositoryRequest struct {
 	ctx            _context.Context
-	apiService     *RepositoriesApiService
+	ApiService     RepositoriesApi
 	projectKey     string
 	repositorySlug string
 }
 
+func (r ApiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, error) {
+	return r.ApiService.GetRepositoryExecute(r)
+}
+
 /*
-GetRepository Get Repository
-Retrieve the repository matching the supplied projectKey and repositorySlug.
+ * GetRepository Get Repository
+ * Retrieve the repository matching the supplied projectKey and repositorySlug.
 
 The authenticated user must have REPO_READ permission for the specified repository to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
-@return apiGetRepositoryRequest
+ * @return ApiGetRepositoryRequest
 */
-func (a *RepositoriesApiService) GetRepository(ctx _context.Context, projectKey string, repositorySlug string) apiGetRepositoryRequest {
-	return apiGetRepositoryRequest{
-		apiService:     a,
+func (a *RepositoriesApiService) GetRepository(ctx _context.Context, projectKey string, repositorySlug string) ApiGetRepositoryRequest {
+	return ApiGetRepositoryRequest{
+		ApiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -660,10 +786,10 @@ func (a *RepositoriesApiService) GetRepository(ctx _context.Context, projectKey 
 }
 
 /*
-Execute executes the request
- @return Repository
-*/
-func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return Repository
+ */
+func (a *RepositoriesApiService) GetRepositoryExecute(r ApiGetRepositoryRequest) (Repository, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -673,14 +799,14 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 		localVarReturnValue  Repository
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.GetRepository")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.GetRepository")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -703,12 +829,12 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -726,7 +852,7 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -736,7 +862,7 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -746,7 +872,7 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -758,9 +884,9 @@ func (r apiGetRepositoryRequest) Execute() (Repository, *_nethttp.Response, erro
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiSearchRepositoriesPagedRequest struct {
+type ApiSearchRepositoriesPagedRequest struct {
 	ctx         _context.Context
-	apiService  *RepositoriesApiService
+	ApiService  RepositoriesApi
 	name        *string
 	projectname *string
 	permission  *string
@@ -770,63 +896,61 @@ type apiSearchRepositoriesPagedRequest struct {
 	limit       *int32
 }
 
-func (r apiSearchRepositoriesPagedRequest) Name(name string) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Name(name string) ApiSearchRepositoriesPagedRequest {
 	r.name = &name
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) Projectname(projectname string) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Projectname(projectname string) ApiSearchRepositoriesPagedRequest {
 	r.projectname = &projectname
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) Permission(permission string) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Permission(permission string) ApiSearchRepositoriesPagedRequest {
 	r.permission = &permission
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) State(state string) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) State(state string) ApiSearchRepositoriesPagedRequest {
 	r.state = &state
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) Visibility(visibility string) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Visibility(visibility string) ApiSearchRepositoriesPagedRequest {
 	r.visibility = &visibility
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) Start(start int32) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Start(start int32) ApiSearchRepositoriesPagedRequest {
 	r.start = &start
 	return r
 }
-
-func (r apiSearchRepositoriesPagedRequest) Limit(limit int32) apiSearchRepositoriesPagedRequest {
+func (r ApiSearchRepositoriesPagedRequest) Limit(limit int32) ApiSearchRepositoriesPagedRequest {
 	r.limit = &limit
 	return r
 }
 
+func (r ApiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.Response, error) {
+	return r.ApiService.SearchRepositoriesPagedExecute(r)
+}
+
 /*
-SearchRepositoriesPaged Search repositories
-Retrieve a page of repositories based on query parameters that control the search. See the documentation of the parameters for more details.
+ * SearchRepositoriesPaged Search repositories
+ * Retrieve a page of repositories based on query parameters that control the search. See the documentation of the parameters for more details.
 
 This resource is anonymously accessible.
 
 Note on permissions. In absence of the permission query parameter the implicit 'read' permission is assumed. Please note that this permission is lower than the REPO_READ permission rather than being equal to it. The implicit 'read' permission for a given repository is assigned to any user that has any of the higher permissions, such as REPO_READ, as well as to anonymous users if the repository is marked as public. The important implication of the above is that an anonymous request to this resource with a permission level REPO_READ is guaranteed to receive an empty list of repositories as a result. For anonymous requests it is therefore recommended to not specify the permission parameter at all.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return apiSearchRepositoriesPagedRequest
+ * @return ApiSearchRepositoriesPagedRequest
 */
-func (a *RepositoriesApiService) SearchRepositoriesPaged(ctx _context.Context) apiSearchRepositoriesPagedRequest {
-	return apiSearchRepositoriesPagedRequest{
-		apiService: a,
+func (a *RepositoriesApiService) SearchRepositoriesPaged(ctx _context.Context) ApiSearchRepositoriesPagedRequest {
+	return ApiSearchRepositoriesPagedRequest{
+		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 /*
-Execute executes the request
- @return RepositoriesPage
-*/
-func (r apiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return RepositoriesPage
+ */
+func (a *RepositoriesApiService) SearchRepositoriesPagedExecute(r ApiSearchRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -836,7 +960,7 @@ func (r apiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethtt
 		localVarReturnValue  RepositoriesPage
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.SearchRepositoriesPaged")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RepositoriesApiService.SearchRepositoriesPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
@@ -885,12 +1009,12 @@ func (r apiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethtt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -908,7 +1032,7 @@ func (r apiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethtt
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -918,7 +1042,7 @@ func (r apiSearchRepositoriesPagedRequest) Execute() (RepositoriesPage, *_nethtt
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
