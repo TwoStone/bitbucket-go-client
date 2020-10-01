@@ -4,3 +4,4 @@ withGoCodegenComment: true
 withXml: false
 packageName: bitbucket
 packageVersion: 1.1.1
+generateInterfaces: true
