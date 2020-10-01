@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | Pointer to [**[]BuildStatus**](buildStatus.md) |  | 
+**Values** | [**[]BuildStatus**](buildStatus.md) |  | 
 
 ## Methods
 

@@ -23,29 +23,68 @@ var (
 	_ _context.Context
 )
 
+type PostWebhookApi interface {
+
+	/*
+	 * DeletePostWebhook Delete post webhook
+	 * Deletes the post webhook from the repository
+	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	 * @param projectKey
+	 * @param repositorySlug
+	 * @param iD
+	 * @return ApiDeletePostWebhookRequest
+	 */
+	DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD int32) ApiDeletePostWebhookRequest
+
+	/*
+	 * DeletePostWebhookExecute executes the request
+	 */
+	DeletePostWebhookExecute(r ApiDeletePostWebhookRequest) (*_nethttp.Response, error)
+
+	/*
+	 * GetPostWebhooks Get Post Webhooks
+	 * Returns the registered post webhooks for the repository.
+	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	 * @param projectKey
+	 * @param repositorySlug
+	 * @return ApiGetPostWebhooksRequest
+	 */
+	GetPostWebhooks(ctx _context.Context, projectKey string, repositorySlug string) ApiGetPostWebhooksRequest
+
+	/*
+	 * GetPostWebhooksExecute executes the request
+	 * @return []PostWebhook
+	 */
+	GetPostWebhooksExecute(r ApiGetPostWebhooksRequest) ([]PostWebhook, *_nethttp.Response, error)
+}
+
 // PostWebhookApiService PostWebhookApi service
 type PostWebhookApiService service
 
-type apiDeletePostWebhookRequest struct {
+type ApiDeletePostWebhookRequest struct {
 	ctx            _context.Context
-	apiService     *PostWebhookApiService
+	ApiService     PostWebhookApi
 	projectKey     string
 	repositorySlug string
 	iD             int32
 }
 
+func (r ApiDeletePostWebhookRequest) Execute() (*_nethttp.Response, error) {
+	return r.ApiService.DeletePostWebhookExecute(r)
+}
+
 /*
-DeletePostWebhook Delete post webhook
-Deletes the post webhook from the repository
+ * DeletePostWebhook Delete post webhook
+ * Deletes the post webhook from the repository
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
  * @param iD
-@return apiDeletePostWebhookRequest
-*/
-func (a *PostWebhookApiService) DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD int32) apiDeletePostWebhookRequest {
-	return apiDeletePostWebhookRequest{
-		apiService:     a,
+ * @return ApiDeletePostWebhookRequest
+ */
+func (a *PostWebhookApiService) DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD int32) ApiDeletePostWebhookRequest {
+	return ApiDeletePostWebhookRequest{
+		ApiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -54,10 +93,9 @@ func (a *PostWebhookApiService) DeletePostWebhook(ctx _context.Context, projectK
 }
 
 /*
-Execute executes the request
-
-*/
-func (r apiDeletePostWebhookRequest) Execute() (*_nethttp.Response, error) {
+ * Execute executes the request
+ */
+func (a *PostWebhookApiService) DeletePostWebhookExecute(r ApiDeletePostWebhookRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -66,15 +104,15 @@ func (r apiDeletePostWebhookRequest) Execute() (*_nethttp.Response, error) {
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PostWebhookApiService.DeletePostWebhook")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PostWebhookApiService.DeletePostWebhook")
 	if err != nil {
 		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations/{ID}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"ID"+"}", _neturl.QueryEscape(parameterToString(r.iD, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"ID"+"}", _neturl.PathEscape(parameterToString(r.iD, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -97,12 +135,12 @@ func (r apiDeletePostWebhookRequest) Execute() (*_nethttp.Response, error) {
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -124,24 +162,28 @@ func (r apiDeletePostWebhookRequest) Execute() (*_nethttp.Response, error) {
 	return localVarHTTPResponse, nil
 }
 
-type apiGetPostWebhooksRequest struct {
+type ApiGetPostWebhooksRequest struct {
 	ctx            _context.Context
-	apiService     *PostWebhookApiService
+	ApiService     PostWebhookApi
 	projectKey     string
 	repositorySlug string
 }
 
+func (r ApiGetPostWebhooksRequest) Execute() ([]PostWebhook, *_nethttp.Response, error) {
+	return r.ApiService.GetPostWebhooksExecute(r)
+}
+
 /*
-GetPostWebhooks Get Post Webhooks
-Returns the registered post webhooks for the repository.
+ * GetPostWebhooks Get Post Webhooks
+ * Returns the registered post webhooks for the repository.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
-@return apiGetPostWebhooksRequest
-*/
-func (a *PostWebhookApiService) GetPostWebhooks(ctx _context.Context, projectKey string, repositorySlug string) apiGetPostWebhooksRequest {
-	return apiGetPostWebhooksRequest{
-		apiService:     a,
+ * @return ApiGetPostWebhooksRequest
+ */
+func (a *PostWebhookApiService) GetPostWebhooks(ctx _context.Context, projectKey string, repositorySlug string) ApiGetPostWebhooksRequest {
+	return ApiGetPostWebhooksRequest{
+		ApiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -149,10 +191,10 @@ func (a *PostWebhookApiService) GetPostWebhooks(ctx _context.Context, projectKey
 }
 
 /*
-Execute executes the request
- @return []PostWebhook
-*/
-func (r apiGetPostWebhooksRequest) Execute() ([]PostWebhook, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return []PostWebhook
+ */
+func (a *PostWebhookApiService) GetPostWebhooksExecute(r ApiGetPostWebhooksRequest) ([]PostWebhook, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -162,14 +204,14 @@ func (r apiGetPostWebhooksRequest) Execute() ([]PostWebhook, *_nethttp.Response,
 		localVarReturnValue  []PostWebhook
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PostWebhookApiService.GetPostWebhooks")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PostWebhookApiService.GetPostWebhooks")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/webhook/1.0/projects/{projectKey}/repos/{repositorySlug}/configurations"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -192,12 +234,12 @@ func (r apiGetPostWebhooksRequest) Execute() ([]PostWebhook, *_nethttp.Response,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -216,7 +258,7 @@ func (r apiGetPostWebhooksRequest) Execute() ([]PostWebhook, *_nethttp.Response,
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,

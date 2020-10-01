@@ -5,16 +5,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **int32** |  | [optional] 
-**Slug** | Pointer to **string** |  | 
-**Name** | Pointer to **string** |  | 
-**Description** | Pointer to **string** |  | 
+**Slug** | **string** |  | 
+**Name** | **string** |  | 
+**Description** | **string** |  | 
 **HierarchyId** | Pointer to **string** |  | [optional] 
 **ScmId** | Pointer to **string** |  | [optional] 
 **State** | Pointer to **string** |  | [optional] 
 **StatusMessage** | Pointer to **string** |  | [optional] 
-**Forkable** | Pointer to **bool** |  | 
-**Public** | Pointer to **bool** |  | 
-**Project** | Pointer to [**Project**](project.md) |  | 
+**Forkable** | **bool** |  | 
+**Public** | **bool** |  | 
+**Project** | [**Project**](project.md) |  | 
 **Links** | Pointer to [**RepositoryLinks**](repository_links.md) |  | [optional] 
 
 ## Methods

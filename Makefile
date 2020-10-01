@@ -7,9 +7,6 @@ BINDIR=hack/bin
 fmt:
 	go fmt ./...
 
-vet:
-	go vet ./...
-
 generate: openapi-generator
 	GO_POST_PROCESS_FILE="go fmt" \
 	$(JAVA) -jar $(OPENAPI_GENERATOR_JAR) generate \
@@ -21,7 +18,7 @@ generate: openapi-generator
   	--api-package bitbucket \
   	--enable-post-process-file
 
-build: generate fmt vet
+build: generate fmt
 	go mod download
 	go build -v ./
 

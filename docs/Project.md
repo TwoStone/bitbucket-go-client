@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **int32** |  | [optional] 
-**Key** | Pointer to **string** |  | 
-**Name** | Pointer to **string** |  | 
-**Description** | Pointer to **string** |  | 
-**Public** | Pointer to **bool** |  | 
-**Type** | Pointer to **string** |  | 
+**Key** | **string** |  | 
+**Name** | **string** |  | 
+**Description** | **string** |  | 
+**Public** | **bool** |  | 
+**Type** | **string** |  | 
 **Links** | Pointer to [**ProjectLinks**](project_links.md) |  | [optional] 
 
 ## Methods

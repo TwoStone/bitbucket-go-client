@@ -23,37 +23,77 @@ var (
 	_ _context.Context
 )
 
+type ProjectsApi interface {
+
+	/*
+		   * GetProject REST resource for working with projects
+		   * Retrieve the project matching the supplied projectKey.
+
+		The authenticated user must have PROJECT_VIEW permission for the specified project to call this resource.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @param projectKey
+		   * @return ApiGetProjectRequest
+	*/
+	GetProject(ctx _context.Context, projectKey string) ApiGetProjectRequest
+
+	/*
+	 * GetProjectExecute executes the request
+	 * @return Project
+	 */
+	GetProjectExecute(r ApiGetProjectRequest) (Project, *_nethttp.Response, error)
+
+	/*
+		   * GetProjectsPaged Get Projects
+		   * Retrieve a page of projects.
+
+		Only projects for which the authenticated user has the PROJECT_VIEW permission will be returned.
+		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		   * @return ApiGetProjectsPagedRequest
+	*/
+	GetProjectsPaged(ctx _context.Context) ApiGetProjectsPagedRequest
+
+	/*
+	 * GetProjectsPagedExecute executes the request
+	 * @return ProjectsPage
+	 */
+	GetProjectsPagedExecute(r ApiGetProjectsPagedRequest) (ProjectsPage, *_nethttp.Response, error)
+}
+
 // ProjectsApiService ProjectsApi service
 type ProjectsApiService service
 
-type apiGetProjectRequest struct {
+type ApiGetProjectRequest struct {
 	ctx        _context.Context
-	apiService *ProjectsApiService
+	ApiService ProjectsApi
 	projectKey string
 }
 
+func (r ApiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
+	return r.ApiService.GetProjectExecute(r)
+}
+
 /*
-GetProject REST resource for working with projects
-Retrieve the project matching the supplied projectKey.
+ * GetProject REST resource for working with projects
+ * Retrieve the project matching the supplied projectKey.
 
 The authenticated user must have PROJECT_VIEW permission for the specified project to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
-@return apiGetProjectRequest
+ * @return ApiGetProjectRequest
 */
-func (a *ProjectsApiService) GetProject(ctx _context.Context, projectKey string) apiGetProjectRequest {
-	return apiGetProjectRequest{
-		apiService: a,
+func (a *ProjectsApiService) GetProject(ctx _context.Context, projectKey string) ApiGetProjectRequest {
+	return ApiGetProjectRequest{
+		ApiService: a,
 		ctx:        ctx,
 		projectKey: projectKey,
 	}
 }
 
 /*
-Execute executes the request
- @return Project
-*/
-func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return Project
+ */
+func (a *ProjectsApiService) GetProjectExecute(r ApiGetProjectRequest) (Project, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -63,13 +103,13 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 		localVarReturnValue  Project
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProject")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -92,12 +132,12 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -115,7 +155,7 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -125,7 +165,7 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -135,7 +175,7 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -147,55 +187,56 @@ func (r apiGetProjectRequest) Execute() (Project, *_nethttp.Response, error) {
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiGetProjectsPagedRequest struct {
+type ApiGetProjectsPagedRequest struct {
 	ctx        _context.Context
-	apiService *ProjectsApiService
+	ApiService ProjectsApi
 	name       *string
 	permission *string
 	start      *int32
 	limit      *int32
 }
 
-func (r apiGetProjectsPagedRequest) Name(name string) apiGetProjectsPagedRequest {
+func (r ApiGetProjectsPagedRequest) Name(name string) ApiGetProjectsPagedRequest {
 	r.name = &name
 	return r
 }
-
-func (r apiGetProjectsPagedRequest) Permission(permission string) apiGetProjectsPagedRequest {
+func (r ApiGetProjectsPagedRequest) Permission(permission string) ApiGetProjectsPagedRequest {
 	r.permission = &permission
 	return r
 }
-
-func (r apiGetProjectsPagedRequest) Start(start int32) apiGetProjectsPagedRequest {
+func (r ApiGetProjectsPagedRequest) Start(start int32) ApiGetProjectsPagedRequest {
 	r.start = &start
 	return r
 }
-
-func (r apiGetProjectsPagedRequest) Limit(limit int32) apiGetProjectsPagedRequest {
+func (r ApiGetProjectsPagedRequest) Limit(limit int32) ApiGetProjectsPagedRequest {
 	r.limit = &limit
 	return r
 }
 
+func (r ApiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response, error) {
+	return r.ApiService.GetProjectsPagedExecute(r)
+}
+
 /*
-GetProjectsPaged Get Projects
-Retrieve a page of projects.
+ * GetProjectsPaged Get Projects
+ * Retrieve a page of projects.
 
 Only projects for which the authenticated user has the PROJECT_VIEW permission will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-@return apiGetProjectsPagedRequest
+ * @return ApiGetProjectsPagedRequest
 */
-func (a *ProjectsApiService) GetProjectsPaged(ctx _context.Context) apiGetProjectsPagedRequest {
-	return apiGetProjectsPagedRequest{
-		apiService: a,
+func (a *ProjectsApiService) GetProjectsPaged(ctx _context.Context) ApiGetProjectsPagedRequest {
+	return ApiGetProjectsPagedRequest{
+		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 /*
-Execute executes the request
- @return ProjectsPage
-*/
-func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return ProjectsPage
+ */
+func (a *ProjectsApiService) GetProjectsPagedExecute(r ApiGetProjectsPagedRequest) (ProjectsPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -205,7 +246,7 @@ func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response,
 		localVarReturnValue  ProjectsPage
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProjectsPaged")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsApiService.GetProjectsPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
@@ -245,12 +286,12 @@ func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response,
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -268,7 +309,7 @@ func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response,
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -278,7 +319,7 @@ func (r apiGetProjectsPagedRequest) Execute() (ProjectsPage, *_nethttp.Response,
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,

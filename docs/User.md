@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | Pointer to **string** |  | 
-**EmailAddress** | Pointer to **string** |  | 
+**Name** | **string** |  | 
+**EmailAddress** | **string** |  | 
 
 ## Methods
 
