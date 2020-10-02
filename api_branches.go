@@ -23,51 +23,12 @@ var (
 	_ _context.Context
 )
 
-type BranchesApi interface {
-
-	/*
-		   * GetBranchesPaged Get Branches
-		   * Retrieve the branches matching the supplied filterText param.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiGetBranchesPagedRequest
-	*/
-	GetBranchesPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiGetBranchesPagedRequest
-
-	/*
-	 * GetBranchesPagedExecute executes the request
-	 * @return BranchesPage
-	 */
-	GetBranchesPagedExecute(r ApiGetBranchesPagedRequest) (BranchesPage, *_nethttp.Response, error)
-
-	/*
-		   * GetDefaultBranch Get default branch
-		   * Get the default branch of the repository.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiGetDefaultBranchRequest
-	*/
-	GetDefaultBranch(ctx _context.Context, projectKey string, repositorySlug string) ApiGetDefaultBranchRequest
-
-	/*
-	 * GetDefaultBranchExecute executes the request
-	 * @return Branch
-	 */
-	GetDefaultBranchExecute(r ApiGetDefaultBranchRequest) (Branch, *_nethttp.Response, error)
-}
-
 // BranchesApiService BranchesApi service
 type BranchesApiService service
 
 type ApiGetBranchesPagedRequest struct {
 	ctx            _context.Context
-	ApiService     BranchesApi
+	ApiService     *BranchesApiService
 	projectKey     string
 	repositorySlug string
 	base           *string
@@ -253,7 +214,7 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 
 type ApiGetDefaultBranchRequest struct {
 	ctx            _context.Context
-	ApiService     BranchesApi
+	ApiService     *BranchesApiService
 	projectKey     string
 	repositorySlug string
 }
