@@ -23,120 +23,12 @@ var (
 	_ _context.Context
 )
 
-type WebhookApi interface {
-
-	/*
-		   * CreateWebhook Create webhook
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Create a webhook for the repository specified via the URL.
-
-		The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiCreateWebhookRequest
-	*/
-	CreateWebhook(ctx _context.Context, projectKey string, repositorySlug string) ApiCreateWebhookRequest
-
-	/*
-	 * CreateWebhookExecute executes the request
-	 * @return Webhook
-	 */
-	CreateWebhookExecute(r ApiCreateWebhookRequest) (Webhook, *_nethttp.Response, error)
-
-	/*
-		   * DeleteWebhook Delete Webhook
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Delete a webhook for the repository specified via the URL.
-
-		The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @param webhookId
-		   * @return ApiDeleteWebhookRequest
-	*/
-	DeleteWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) ApiDeleteWebhookRequest
-
-	/*
-	 * DeleteWebhookExecute executes the request
-	 */
-	DeleteWebhookExecute(r ApiDeleteWebhookRequest) (*_nethttp.Response, error)
-
-	/*
-		   * GetWebhook Get Webhook
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Get a webhook by id.
-
-		The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @param webhookId
-		   * @return ApiGetWebhookRequest
-	*/
-	GetWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) ApiGetWebhookRequest
-
-	/*
-	 * GetWebhookExecute executes the request
-	 * @return Webhook
-	 */
-	GetWebhookExecute(r ApiGetWebhookRequest) (Webhook, *_nethttp.Response, error)
-
-	/*
-		   * GetWebhooksPaged Get webhooks
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Find webhooks in this repository.
-
-		The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiGetWebhooksPagedRequest
-	*/
-	GetWebhooksPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiGetWebhooksPagedRequest
-
-	/*
-	 * GetWebhooksPagedExecute executes the request
-	 * @return WebhooksPage
-	 */
-	GetWebhooksPagedExecute(r ApiGetWebhooksPagedRequest) (WebhooksPage, *_nethttp.Response, error)
-
-	/*
-		   * UpdateWebhook Update webhook
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Update an existing webhook.
-
-		The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-
-
-
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @param webhookId
-		   * @return ApiUpdateWebhookRequest
-	*/
-	UpdateWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) ApiUpdateWebhookRequest
-
-	/*
-	 * UpdateWebhookExecute executes the request
-	 * @return Webhook
-	 */
-	UpdateWebhookExecute(r ApiUpdateWebhookRequest) (Webhook, *_nethttp.Response, error)
-}
-
 // WebhookApiService WebhookApi service
 type WebhookApiService service
 
 type ApiCreateWebhookRequest struct {
 	ctx            _context.Context
-	ApiService     WebhookApi
+	ApiService     *WebhookApiService
 	projectKey     string
 	repositorySlug string
 	webhook        *Webhook
@@ -285,7 +177,7 @@ func (a *WebhookApiService) CreateWebhookExecute(r ApiCreateWebhookRequest) (Web
 
 type ApiDeleteWebhookRequest struct {
 	ctx            _context.Context
-	ApiService     WebhookApi
+	ApiService     *WebhookApiService
 	projectKey     string
 	repositorySlug string
 	webhookId      int32
@@ -409,7 +301,7 @@ func (a *WebhookApiService) DeleteWebhookExecute(r ApiDeleteWebhookRequest) (*_n
 
 type ApiGetWebhookRequest struct {
 	ctx            _context.Context
-	ApiService     WebhookApi
+	ApiService     *WebhookApiService
 	projectKey     string
 	repositorySlug string
 	webhookId      int32
@@ -544,7 +436,7 @@ func (a *WebhookApiService) GetWebhookExecute(r ApiGetWebhookRequest) (Webhook, 
 
 type ApiGetWebhooksPagedRequest struct {
 	ctx            _context.Context
-	ApiService     WebhookApi
+	ApiService     *WebhookApiService
 	projectKey     string
 	repositorySlug string
 	start          *int32
@@ -700,7 +592,7 @@ func (a *WebhookApiService) GetWebhooksPagedExecute(r ApiGetWebhooksPagedRequest
 
 type ApiUpdateWebhookRequest struct {
 	ctx            _context.Context
-	ApiService     WebhookApi
+	ApiService     *WebhookApiService
 	projectKey     string
 	repositorySlug string
 	webhookId      int32

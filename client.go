@@ -48,19 +48,19 @@ type APIClient struct {
 
 	// API Services
 
-	BranchesApi BranchesApi
+	BranchesApi *BranchesApiService
 
-	BuildStatusApi BuildStatusApi
+	BuildStatusApi *BuildStatusApiService
 
-	CommitsApi CommitsApi
+	CommitsApi *CommitsApiService
 
-	PostWebhookApi PostWebhookApi
+	PostWebhookApi *PostWebhookApiService
 
-	ProjectsApi ProjectsApi
+	ProjectsApi *ProjectsApiService
 
-	RepositoriesApi RepositoriesApi
+	RepositoriesApi *RepositoriesApiService
 
-	WebhookApi WebhookApi
+	WebhookApi *WebhookApiService
 }
 
 type service struct {

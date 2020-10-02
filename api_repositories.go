@@ -23,123 +23,12 @@ var (
 	_ _context.Context
 )
 
-type RepositoriesApi interface {
-
-	/*
-		   * BrowseRepositoryPaged browseRepository
-		   * Retrieve a page of content for a file path at a specified revision.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiBrowseRepositoryPagedRequest
-	*/
-	BrowseRepositoryPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiBrowseRepositoryPagedRequest
-
-	/*
-	 * BrowseRepositoryPagedExecute executes the request
-	 * @return Directory
-	 */
-	BrowseRepositoryPagedExecute(r ApiBrowseRepositoryPagedRequest) (Directory, *_nethttp.Response, error)
-
-	/*
-		   * BrowseRepositoryPathPaged browseRepositoryPath
-		   * Retrieve a page of content for a file path at a specified revision.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @param path
-		   * @return ApiBrowseRepositoryPathPagedRequest
-	*/
-	BrowseRepositoryPathPaged(ctx _context.Context, projectKey string, repositorySlug string, path string) ApiBrowseRepositoryPathPagedRequest
-
-	/*
-	 * BrowseRepositoryPathPagedExecute executes the request
-	 * @return FileOrDirectory
-	 */
-	BrowseRepositoryPathPagedExecute(r ApiBrowseRepositoryPathPagedRequest) (FileOrDirectory, *_nethttp.Response, error)
-
-	/*
-		   * CreateRepository Create repository
-		   * Create a new repository. Requires an existing project in which this repository will be created. The only parameters which will be used are name and scmId.
-
-		The authenticated user must have PROJECT_ADMIN permission for the context project to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @return ApiCreateRepositoryRequest
-	*/
-	CreateRepository(ctx _context.Context, projectKey string) ApiCreateRepositoryRequest
-
-	/*
-	 * CreateRepositoryExecute executes the request
-	 * @return Repository
-	 */
-	CreateRepositoryExecute(r ApiCreateRepositoryRequest) (Repository, *_nethttp.Response, error)
-
-	/*
-		   * GetRepositoriesPaged Get Repositories
-		   * Retrieve repositories from the project corresponding to the supplied projectKey.
-
-
-		The authenticated user must have REPO_READ permission for the specified project to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @return ApiGetRepositoriesPagedRequest
-	*/
-	GetRepositoriesPaged(ctx _context.Context, projectKey string) ApiGetRepositoriesPagedRequest
-
-	/*
-	 * GetRepositoriesPagedExecute executes the request
-	 * @return RepositoriesPage
-	 */
-	GetRepositoriesPagedExecute(r ApiGetRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error)
-
-	/*
-		   * GetRepository Get Repository
-		   * Retrieve the repository matching the supplied projectKey and repositorySlug.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiGetRepositoryRequest
-	*/
-	GetRepository(ctx _context.Context, projectKey string, repositorySlug string) ApiGetRepositoryRequest
-
-	/*
-	 * GetRepositoryExecute executes the request
-	 * @return Repository
-	 */
-	GetRepositoryExecute(r ApiGetRepositoryRequest) (Repository, *_nethttp.Response, error)
-
-	/*
-		   * SearchRepositoriesPaged Search repositories
-		   * Retrieve a page of repositories based on query parameters that control the search. See the documentation of the parameters for more details.
-
-		This resource is anonymously accessible.
-
-		Note on permissions. In absence of the permission query parameter the implicit 'read' permission is assumed. Please note that this permission is lower than the REPO_READ permission rather than being equal to it. The implicit 'read' permission for a given repository is assigned to any user that has any of the higher permissions, such as REPO_READ, as well as to anonymous users if the repository is marked as public. The important implication of the above is that an anonymous request to this resource with a permission level REPO_READ is guaranteed to receive an empty list of repositories as a result. For anonymous requests it is therefore recommended to not specify the permission parameter at all.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @return ApiSearchRepositoriesPagedRequest
-	*/
-	SearchRepositoriesPaged(ctx _context.Context) ApiSearchRepositoriesPagedRequest
-
-	/*
-	 * SearchRepositoriesPagedExecute executes the request
-	 * @return RepositoriesPage
-	 */
-	SearchRepositoriesPagedExecute(r ApiSearchRepositoriesPagedRequest) (RepositoriesPage, *_nethttp.Response, error)
-}
-
 // RepositoriesApiService RepositoriesApi service
 type RepositoriesApiService service
 
 type ApiBrowseRepositoryPagedRequest struct {
 	ctx            _context.Context
-	ApiService     RepositoriesApi
+	ApiService     *RepositoriesApiService
 	projectKey     string
 	repositorySlug string
 	at             *string
@@ -303,7 +192,7 @@ func (a *RepositoriesApiService) BrowseRepositoryPagedExecute(r ApiBrowseReposit
 
 type ApiBrowseRepositoryPathPagedRequest struct {
 	ctx            _context.Context
-	ApiService     RepositoriesApi
+	ApiService     *RepositoriesApiService
 	projectKey     string
 	repositorySlug string
 	path           string
@@ -471,7 +360,7 @@ func (a *RepositoriesApiService) BrowseRepositoryPathPagedExecute(r ApiBrowseRep
 
 type ApiCreateRepositoryRequest struct {
 	ctx              _context.Context
-	ApiService       RepositoriesApi
+	ApiService       *RepositoriesApiService
 	projectKey       string
 	createRepository *CreateRepository
 }
@@ -614,7 +503,7 @@ func (a *RepositoriesApiService) CreateRepositoryExecute(r ApiCreateRepositoryRe
 
 type ApiGetRepositoriesPagedRequest struct {
 	ctx        _context.Context
-	ApiService RepositoriesApi
+	ApiService *RepositoriesApiService
 	projectKey string
 	limit      *int32
 	start      *int32
@@ -757,7 +646,7 @@ func (a *RepositoriesApiService) GetRepositoriesPagedExecute(r ApiGetRepositorie
 
 type ApiGetRepositoryRequest struct {
 	ctx            _context.Context
-	ApiService     RepositoriesApi
+	ApiService     *RepositoriesApiService
 	projectKey     string
 	repositorySlug string
 }
@@ -886,7 +775,7 @@ func (a *RepositoriesApiService) GetRepositoryExecute(r ApiGetRepositoryRequest)
 
 type ApiSearchRepositoriesPagedRequest struct {
 	ctx         _context.Context
-	ApiService  RepositoriesApi
+	ApiService  *RepositoriesApiService
 	name        *string
 	projectname *string
 	permission  *string
