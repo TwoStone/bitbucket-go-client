@@ -23,56 +23,12 @@ var (
 	_ _context.Context
 )
 
-type CommitsApi interface {
-
-	/*
-		   * GetCommit Get commit
-		   * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Retrieve a single commit identified by its ID. In general, that ID is a SHA1. From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @param commitId
-		   * @return ApiGetCommitRequest
-	*/
-	GetCommit(ctx _context.Context, projectKey string, repositorySlug string, commitId string) ApiGetCommitRequest
-
-	/*
-	 * GetCommitExecute executes the request
-	 * @return Commit
-	 */
-	GetCommitExecute(r ApiGetCommitRequest) (Commit, *_nethttp.Response, error)
-
-	/*
-		   * GetCommitsPaged Get commits
-		   * This is a paged API. This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-		Retrieve a page of commits from a given starting commit or "between" two commits. If no explicit commit is specified, the tip of the repository's default branch is assumed. commits may be identified by branch or tag name or by ID. A path may be supplied to restrict the returned commits to only those which affect that path.
-
-		The authenticated user must have REPO_READ permission for the specified repository to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @param repositorySlug
-		   * @return ApiGetCommitsPagedRequest
-	*/
-	GetCommitsPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiGetCommitsPagedRequest
-
-	/*
-	 * GetCommitsPagedExecute executes the request
-	 * @return CommitsPage
-	 */
-	GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) (CommitsPage, *_nethttp.Response, error)
-}
-
 // CommitsApiService CommitsApi service
 type CommitsApiService service
 
 type ApiGetCommitRequest struct {
 	ctx            _context.Context
-	ApiService     CommitsApi
+	ApiService     *CommitsApiService
 	projectKey     string
 	repositorySlug string
 	commitId       string
@@ -226,7 +182,7 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 
 type ApiGetCommitsPagedRequest struct {
 	ctx            _context.Context
-	ApiService     CommitsApi
+	ApiService     *CommitsApiService
 	projectKey     string
 	repositorySlug string
 	followRenames  *bool

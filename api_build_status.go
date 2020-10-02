@@ -23,52 +23,12 @@ var (
 	_ _context.Context
 )
 
-type BuildStatusApi interface {
-
-	/*
-	 * GetBuildStatusesPaged Get build statuses
-	 * Gets the build statuses associated with a commit.
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param commitHash
-	 * @return ApiGetBuildStatusesPagedRequest
-	 */
-	GetBuildStatusesPaged(ctx _context.Context, commitHash string) ApiGetBuildStatusesPagedRequest
-
-	/*
-	 * GetBuildStatusesPagedExecute executes the request
-	 * @return BuildStatusPage
-	 */
-	GetBuildStatusesPagedExecute(r ApiGetBuildStatusesPagedRequest) (BuildStatusPage, *_nethttp.Response, error)
-
-	/*
-		   * PostBuildResult Post build-result
-		   * Associates a build status with a commit.
-
-		The state, the key and the url are mandatory. The name and description fields are optional.
-
-		All fields (mandatory or optional) are limited to 255 characters, except for the url, which is limited to 450 characters.
-
-		Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
-
-		The authenticated user must have LICENSED permission or higher to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param commitHash
-		   * @return ApiPostBuildResultRequest
-	*/
-	PostBuildResult(ctx _context.Context, commitHash string) ApiPostBuildResultRequest
-
-	/*
-	 * PostBuildResultExecute executes the request
-	 */
-	PostBuildResultExecute(r ApiPostBuildResultRequest) (*_nethttp.Response, error)
-}
-
 // BuildStatusApiService BuildStatusApi service
 type BuildStatusApiService service
 
 type ApiGetBuildStatusesPagedRequest struct {
 	ctx        _context.Context
-	ApiService BuildStatusApi
+	ApiService *BuildStatusApiService
 	commitHash string
 	orderBy    *string
 	limit      *int32
@@ -206,7 +166,7 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 
 type ApiPostBuildResultRequest struct {
 	ctx         _context.Context
-	ApiService  BuildStatusApi
+	ApiService  *BuildStatusApiService
 	commitHash  string
 	buildStatus *BuildStatus
 }

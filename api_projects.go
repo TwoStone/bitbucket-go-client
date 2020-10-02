@@ -23,48 +23,12 @@ var (
 	_ _context.Context
 )
 
-type ProjectsApi interface {
-
-	/*
-		   * GetProject REST resource for working with projects
-		   * Retrieve the project matching the supplied projectKey.
-
-		The authenticated user must have PROJECT_VIEW permission for the specified project to call this resource.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @param projectKey
-		   * @return ApiGetProjectRequest
-	*/
-	GetProject(ctx _context.Context, projectKey string) ApiGetProjectRequest
-
-	/*
-	 * GetProjectExecute executes the request
-	 * @return Project
-	 */
-	GetProjectExecute(r ApiGetProjectRequest) (Project, *_nethttp.Response, error)
-
-	/*
-		   * GetProjectsPaged Get Projects
-		   * Retrieve a page of projects.
-
-		Only projects for which the authenticated user has the PROJECT_VIEW permission will be returned.
-		   * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		   * @return ApiGetProjectsPagedRequest
-	*/
-	GetProjectsPaged(ctx _context.Context) ApiGetProjectsPagedRequest
-
-	/*
-	 * GetProjectsPagedExecute executes the request
-	 * @return ProjectsPage
-	 */
-	GetProjectsPagedExecute(r ApiGetProjectsPagedRequest) (ProjectsPage, *_nethttp.Response, error)
-}
-
 // ProjectsApiService ProjectsApi service
 type ProjectsApiService service
 
 type ApiGetProjectRequest struct {
 	ctx        _context.Context
-	ApiService ProjectsApi
+	ApiService *ProjectsApiService
 	projectKey string
 }
 
@@ -189,7 +153,7 @@ func (a *ProjectsApiService) GetProjectExecute(r ApiGetProjectRequest) (Project,
 
 type ApiGetProjectsPagedRequest struct {
 	ctx        _context.Context
-	ApiService ProjectsApi
+	ApiService *ProjectsApiService
 	name       *string
 	permission *string
 	start      *int32

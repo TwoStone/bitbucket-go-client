@@ -23,47 +23,12 @@ var (
 	_ _context.Context
 )
 
-type PostWebhookApi interface {
-
-	/*
-	 * DeletePostWebhook Delete post webhook
-	 * Deletes the post webhook from the repository
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param projectKey
-	 * @param repositorySlug
-	 * @param iD
-	 * @return ApiDeletePostWebhookRequest
-	 */
-	DeletePostWebhook(ctx _context.Context, projectKey string, repositorySlug string, iD int32) ApiDeletePostWebhookRequest
-
-	/*
-	 * DeletePostWebhookExecute executes the request
-	 */
-	DeletePostWebhookExecute(r ApiDeletePostWebhookRequest) (*_nethttp.Response, error)
-
-	/*
-	 * GetPostWebhooks Get Post Webhooks
-	 * Returns the registered post webhooks for the repository.
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param projectKey
-	 * @param repositorySlug
-	 * @return ApiGetPostWebhooksRequest
-	 */
-	GetPostWebhooks(ctx _context.Context, projectKey string, repositorySlug string) ApiGetPostWebhooksRequest
-
-	/*
-	 * GetPostWebhooksExecute executes the request
-	 * @return []PostWebhook
-	 */
-	GetPostWebhooksExecute(r ApiGetPostWebhooksRequest) ([]PostWebhook, *_nethttp.Response, error)
-}
-
 // PostWebhookApiService PostWebhookApi service
 type PostWebhookApiService service
 
 type ApiDeletePostWebhookRequest struct {
 	ctx            _context.Context
-	ApiService     PostWebhookApi
+	ApiService     *PostWebhookApiService
 	projectKey     string
 	repositorySlug string
 	iD             int32
@@ -164,7 +129,7 @@ func (a *PostWebhookApiService) DeletePostWebhookExecute(r ApiDeletePostWebhookR
 
 type ApiGetPostWebhooksRequest struct {
 	ctx            _context.Context
-	ApiService     PostWebhookApi
+	ApiService     *PostWebhookApiService
 	projectKey     string
 	repositorySlug string
 }
