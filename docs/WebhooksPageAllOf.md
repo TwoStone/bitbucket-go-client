@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | [**[]Webhook**](webhook.md) |  | 
+**Values** | Pointer to [**[]Webhook**](webhook.md) |  | 
 
 ## Methods
 

@@ -26,27 +26,23 @@ var (
 // CommitsApiService CommitsApi service
 type CommitsApiService service
 
-type ApiGetCommitRequest struct {
+type apiGetCommitRequest struct {
 	ctx            _context.Context
-	ApiService     *CommitsApiService
+	apiService     *CommitsApiService
 	projectKey     string
 	repositorySlug string
 	commitId       string
 	path           *string
 }
 
-func (r ApiGetCommitRequest) Path(path string) ApiGetCommitRequest {
+func (r apiGetCommitRequest) Path(path string) apiGetCommitRequest {
 	r.path = &path
 	return r
 }
 
-func (r ApiGetCommitRequest) Execute() (Commit, *_nethttp.Response, error) {
-	return r.ApiService.GetCommitExecute(r)
-}
-
 /*
- * GetCommit Get commit
- * This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+GetCommit Get commit
+This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
 
 Retrieve a single commit identified by its ID. In general, that ID is a SHA1. From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
 
@@ -55,11 +51,11 @@ The authenticated user must have REPO_READ permission for the specified reposito
  * @param projectKey
  * @param repositorySlug
  * @param commitId
- * @return ApiGetCommitRequest
+@return apiGetCommitRequest
 */
-func (a *CommitsApiService) GetCommit(ctx _context.Context, projectKey string, repositorySlug string, commitId string) ApiGetCommitRequest {
-	return ApiGetCommitRequest{
-		ApiService:     a,
+func (a *CommitsApiService) GetCommit(ctx _context.Context, projectKey string, repositorySlug string, commitId string) apiGetCommitRequest {
+	return apiGetCommitRequest{
+		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -68,10 +64,10 @@ func (a *CommitsApiService) GetCommit(ctx _context.Context, projectKey string, r
 }
 
 /*
- * Execute executes the request
- * @return Commit
- */
-func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_nethttp.Response, error) {
+Execute executes the request
+ @return Commit
+*/
+func (r apiGetCommitRequest) Execute() (Commit, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -81,15 +77,15 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 		localVarReturnValue  Commit
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CommitsApiService.GetCommit")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "CommitsApiService.GetCommit")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"commitId"+"}", _neturl.PathEscape(parameterToString(r.commitId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"commitId"+"}", _neturl.QueryEscape(parameterToString(r.commitId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -115,12 +111,12 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -138,7 +134,7 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -148,7 +144,7 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -158,7 +154,7 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -168,7 +164,7 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -180,9 +176,9 @@ func (a *CommitsApiService) GetCommitExecute(r ApiGetCommitRequest) (Commit, *_n
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetCommitsPagedRequest struct {
+type apiGetCommitsPagedRequest struct {
 	ctx            _context.Context
-	ApiService     *CommitsApiService
+	apiService     *CommitsApiService
 	projectKey     string
 	repositorySlug string
 	followRenames  *bool
@@ -196,50 +192,54 @@ type ApiGetCommitsPagedRequest struct {
 	start          *int32
 }
 
-func (r ApiGetCommitsPagedRequest) FollowRenames(followRenames bool) ApiGetCommitsPagedRequest {
+func (r apiGetCommitsPagedRequest) FollowRenames(followRenames bool) apiGetCommitsPagedRequest {
 	r.followRenames = &followRenames
 	return r
 }
-func (r ApiGetCommitsPagedRequest) IgnoreMissing(ignoreMissing bool) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) IgnoreMissing(ignoreMissing bool) apiGetCommitsPagedRequest {
 	r.ignoreMissing = &ignoreMissing
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Merges(merges string) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Merges(merges string) apiGetCommitsPagedRequest {
 	r.merges = &merges
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Path(path string) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Path(path string) apiGetCommitsPagedRequest {
 	r.path = &path
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Since(since string) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Since(since string) apiGetCommitsPagedRequest {
 	r.since = &since
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Until(until string) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Until(until string) apiGetCommitsPagedRequest {
 	r.until = &until
 	return r
 }
-func (r ApiGetCommitsPagedRequest) WithCounts(withCounts bool) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) WithCounts(withCounts bool) apiGetCommitsPagedRequest {
 	r.withCounts = &withCounts
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Limit(limit int32) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Limit(limit int32) apiGetCommitsPagedRequest {
 	r.limit = &limit
 	return r
 }
-func (r ApiGetCommitsPagedRequest) Start(start int32) ApiGetCommitsPagedRequest {
+
+func (r apiGetCommitsPagedRequest) Start(start int32) apiGetCommitsPagedRequest {
 	r.start = &start
 	return r
 }
 
-func (r ApiGetCommitsPagedRequest) Execute() (CommitsPage, *_nethttp.Response, error) {
-	return r.ApiService.GetCommitsPagedExecute(r)
-}
-
 /*
- * GetCommitsPaged Get commits
- * This is a paged API. This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+GetCommitsPaged Get commits
+This is a paged API. This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
 
 Retrieve a page of commits from a given starting commit or "between" two commits. If no explicit commit is specified, the tip of the repository's default branch is assumed. commits may be identified by branch or tag name or by ID. A path may be supplied to restrict the returned commits to only those which affect that path.
 
@@ -247,11 +247,11 @@ The authenticated user must have REPO_READ permission for the specified reposito
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
- * @return ApiGetCommitsPagedRequest
+@return apiGetCommitsPagedRequest
 */
-func (a *CommitsApiService) GetCommitsPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiGetCommitsPagedRequest {
-	return ApiGetCommitsPagedRequest{
-		ApiService:     a,
+func (a *CommitsApiService) GetCommitsPaged(ctx _context.Context, projectKey string, repositorySlug string) apiGetCommitsPagedRequest {
+	return apiGetCommitsPagedRequest{
+		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -259,10 +259,10 @@ func (a *CommitsApiService) GetCommitsPaged(ctx _context.Context, projectKey str
 }
 
 /*
- * Execute executes the request
- * @return CommitsPage
- */
-func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) (CommitsPage, *_nethttp.Response, error) {
+Execute executes the request
+ @return CommitsPage
+*/
+func (r apiGetCommitsPagedRequest) Execute() (CommitsPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -272,14 +272,14 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 		localVarReturnValue  CommitsPage
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CommitsApiService.GetCommitsPaged")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "CommitsApiService.GetCommitsPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -329,12 +329,12 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -352,7 +352,7 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -362,7 +362,7 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -372,7 +372,7 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -382,7 +382,7 @@ func (a *CommitsApiService) GetCommitsPagedExecute(r ApiGetCommitsPagedRequest) 
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,

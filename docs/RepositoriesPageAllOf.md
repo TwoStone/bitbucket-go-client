@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | [**[]Repository**](repository.md) |  | 
+**Values** | Pointer to [**[]Repository**](repository.md) |  | 
 
 ## Methods
 

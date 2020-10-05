@@ -26,9 +26,9 @@ var (
 // BranchesApiService BranchesApi service
 type BranchesApiService service
 
-type ApiGetBranchesPagedRequest struct {
+type apiGetBranchesPagedRequest struct {
 	ctx            _context.Context
-	ApiService     *BranchesApiService
+	apiService     *BranchesApiService
 	projectKey     string
 	repositorySlug string
 	base           *string
@@ -40,52 +40,54 @@ type ApiGetBranchesPagedRequest struct {
 	limit          *int32
 }
 
-func (r ApiGetBranchesPagedRequest) Base(base string) ApiGetBranchesPagedRequest {
+func (r apiGetBranchesPagedRequest) Base(base string) apiGetBranchesPagedRequest {
 	r.base = &base
 	return r
 }
-func (r ApiGetBranchesPagedRequest) Details(details bool) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) Details(details bool) apiGetBranchesPagedRequest {
 	r.details = &details
 	return r
 }
-func (r ApiGetBranchesPagedRequest) FilterText(filterText string) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) FilterText(filterText string) apiGetBranchesPagedRequest {
 	r.filterText = &filterText
 	return r
 }
-func (r ApiGetBranchesPagedRequest) OrderBy(orderBy string) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) OrderBy(orderBy string) apiGetBranchesPagedRequest {
 	r.orderBy = &orderBy
 	return r
 }
-func (r ApiGetBranchesPagedRequest) BoostMatches(boostMatches bool) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) BoostMatches(boostMatches bool) apiGetBranchesPagedRequest {
 	r.boostMatches = &boostMatches
 	return r
 }
-func (r ApiGetBranchesPagedRequest) Start(start int32) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) Start(start int32) apiGetBranchesPagedRequest {
 	r.start = &start
 	return r
 }
-func (r ApiGetBranchesPagedRequest) Limit(limit int32) ApiGetBranchesPagedRequest {
+
+func (r apiGetBranchesPagedRequest) Limit(limit int32) apiGetBranchesPagedRequest {
 	r.limit = &limit
 	return r
 }
 
-func (r ApiGetBranchesPagedRequest) Execute() (BranchesPage, *_nethttp.Response, error) {
-	return r.ApiService.GetBranchesPagedExecute(r)
-}
-
 /*
- * GetBranchesPaged Get Branches
- * Retrieve the branches matching the supplied filterText param.
+GetBranchesPaged Get Branches
+Retrieve the branches matching the supplied filterText param.
 
 The authenticated user must have REPO_READ permission for the specified repository to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
- * @return ApiGetBranchesPagedRequest
+@return apiGetBranchesPagedRequest
 */
-func (a *BranchesApiService) GetBranchesPaged(ctx _context.Context, projectKey string, repositorySlug string) ApiGetBranchesPagedRequest {
-	return ApiGetBranchesPagedRequest{
-		ApiService:     a,
+func (a *BranchesApiService) GetBranchesPaged(ctx _context.Context, projectKey string, repositorySlug string) apiGetBranchesPagedRequest {
+	return apiGetBranchesPagedRequest{
+		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -93,10 +95,10 @@ func (a *BranchesApiService) GetBranchesPaged(ctx _context.Context, projectKey s
 }
 
 /*
- * Execute executes the request
- * @return BranchesPage
- */
-func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedRequest) (BranchesPage, *_nethttp.Response, error) {
+Execute executes the request
+ @return BranchesPage
+*/
+func (r apiGetBranchesPagedRequest) Execute() (BranchesPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -106,14 +108,14 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 		localVarReturnValue  BranchesPage
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.GetBranchesPaged")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.GetBranchesPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -157,12 +159,12 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -180,7 +182,7 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -190,7 +192,7 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -200,7 +202,7 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -212,30 +214,26 @@ func (a *BranchesApiService) GetBranchesPagedExecute(r ApiGetBranchesPagedReques
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetDefaultBranchRequest struct {
+type apiGetDefaultBranchRequest struct {
 	ctx            _context.Context
-	ApiService     *BranchesApiService
+	apiService     *BranchesApiService
 	projectKey     string
 	repositorySlug string
 }
 
-func (r ApiGetDefaultBranchRequest) Execute() (Branch, *_nethttp.Response, error) {
-	return r.ApiService.GetDefaultBranchExecute(r)
-}
-
 /*
- * GetDefaultBranch Get default branch
- * Get the default branch of the repository.
+GetDefaultBranch Get default branch
+Get the default branch of the repository.
 
 The authenticated user must have REPO_READ permission for the specified repository to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
- * @return ApiGetDefaultBranchRequest
+@return apiGetDefaultBranchRequest
 */
-func (a *BranchesApiService) GetDefaultBranch(ctx _context.Context, projectKey string, repositorySlug string) ApiGetDefaultBranchRequest {
-	return ApiGetDefaultBranchRequest{
-		ApiService:     a,
+func (a *BranchesApiService) GetDefaultBranch(ctx _context.Context, projectKey string, repositorySlug string) apiGetDefaultBranchRequest {
+	return apiGetDefaultBranchRequest{
+		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
@@ -243,10 +241,10 @@ func (a *BranchesApiService) GetDefaultBranch(ctx _context.Context, projectKey s
 }
 
 /*
- * Execute executes the request
- * @return Branch
- */
-func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchRequest) (Branch, *_nethttp.Response, error) {
+Execute executes the request
+ @return Branch
+*/
+func (r apiGetDefaultBranchRequest) Execute() (Branch, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -256,14 +254,14 @@ func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchReques
 		localVarReturnValue  Branch
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.GetDefaultBranch")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.GetDefaultBranch")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.PathEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.PathEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -286,12 +284,12 @@ func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -309,7 +307,7 @@ func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchReques
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -319,7 +317,7 @@ func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchReques
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -329,7 +327,7 @@ func (a *BranchesApiService) GetDefaultBranchExecute(r ApiGetDefaultBranchReques
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,

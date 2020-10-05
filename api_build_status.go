@@ -26,52 +26,50 @@ var (
 // BuildStatusApiService BuildStatusApi service
 type BuildStatusApiService service
 
-type ApiGetBuildStatusesPagedRequest struct {
+type apiGetBuildStatusesPagedRequest struct {
 	ctx        _context.Context
-	ApiService *BuildStatusApiService
+	apiService *BuildStatusApiService
 	commitHash string
 	orderBy    *string
 	limit      *int32
 	start      *int32
 }
 
-func (r ApiGetBuildStatusesPagedRequest) OrderBy(orderBy string) ApiGetBuildStatusesPagedRequest {
+func (r apiGetBuildStatusesPagedRequest) OrderBy(orderBy string) apiGetBuildStatusesPagedRequest {
 	r.orderBy = &orderBy
 	return r
 }
-func (r ApiGetBuildStatusesPagedRequest) Limit(limit int32) ApiGetBuildStatusesPagedRequest {
+
+func (r apiGetBuildStatusesPagedRequest) Limit(limit int32) apiGetBuildStatusesPagedRequest {
 	r.limit = &limit
 	return r
 }
-func (r ApiGetBuildStatusesPagedRequest) Start(start int32) ApiGetBuildStatusesPagedRequest {
+
+func (r apiGetBuildStatusesPagedRequest) Start(start int32) apiGetBuildStatusesPagedRequest {
 	r.start = &start
 	return r
 }
 
-func (r ApiGetBuildStatusesPagedRequest) Execute() (BuildStatusPage, *_nethttp.Response, error) {
-	return r.ApiService.GetBuildStatusesPagedExecute(r)
-}
-
 /*
- * GetBuildStatusesPaged Get build statuses
- * Gets the build statuses associated with a commit.
+GetBuildStatusesPaged Get build statuses
+Gets the build statuses associated with a commit.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param commitHash
- * @return ApiGetBuildStatusesPagedRequest
- */
-func (a *BuildStatusApiService) GetBuildStatusesPaged(ctx _context.Context, commitHash string) ApiGetBuildStatusesPagedRequest {
-	return ApiGetBuildStatusesPagedRequest{
-		ApiService: a,
+@return apiGetBuildStatusesPagedRequest
+*/
+func (a *BuildStatusApiService) GetBuildStatusesPaged(ctx _context.Context, commitHash string) apiGetBuildStatusesPagedRequest {
+	return apiGetBuildStatusesPagedRequest{
+		apiService: a,
 		ctx:        ctx,
 		commitHash: commitHash,
 	}
 }
 
 /*
- * Execute executes the request
- * @return BuildStatusPage
- */
-func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatusesPagedRequest) (BuildStatusPage, *_nethttp.Response, error) {
+Execute executes the request
+ @return BuildStatusPage
+*/
+func (r apiGetBuildStatusesPagedRequest) Execute() (BuildStatusPage, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -81,13 +79,13 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 		localVarReturnValue  BuildStatusPage
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.GetBuildStatusesPaged")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.GetBuildStatusesPaged")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/build-status/1.0/commits/{commitHash}"
-	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.PathEscape(parameterToString(r.commitHash, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.QueryEscape(parameterToString(r.commitHash, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -119,12 +117,12 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -142,7 +140,7 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
@@ -152,7 +150,7 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
@@ -164,25 +162,21 @@ func (a *BuildStatusApiService) GetBuildStatusesPagedExecute(r ApiGetBuildStatus
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiPostBuildResultRequest struct {
+type apiPostBuildResultRequest struct {
 	ctx         _context.Context
-	ApiService  *BuildStatusApiService
+	apiService  *BuildStatusApiService
 	commitHash  string
 	buildStatus *BuildStatus
 }
 
-func (r ApiPostBuildResultRequest) BuildStatus(buildStatus BuildStatus) ApiPostBuildResultRequest {
+func (r apiPostBuildResultRequest) BuildStatus(buildStatus BuildStatus) apiPostBuildResultRequest {
 	r.buildStatus = &buildStatus
 	return r
 }
 
-func (r ApiPostBuildResultRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.PostBuildResultExecute(r)
-}
-
 /*
- * PostBuildResult Post build-result
- * Associates a build status with a commit.
+PostBuildResult Post build-result
+Associates a build status with a commit.
 
 The state, the key and the url are mandatory. The name and description fields are optional.
 
@@ -193,20 +187,21 @@ Supported values for the state are SUCCESSFUL, FAILED and INPROGRESS.
 The authenticated user must have LICENSED permission or higher to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param commitHash
- * @return ApiPostBuildResultRequest
+@return apiPostBuildResultRequest
 */
-func (a *BuildStatusApiService) PostBuildResult(ctx _context.Context, commitHash string) ApiPostBuildResultRequest {
-	return ApiPostBuildResultRequest{
-		ApiService: a,
+func (a *BuildStatusApiService) PostBuildResult(ctx _context.Context, commitHash string) apiPostBuildResultRequest {
+	return apiPostBuildResultRequest{
+		apiService: a,
 		ctx:        ctx,
 		commitHash: commitHash,
 	}
 }
 
 /*
- * Execute executes the request
- */
-func (a *BuildStatusApiService) PostBuildResultExecute(r ApiPostBuildResultRequest) (*_nethttp.Response, error) {
+Execute executes the request
+
+*/
+func (r apiPostBuildResultRequest) Execute() (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -215,13 +210,13 @@ func (a *BuildStatusApiService) PostBuildResultExecute(r ApiPostBuildResultReque
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.PostBuildResult")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BuildStatusApiService.PostBuildResult")
 	if err != nil {
 		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/rest/build-status/1.0/commits/{commitHash}"
-	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.PathEscape(parameterToString(r.commitHash, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"commitHash"+"}", _neturl.QueryEscape(parameterToString(r.commitHash, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -246,12 +241,12 @@ func (a *BuildStatusApiService) PostBuildResultExecute(r ApiPostBuildResultReque
 	}
 	// body params
 	localVarPostBody = r.buildStatus
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -269,7 +264,7 @@ func (a *BuildStatusApiService) PostBuildResultExecute(r ApiPostBuildResultReque
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
@@ -279,7 +274,7 @@ func (a *BuildStatusApiService) PostBuildResultExecute(r ApiPostBuildResultReque
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr

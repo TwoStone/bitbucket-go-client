@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | [**[]Commit**](commit.md) |  | 
+**Values** | Pointer to [**[]Commit**](commit.md) |  | 
 **AuthorCount** | Pointer to **int32** |  | [optional] 
 **TotalCount** | Pointer to **int32** |  | [optional] 
 
