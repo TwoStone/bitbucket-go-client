@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Path** | Pointer to [**Path**](path.md) |  | [optional] 
 **ContentId** | Pointer to **string** |  | [optional] 
-**Type** | **string** |  | 
+**Type** | Pointer to **string** |  | 
 **Size** | Pointer to **string** |  | [optional] 
 **Node** | Pointer to **string** |  | [optional] 
 

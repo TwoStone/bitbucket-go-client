@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Context** | Pointer to **string** |  | [optional] 
-**Message** | **string** |  | 
+**Message** | Pointer to **string** |  | 
 **ExceptionName** | Pointer to **string** |  | [optional] 
 
 ## Methods

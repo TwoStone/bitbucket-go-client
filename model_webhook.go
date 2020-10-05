@@ -18,8 +18,8 @@ import (
 type Webhook struct {
 	Id            *int32                `json:"id,omitempty"`
 	Name          string                `json:"name"`
-	CreateDate    *int32                `json:"createDate,omitempty"`
-	UpdatedDate   *int32                `json:"updatedDate,omitempty"`
+	CreateDate    *int64                `json:"createDate,omitempty"`
+	UpdatedDate   *int64                `json:"updatedDate,omitempty"`
 	Events        []WebhookEvent        `json:"events"`
 	Configuration *WebhookConfiguration `json:"configuration,omitempty"`
 	Url           string                `json:"url"`
@@ -102,9 +102,9 @@ func (o *Webhook) SetName(v string) {
 }
 
 // GetCreateDate returns the CreateDate field value if set, zero value otherwise.
-func (o *Webhook) GetCreateDate() int32 {
+func (o *Webhook) GetCreateDate() int64 {
 	if o == nil || o.CreateDate == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.CreateDate
@@ -112,7 +112,7 @@ func (o *Webhook) GetCreateDate() int32 {
 
 // GetCreateDateOk returns a tuple with the CreateDate field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Webhook) GetCreateDateOk() (*int32, bool) {
+func (o *Webhook) GetCreateDateOk() (*int64, bool) {
 	if o == nil || o.CreateDate == nil {
 		return nil, false
 	}
@@ -128,15 +128,15 @@ func (o *Webhook) HasCreateDate() bool {
 	return false
 }
 
-// SetCreateDate gets a reference to the given int32 and assigns it to the CreateDate field.
-func (o *Webhook) SetCreateDate(v int32) {
+// SetCreateDate gets a reference to the given int64 and assigns it to the CreateDate field.
+func (o *Webhook) SetCreateDate(v int64) {
 	o.CreateDate = &v
 }
 
 // GetUpdatedDate returns the UpdatedDate field value if set, zero value otherwise.
-func (o *Webhook) GetUpdatedDate() int32 {
+func (o *Webhook) GetUpdatedDate() int64 {
 	if o == nil || o.UpdatedDate == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.UpdatedDate
@@ -144,7 +144,7 @@ func (o *Webhook) GetUpdatedDate() int32 {
 
 // GetUpdatedDateOk returns a tuple with the UpdatedDate field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Webhook) GetUpdatedDateOk() (*int32, bool) {
+func (o *Webhook) GetUpdatedDateOk() (*int64, bool) {
 	if o == nil || o.UpdatedDate == nil {
 		return nil, false
 	}
@@ -160,8 +160,8 @@ func (o *Webhook) HasUpdatedDate() bool {
 	return false
 }
 
-// SetUpdatedDate gets a reference to the given int32 and assigns it to the UpdatedDate field.
-func (o *Webhook) SetUpdatedDate(v int32) {
+// SetUpdatedDate gets a reference to the given int64 and assigns it to the UpdatedDate field.
+func (o *Webhook) SetUpdatedDate(v int64) {
 	o.UpdatedDate = &v
 }
 

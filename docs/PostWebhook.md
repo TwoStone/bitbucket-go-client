@@ -6,11 +6,11 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **BranchCreated** | Pointer to **bool** |  | [optional] 
 **BranchDeleted** | Pointer to **bool** |  | [optional] 
-**BranchesToIgnore** | **string** |  | 
+**BranchesToIgnore** | Pointer to **string** |  | 
 **BuildStatus** | Pointer to **bool** |  | [optional] 
-**CommittersToIgnore** | **string** |  | 
-**Enabled** | **bool** |  | 
-**Id** | **int32** |  | 
+**CommittersToIgnore** | Pointer to **string** |  | 
+**Enabled** | Pointer to **bool** |  | 
+**Id** | Pointer to **int32** |  | 
 **PrCommented** | Pointer to **bool** |  | [optional] 
 **PrCreated** | Pointer to **bool** |  | [optional] 
 **PrDeclined** | Pointer to **bool** |  | [optional] 
@@ -20,8 +20,8 @@ Name | Type | Description | Notes
 **PrUpdated** | Pointer to **bool** |  | [optional] 
 **RepoPush** | Pointer to **bool** |  | [optional] 
 **TagCreated** | Pointer to **bool** |  | [optional] 
-**Title** | **string** |  | 
-**Url** | **string** |  | 
+**Title** | Pointer to **string** |  | 
+**Url** | Pointer to **string** |  | 
 
 ## Methods
 

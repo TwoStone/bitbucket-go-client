@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Href** | **string** |  | 
+**Href** | Pointer to **string** |  | 
 **Name** | Pointer to **string** |  | [optional] 
 
 ## Methods

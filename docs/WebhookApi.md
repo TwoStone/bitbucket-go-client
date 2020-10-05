@@ -35,7 +35,7 @@ import (
 func main() {
     projectKey := "projectKey_example" // string | 
     repositorySlug := "repositorySlug_example" // string | 
-    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: 123, UpdatedDate: 123, Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
+    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: int64(123), UpdatedDate: int64(123), Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -340,7 +340,7 @@ func main() {
     projectKey := "projectKey_example" // string | 
     repositorySlug := "repositorySlug_example" // string | 
     webhookId := 987 // int32 | 
-    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: 123, UpdatedDate: 123, Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
+    webhook := openapiclient.webhook{Id: 123, Name: "Name_example", CreateDate: int64(123), UpdatedDate: int64(123), Events: []WebhookEvent{openapiclient.webhookEvent{}), Configuration: openapiclient.webhook_configuration{Secret: "Secret_example"}, Url: "Url_example"} // Webhook |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

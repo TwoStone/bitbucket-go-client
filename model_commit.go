@@ -19,9 +19,9 @@ type Commit struct {
 	Id                string           `json:"id"`
 	DisplayId         string           `json:"displayId"`
 	Author            User             `json:"author"`
-	AuthorTimestamp   int32            `json:"authorTimestamp"`
+	AuthorTimestamp   int64            `json:"authorTimestamp"`
 	Commiter          User             `json:"commiter"`
-	CommiterTimestamp int32            `json:"commiterTimestamp"`
+	CommiterTimestamp int64            `json:"commiterTimestamp"`
 	Message           string           `json:"message"`
 	Parents           *[]CommitParents `json:"parents,omitempty"`
 }
@@ -30,7 +30,7 @@ type Commit struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp int32, message string) *Commit {
+func NewCommit(id string, displayId string, author User, authorTimestamp int64, commiter User, commiterTimestamp int64, message string) *Commit {
 	this := Commit{}
 	this.Id = id
 	this.DisplayId = displayId
@@ -123,9 +123,9 @@ func (o *Commit) SetAuthor(v User) {
 }
 
 // GetAuthorTimestamp returns the AuthorTimestamp field value
-func (o *Commit) GetAuthorTimestamp() int32 {
+func (o *Commit) GetAuthorTimestamp() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -134,7 +134,7 @@ func (o *Commit) GetAuthorTimestamp() int32 {
 
 // GetAuthorTimestampOk returns a tuple with the AuthorTimestamp field value
 // and a boolean to check if the value has been set.
-func (o *Commit) GetAuthorTimestampOk() (*int32, bool) {
+func (o *Commit) GetAuthorTimestampOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -142,7 +142,7 @@ func (o *Commit) GetAuthorTimestampOk() (*int32, bool) {
 }
 
 // SetAuthorTimestamp sets field value
-func (o *Commit) SetAuthorTimestamp(v int32) {
+func (o *Commit) SetAuthorTimestamp(v int64) {
 	o.AuthorTimestamp = v
 }
 
@@ -171,9 +171,9 @@ func (o *Commit) SetCommiter(v User) {
 }
 
 // GetCommiterTimestamp returns the CommiterTimestamp field value
-func (o *Commit) GetCommiterTimestamp() int32 {
+func (o *Commit) GetCommiterTimestamp() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -182,7 +182,7 @@ func (o *Commit) GetCommiterTimestamp() int32 {
 
 // GetCommiterTimestampOk returns a tuple with the CommiterTimestamp field value
 // and a boolean to check if the value has been set.
-func (o *Commit) GetCommiterTimestampOk() (*int32, bool) {
+func (o *Commit) GetCommiterTimestampOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -190,7 +190,7 @@ func (o *Commit) GetCommiterTimestampOk() (*int32, bool) {
 }
 
 // SetCommiterTimestamp sets field value
-func (o *Commit) SetCommiterTimestamp(v int32) {
+func (o *Commit) SetCommiterTimestamp(v int64) {
 	o.CommiterTimestamp = v
 }
 

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | **string** |  | 
+**Name** | Pointer to **string** |  | 
 **ScmId** | Pointer to **string** |  | [optional] [default to "git"]
 **Forkable** | Pointer to **bool** |  | [optional] 
 **DefaultBranch** | Pointer to **string** |  | [optional] 

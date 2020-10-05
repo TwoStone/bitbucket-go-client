@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**State** | **string** |  | 
-**Key** | **string** |  | 
-**Name** | **string** |  | 
-**Url** | **string** |  | 
-**Description** | **string** |  | 
+**State** | Pointer to **string** |  | 
+**Key** | Pointer to **string** |  | 
+**Name** | Pointer to **string** |  | 
+**Url** | Pointer to **string** |  | 
+**Description** | Pointer to **string** |  | 
 
 ## Methods
 
