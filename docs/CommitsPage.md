@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Size** | **int32** |  | 
-**Limit** | **int32** |  | 
-**Start** | **int32** |  | 
-**IsLastPage** | **bool** |  | 
+**Size** | Pointer to **int32** |  | 
+**Limit** | Pointer to **int32** |  | 
+**Start** | Pointer to **int32** |  | 
+**IsLastPage** | Pointer to **bool** |  | 
 **NextPageStart** | Pointer to **int32** |  | [optional] 
-**Values** | [**[]Commit**](commit.md) |  | 
+**Values** | Pointer to [**[]Commit**](commit.md) |  | 
 **AuthorCount** | Pointer to **int32** |  | [optional] 
 **TotalCount** | Pointer to **int32** |  | [optional] 
 

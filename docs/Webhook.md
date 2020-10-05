@@ -5,12 +5,12 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | Pointer to **int32** |  | [optional] 
-**Name** | **string** |  | 
-**CreateDate** | Pointer to **int32** |  | [optional] 
-**UpdatedDate** | Pointer to **int32** |  | [optional] 
-**Events** | [**[]WebhookEvent**](webhookEvent.md) |  | 
+**Name** | Pointer to **string** |  | 
+**CreateDate** | Pointer to **int64** |  | [optional] 
+**UpdatedDate** | Pointer to **int64** |  | [optional] 
+**Events** | Pointer to [**[]WebhookEvent**](webhookEvent.md) |  | 
 **Configuration** | Pointer to [**WebhookConfiguration**](webhook_configuration.md) |  | [optional] 
-**Url** | **string** |  | 
+**Url** | Pointer to **string** |  | 
 
 ## Methods
 
@@ -78,20 +78,20 @@ SetName sets Name field to given value.
 
 ### GetCreateDate
 
-`func (o *Webhook) GetCreateDate() int32`
+`func (o *Webhook) GetCreateDate() int64`
 
 GetCreateDate returns the CreateDate field if non-nil, zero value otherwise.
 
 ### GetCreateDateOk
 
-`func (o *Webhook) GetCreateDateOk() (*int32, bool)`
+`func (o *Webhook) GetCreateDateOk() (*int64, bool)`
 
 GetCreateDateOk returns a tuple with the CreateDate field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCreateDate
 
-`func (o *Webhook) SetCreateDate(v int32)`
+`func (o *Webhook) SetCreateDate(v int64)`
 
 SetCreateDate sets CreateDate field to given value.
 
@@ -103,20 +103,20 @@ HasCreateDate returns a boolean if a field has been set.
 
 ### GetUpdatedDate
 
-`func (o *Webhook) GetUpdatedDate() int32`
+`func (o *Webhook) GetUpdatedDate() int64`
 
 GetUpdatedDate returns the UpdatedDate field if non-nil, zero value otherwise.
 
 ### GetUpdatedDateOk
 
-`func (o *Webhook) GetUpdatedDateOk() (*int32, bool)`
+`func (o *Webhook) GetUpdatedDateOk() (*int64, bool)`
 
 GetUpdatedDateOk returns a tuple with the UpdatedDate field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUpdatedDate
 
-`func (o *Webhook) SetUpdatedDate(v int32)`
+`func (o *Webhook) SetUpdatedDate(v int64)`
 
 SetUpdatedDate sets UpdatedDate field to given value.
 

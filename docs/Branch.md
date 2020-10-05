@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | 
-**DisplayId** | **string** |  | 
-**Type** | **string** |  | 
-**LatestCommit** | **string** |  | 
-**LatestChangeset** | **string** |  | 
-**IsDefault** | **bool** |  | 
+**Id** | Pointer to **string** |  | 
+**DisplayId** | Pointer to **string** |  | 
+**Type** | Pointer to **string** |  | 
+**LatestCommit** | Pointer to **string** |  | 
+**LatestChangeset** | Pointer to **string** |  | 
+**IsDefault** | Pointer to **bool** |  | 
 
 ## Methods
 

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Values** | [**[]Branch**](branch.md) |  | 
+**Values** | Pointer to [**[]Branch**](branch.md) |  | 
 
 ## Methods
 

@@ -4,20 +4,20 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | 
-**DisplayId** | **string** |  | 
-**Author** | [**User**](user.md) |  | 
-**AuthorTimestamp** | **int32** |  | 
-**Commiter** | [**User**](user.md) |  | 
-**CommiterTimestamp** | **int32** |  | 
-**Message** | **string** |  | 
+**Id** | Pointer to **string** |  | 
+**DisplayId** | Pointer to **string** |  | 
+**Author** | Pointer to [**User**](user.md) |  | 
+**AuthorTimestamp** | Pointer to **int64** |  | 
+**Commiter** | Pointer to [**User**](user.md) |  | 
+**CommiterTimestamp** | Pointer to **int64** |  | 
+**Message** | Pointer to **string** |  | 
 **Parents** | Pointer to [**[]CommitParents**](commit_parents.md) |  | [optional] 
 
 ## Methods
 
 ### NewCommit
 
-`func NewCommit(id string, displayId string, author User, authorTimestamp int32, commiter User, commiterTimestamp int32, message string, ) *Commit`
+`func NewCommit(id string, displayId string, author User, authorTimestamp int64, commiter User, commiterTimestamp int64, message string, ) *Commit`
 
 NewCommit instantiates a new Commit object
 This constructor will assign default values to properties that have it defined,
@@ -94,20 +94,20 @@ SetAuthor sets Author field to given value.
 
 ### GetAuthorTimestamp
 
-`func (o *Commit) GetAuthorTimestamp() int32`
+`func (o *Commit) GetAuthorTimestamp() int64`
 
 GetAuthorTimestamp returns the AuthorTimestamp field if non-nil, zero value otherwise.
 
 ### GetAuthorTimestampOk
 
-`func (o *Commit) GetAuthorTimestampOk() (*int32, bool)`
+`func (o *Commit) GetAuthorTimestampOk() (*int64, bool)`
 
 GetAuthorTimestampOk returns a tuple with the AuthorTimestamp field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAuthorTimestamp
 
-`func (o *Commit) SetAuthorTimestamp(v int32)`
+`func (o *Commit) SetAuthorTimestamp(v int64)`
 
 SetAuthorTimestamp sets AuthorTimestamp field to given value.
 
@@ -134,20 +134,20 @@ SetCommiter sets Commiter field to given value.
 
 ### GetCommiterTimestamp
 
-`func (o *Commit) GetCommiterTimestamp() int32`
+`func (o *Commit) GetCommiterTimestamp() int64`
 
 GetCommiterTimestamp returns the CommiterTimestamp field if non-nil, zero value otherwise.
 
 ### GetCommiterTimestampOk
 
-`func (o *Commit) GetCommiterTimestampOk() (*int32, bool)`
+`func (o *Commit) GetCommiterTimestampOk() (*int64, bool)`
 
 GetCommiterTimestampOk returns a tuple with the CommiterTimestamp field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCommiterTimestamp
 
-`func (o *Commit) SetCommiterTimestamp(v int32)`
+`func (o *Commit) SetCommiterTimestamp(v int64)`
 
 SetCommiterTimestamp sets CommiterTimestamp field to given value.
 
