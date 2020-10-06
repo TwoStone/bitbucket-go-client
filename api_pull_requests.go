@@ -23,36 +23,36 @@ var (
 	_ _context.Context
 )
 
-// WebhookApiService WebhookApi service
-type WebhookApiService service
+// PullRequestsApiService PullRequestsApi service
+type PullRequestsApiService service
 
-type apiCreateWebhookRequest struct {
+type apiCreatePullRequestRequest struct {
 	ctx            _context.Context
-	apiService     *WebhookApiService
+	apiService     *PullRequestsApiService
 	projectKey     string
 	repositorySlug string
-	webhook        *Webhook
+	pullRequest    *PullRequest
 }
 
-func (r apiCreateWebhookRequest) Webhook(webhook Webhook) apiCreateWebhookRequest {
-	r.webhook = &webhook
+func (r apiCreatePullRequestRequest) PullRequest(pullRequest PullRequest) apiCreatePullRequestRequest {
+	r.pullRequest = &pullRequest
 	return r
 }
 
 /*
-CreateWebhook Create webhook
+CreatePullRequest Create Pull Request
 This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
 
-Create a webhook for the repository specified via the URL.
+Create a new pull request between two branches. The branches may be in the same repository, or different ones. When using different repositories, they must still be in the same {@link Repository#getHierarchyId() hierarchy}.
 
-The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
+The authenticated user must have REPO_READ permission for the "from" and "to"repositories to call this resource.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
-@return apiCreateWebhookRequest
+@return apiCreatePullRequestRequest
 */
-func (a *WebhookApiService) CreateWebhook(ctx _context.Context, projectKey string, repositorySlug string) apiCreateWebhookRequest {
-	return apiCreateWebhookRequest{
+func (a *PullRequestsApiService) CreatePullRequest(ctx _context.Context, projectKey string, repositorySlug string) apiCreatePullRequestRequest {
+	return apiCreatePullRequestRequest{
 		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
@@ -62,24 +62,24 @@ func (a *WebhookApiService) CreateWebhook(ctx _context.Context, projectKey strin
 
 /*
 Execute executes the request
- @return Webhook
+ @return PullRequest
 */
-func (r apiCreateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) {
+func (r apiCreatePullRequestRequest) Execute() (PullRequest, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Webhook
+		localVarReturnValue  PullRequest
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "WebhookApiService.CreateWebhook")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.CreatePullRequest")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks"
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests"
 	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
 
@@ -105,7 +105,633 @@ func (r apiCreateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.webhook
+	localVarPostBody = r.pullRequest
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiDeletePullRequestRequest struct {
+	ctx               _context.Context
+	apiService        *PullRequestsApiService
+	projectKey        string
+	repositorySlug    string
+	pullRequestId     int32
+	pullRequestDelete *PullRequestDelete
+}
+
+func (r apiDeletePullRequestRequest) PullRequestDelete(pullRequestDelete PullRequestDelete) apiDeletePullRequestRequest {
+	r.pullRequestDelete = &pullRequestDelete
+	return r
+}
+
+/*
+DeletePullRequest Delete pull request
+This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+Deletes a pull request.
+
+To call this resource, users must be authenticated and have permission to view the pull request. Additionally, they must:
+
+be the pull request author, if the system is configured to allow authors to delete their own pull requests (this is the default) OR
+have repository administrator permission for the repository the pull request is targeting
+A body containing the version of the pull request must be provided with this request.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+ * @param pullRequestId
+@return apiDeletePullRequestRequest
+*/
+func (a *PullRequestsApiService) DeletePullRequest(ctx _context.Context, projectKey string, repositorySlug string, pullRequestId int32) apiDeletePullRequestRequest {
+	return apiDeletePullRequestRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+		pullRequestId:  pullRequestId,
+	}
+}
+
+/*
+Execute executes the request
+
+*/
+func (r apiDeletePullRequestRequest) Execute() (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.DeletePullRequest")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pullRequestId"+"}", _neturl.QueryEscape(parameterToString(r.pullRequestId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.pullRequestDelete
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type apiGetDiffRequest struct {
+	ctx            _context.Context
+	apiService     *PullRequestsApiService
+	projectKey     string
+	repositorySlug string
+	pullRequestId  int32
+	contextLines   *int32
+	whitespaces    *string
+}
+
+func (r apiGetDiffRequest) ContextLines(contextLines int32) apiGetDiffRequest {
+	r.contextLines = &contextLines
+	return r
+}
+
+func (r apiGetDiffRequest) Whitespaces(whitespaces string) apiGetDiffRequest {
+	r.whitespaces = &whitespaces
+	return r
+}
+
+/*
+GetDiff Get PR Diff
+This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+Streams the raw diff for a pull request.
+
+The authenticated user must have REPO_READ permission for the repository that this pull request targets to call this resource.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+ * @param pullRequestId
+@return apiGetDiffRequest
+*/
+func (a *PullRequestsApiService) GetDiff(ctx _context.Context, projectKey string, repositorySlug string, pullRequestId int32) apiGetDiffRequest {
+	return apiGetDiffRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+		pullRequestId:  pullRequestId,
+	}
+}
+
+/*
+Execute executes the request
+ @return string
+*/
+func (r apiGetDiffRequest) Execute() (string, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  string
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.GetDiff")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}.diff"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pullRequestId"+"}", _neturl.QueryEscape(parameterToString(r.pullRequestId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.contextLines != nil {
+		localVarQueryParams.Add("contextLines", parameterToString(*r.contextLines, ""))
+	}
+	if r.whitespaces != nil {
+		localVarQueryParams.Add("whitespaces", parameterToString(*r.whitespaces, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"text/plain", "application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiGetPullRequestRequest struct {
+	ctx            _context.Context
+	apiService     *PullRequestsApiService
+	projectKey     string
+	repositorySlug string
+	pullRequestId  int32
+}
+
+/*
+GetPullRequest Get pull request
+This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+
+Retrieve a pull request.
+
+The authenticated user must have REPO_READ permission for the repository that this pull request targets to call this resource.
+
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+ * @param pullRequestId
+@return apiGetPullRequestRequest
+*/
+func (a *PullRequestsApiService) GetPullRequest(ctx _context.Context, projectKey string, repositorySlug string, pullRequestId int32) apiGetPullRequestRequest {
+	return apiGetPullRequestRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+		pullRequestId:  pullRequestId,
+	}
+}
+
+/*
+Execute executes the request
+ @return PullRequest
+*/
+func (r apiGetPullRequestRequest) Execute() (PullRequest, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  PullRequest
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.GetPullRequest")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pullRequestId"+"}", _neturl.QueryEscape(parameterToString(r.pullRequestId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiGetPullRequestsPagedRequest struct {
+	ctx            _context.Context
+	apiService     *PullRequestsApiService
+	projectKey     string
+	repositorySlug string
+	limit          *int32
+	start          *int32
+	state          *string
+	order          *string
+	at             *string
+	direction      *string
+	filterText     *string
+}
+
+func (r apiGetPullRequestsPagedRequest) Limit(limit int32) apiGetPullRequestsPagedRequest {
+	r.limit = &limit
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) Start(start int32) apiGetPullRequestsPagedRequest {
+	r.start = &start
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) State(state string) apiGetPullRequestsPagedRequest {
+	r.state = &state
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) Order(order string) apiGetPullRequestsPagedRequest {
+	r.order = &order
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) At(at string) apiGetPullRequestsPagedRequest {
+	r.at = &at
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) Direction(direction string) apiGetPullRequestsPagedRequest {
+	r.direction = &direction
+	return r
+}
+
+func (r apiGetPullRequestsPagedRequest) FilterText(filterText string) apiGetPullRequestsPagedRequest {
+	r.filterText = &filterText
+	return r
+}
+
+/*
+GetPullRequestsPaged Get Pull Request Page
+Retrieve a page of pull requests to or from the specified repository.
+
+The authenticated user must have REPO_READ permission for the specified repository to call this resource. Optionally clients can specify PR participant filters. Each filter has a mandatory username.N parameter, and the optional role.N and approved.N parameters.
+
+username.N - the "root" of a single participant filter, where "N" is a natural number starting from 1. This allows clients to specify multiple participant filters, by providing consecutive filters as username.1, username.2 etc. Note that the filters numbering has to start with 1 and be continuous for all filters to be processed. The total allowed number of participant filters is 10 and all filters exceeding that limit will be dropped.
+role.N(optional) the role associated with username.N. This must be one of AUTHOR, REVIEWER, orPARTICIPANT
+approved.N(optional) the approved status associated with username.N. That is whether username.N has approved the PR. Either true, or false
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiGetPullRequestsPagedRequest
+*/
+func (a *PullRequestsApiService) GetPullRequestsPaged(ctx _context.Context, projectKey string, repositorySlug string) apiGetPullRequestsPagedRequest {
+	return apiGetPullRequestsPagedRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return PullRequestsPage
+*/
+func (r apiGetPullRequestsPagedRequest) Execute() (PullRequestsPage, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  PullRequestsPage
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.GetPullRequestsPaged")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.limit != nil {
+		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+	}
+	if r.start != nil {
+		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
+	}
+	if r.state != nil {
+		localVarQueryParams.Add("state", parameterToString(*r.state, ""))
+	}
+	if r.order != nil {
+		localVarQueryParams.Add("order", parameterToString(*r.order, ""))
+	}
+	if r.at != nil {
+		localVarQueryParams.Add("at", parameterToString(*r.at, ""))
+	}
+	if r.direction != nil {
+		localVarQueryParams.Add("direction", parameterToString(*r.direction, ""))
+	}
+	if r.filterText != nil {
+		localVarQueryParams.Add("filterText", parameterToString(*r.filterText, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
 	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -171,181 +797,61 @@ func (r apiCreateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiDeleteWebhookRequest struct {
+type apiGetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatchRequest struct {
 	ctx            _context.Context
-	apiService     *WebhookApiService
+	apiService     *PullRequestsApiService
 	projectKey     string
 	repositorySlug string
-	webhookId      int32
+	pullRequestId  string
 }
 
 /*
-DeleteWebhook Delete Webhook
+GetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatch Get PR Patch
 This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
 
-Delete a webhook for the repository specified via the URL.
+Streams a patch representing a pull request.
 
-The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
+The authenticated user must have REPO_READ permission for the repository that this pull request targets to call this resource.
+
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
- * @param webhookId
-@return apiDeleteWebhookRequest
+ * @param pullRequestId
+@return apiGetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatchRequest
 */
-func (a *WebhookApiService) DeleteWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) apiDeleteWebhookRequest {
-	return apiDeleteWebhookRequest{
+func (a *PullRequestsApiService) GetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatch(ctx _context.Context, projectKey string, repositorySlug string, pullRequestId string) apiGetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatchRequest {
+	return apiGetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatchRequest{
 		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
-		webhookId:      webhookId,
+		pullRequestId:  pullRequestId,
 	}
 }
 
 /*
 Execute executes the request
-
+ @return string
 */
-func (r apiDeleteWebhookRequest) Execute() (*_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodDelete
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-	)
-
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "WebhookApiService.DeleteWebhook")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"webhookId"+"}", _neturl.QueryEscape(parameterToString(r.webhookId, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 404 {
-			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-		}
-		return localVarHTTPResponse, newErr
-	}
-
-	return localVarHTTPResponse, nil
-}
-
-type apiGetWebhookRequest struct {
-	ctx            _context.Context
-	apiService     *WebhookApiService
-	projectKey     string
-	repositorySlug string
-	webhookId      int32
-}
-
-/*
-GetWebhook Get Webhook
-This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-Get a webhook by id.
-
-The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param projectKey
- * @param repositorySlug
- * @param webhookId
-@return apiGetWebhookRequest
-*/
-func (a *WebhookApiService) GetWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) apiGetWebhookRequest {
-	return apiGetWebhookRequest{
-		apiService:     a,
-		ctx:            ctx,
-		projectKey:     projectKey,
-		repositorySlug: repositorySlug,
-		webhookId:      webhookId,
-	}
-}
-
-/*
-Execute executes the request
- @return Webhook
-*/
-func (r apiGetWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) {
+func (r apiGetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatchRequest) Execute() (string, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Webhook
+		localVarReturnValue  string
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "WebhookApiService.GetWebhook")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.GetRestApi10ProjectsProjectKeyReposRepositorySlugPullRequestsPullRequestIdPatch")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId}"
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}.patch"
 	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"webhookId"+"}", _neturl.QueryEscape(parameterToString(r.webhookId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pullRequestId"+"}", _neturl.QueryEscape(parameterToString(r.pullRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -361,7 +867,7 @@ func (r apiGetWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) {
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{"text/plain", "application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -423,221 +929,70 @@ func (r apiGetWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) {
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type apiGetWebhooksPagedRequest struct {
-	ctx            _context.Context
-	apiService     *WebhookApiService
-	projectKey     string
-	repositorySlug string
-	start          *int32
-	limit          *int32
-	event          *string
+type apiUpdatePullRequestRequest struct {
+	ctx               _context.Context
+	apiService        *PullRequestsApiService
+	projectKey        string
+	repositorySlug    string
+	pullRequestId     int32
+	pullRequestUpdate *PullRequestUpdate
 }
 
-func (r apiGetWebhooksPagedRequest) Start(start int32) apiGetWebhooksPagedRequest {
-	r.start = &start
-	return r
-}
-
-func (r apiGetWebhooksPagedRequest) Limit(limit int32) apiGetWebhooksPagedRequest {
-	r.limit = &limit
-	return r
-}
-
-func (r apiGetWebhooksPagedRequest) Event(event string) apiGetWebhooksPagedRequest {
-	r.event = &event
+func (r apiUpdatePullRequestRequest) PullRequestUpdate(pullRequestUpdate PullRequestUpdate) apiUpdatePullRequestRequest {
+	r.pullRequestUpdate = &pullRequestUpdate
 	return r
 }
 
 /*
-GetWebhooksPaged Get webhooks
-This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
+UpdatePullRequest Update pull request
+Update the title, description, reviewers or destination branch of an existing pull request.
 
-Find webhooks in this repository.
+Note: the reviewers list may be updated using this resource. However the author and participants list may not.
 
-The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
+The authenticated user must either:
+* be the author of the pull request and have the REPO_READ permission for the repository that this pull request targets; or
+* have the REPO_WRITE permission for the repository that this pull request targets
+to call this resource.
+
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param projectKey
  * @param repositorySlug
-@return apiGetWebhooksPagedRequest
+ * @param pullRequestId
+@return apiUpdatePullRequestRequest
 */
-func (a *WebhookApiService) GetWebhooksPaged(ctx _context.Context, projectKey string, repositorySlug string) apiGetWebhooksPagedRequest {
-	return apiGetWebhooksPagedRequest{
+func (a *PullRequestsApiService) UpdatePullRequest(ctx _context.Context, projectKey string, repositorySlug string, pullRequestId int32) apiUpdatePullRequestRequest {
+	return apiUpdatePullRequestRequest{
 		apiService:     a,
 		ctx:            ctx,
 		projectKey:     projectKey,
 		repositorySlug: repositorySlug,
+		pullRequestId:  pullRequestId,
 	}
 }
 
 /*
 Execute executes the request
- @return WebhooksPage
+ @return PullRequest
 */
-func (r apiGetWebhooksPagedRequest) Execute() (WebhooksPage, *_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodGet
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-		localVarReturnValue  WebhooksPage
-	)
-
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "WebhookApiService.GetWebhooksPaged")
-	if err != nil {
-		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks"
-	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	if r.start != nil {
-		localVarQueryParams.Add("start", parameterToString(*r.start, ""))
-	}
-	if r.limit != nil {
-		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
-	}
-	if r.event != nil {
-		localVarQueryParams.Add("event", parameterToString(*r.event, ""))
-	}
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 404 {
-			var v Errors
-			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type apiUpdateWebhookRequest struct {
-	ctx            _context.Context
-	apiService     *WebhookApiService
-	projectKey     string
-	repositorySlug string
-	webhookId      int32
-	webhook        *Webhook
-}
-
-func (r apiUpdateWebhookRequest) Webhook(webhook Webhook) apiUpdateWebhookRequest {
-	r.webhook = &webhook
-	return r
-}
-
-/*
-UpdateWebhook Update webhook
-This API can also be invoked via a user-centric URL when addressing repositories in personal projects.
-
-Update an existing webhook.
-
-The authenticated user must have REPO_ADMIN permission for the specified repository to call this resource.
-
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param projectKey
- * @param repositorySlug
- * @param webhookId
-@return apiUpdateWebhookRequest
-*/
-func (a *WebhookApiService) UpdateWebhook(ctx _context.Context, projectKey string, repositorySlug string, webhookId int32) apiUpdateWebhookRequest {
-	return apiUpdateWebhookRequest{
-		apiService:     a,
-		ctx:            ctx,
-		projectKey:     projectKey,
-		repositorySlug: repositorySlug,
-		webhookId:      webhookId,
-	}
-}
-
-/*
-Execute executes the request
- @return Webhook
-*/
-func (r apiUpdateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) {
+func (r apiUpdatePullRequestRequest) Execute() (PullRequest, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Webhook
+		localVarReturnValue  PullRequest
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "WebhookApiService.UpdateWebhook")
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.UpdatePullRequest")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/webhooks/{webhookId}"
+	localVarPath := localBasePath + "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}"
 	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"webhookId"+"}", _neturl.QueryEscape(parameterToString(r.webhookId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pullRequestId"+"}", _neturl.QueryEscape(parameterToString(r.pullRequestId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -661,7 +1016,7 @@ func (r apiUpdateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.webhook
+	localVarPostBody = r.pullRequestUpdate
 	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -683,6 +1038,16 @@ func (r apiUpdateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) 
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v Errors
 			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
@@ -694,6 +1059,16 @@ func (r apiUpdateWebhookRequest) Execute() (Webhook, *_nethttp.Response, error) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
 			var v Errors
 			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {

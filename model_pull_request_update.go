@@ -14,274 +14,280 @@ import (
 	"encoding/json"
 )
 
-// Branch struct for Branch
-type Branch struct {
-	Id              string          `json:"id"`
-	DisplayId       string          `json:"displayId"`
-	Type            string          `json:"type"`
-	LatestCommit    string          `json:"latestCommit"`
-	LatestChangeset string          `json:"latestChangeset"`
-	IsDefault       bool            `json:"isDefault"`
-	Metadata        *BranchMetadata `json:"metadata,omitempty"`
+// PullRequestUpdate struct for PullRequestUpdate
+type PullRequestUpdate struct {
+	Id          *int32         `json:"id,omitempty"`
+	Version     *int32         `json:"version,omitempty"`
+	Title       *string        `json:"title,omitempty"`
+	Description *string        `json:"description,omitempty"`
+	Reviewers   *[]UserRole    `json:"reviewers,omitempty"`
+	ToRef       *RepositoryRef `json:"toRef,omitempty"`
 }
 
-// NewBranch instantiates a new Branch object
+// NewPullRequestUpdate instantiates a new PullRequestUpdate object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
-	this := Branch{}
-	this.Id = id
-	this.DisplayId = displayId
-	this.Type = type_
-	this.LatestCommit = latestCommit
-	this.LatestChangeset = latestChangeset
-	this.IsDefault = isDefault
+func NewPullRequestUpdate() *PullRequestUpdate {
+	this := PullRequestUpdate{}
 	return &this
 }
 
-// NewBranchWithDefaults instantiates a new Branch object
+// NewPullRequestUpdateWithDefaults instantiates a new PullRequestUpdate object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBranchWithDefaults() *Branch {
-	this := Branch{}
+func NewPullRequestUpdateWithDefaults() *PullRequestUpdate {
+	this := PullRequestUpdate{}
 	return &this
 }
 
-// GetId returns the Id field value
-func (o *Branch) GetId() string {
-	if o == nil {
-		var ret string
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetId() int32 {
+	if o == nil || o.Id == nil {
+		var ret int32
 		return ret
 	}
-
-	return o.Id
+	return *o.Id
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIdOk() (*string, bool) {
-	if o == nil {
+func (o *PullRequestUpdate) GetIdOk() (*int32, bool) {
+	if o == nil || o.Id == nil {
 		return nil, false
 	}
-	return &o.Id, true
+	return o.Id, true
 }
 
-// SetId sets field value
-func (o *Branch) SetId(v string) {
-	o.Id = v
-}
-
-// GetDisplayId returns the DisplayId field value
-func (o *Branch) GetDisplayId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.DisplayId
-}
-
-// GetDisplayIdOk returns a tuple with the DisplayId field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetDisplayIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.DisplayId, true
-}
-
-// SetDisplayId sets field value
-func (o *Branch) SetDisplayId(v string) {
-	o.DisplayId = v
-}
-
-// GetType returns the Type field value
-func (o *Branch) GetType() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Type
-}
-
-// GetTypeOk returns a tuple with the Type field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Type, true
-}
-
-// SetType sets field value
-func (o *Branch) SetType(v string) {
-	o.Type = v
-}
-
-// GetLatestCommit returns the LatestCommit field value
-func (o *Branch) GetLatestCommit() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestCommit
-}
-
-// GetLatestCommitOk returns a tuple with the LatestCommit field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestCommit, true
-}
-
-// SetLatestCommit sets field value
-func (o *Branch) SetLatestCommit(v string) {
-	o.LatestCommit = v
-}
-
-// GetLatestChangeset returns the LatestChangeset field value
-func (o *Branch) GetLatestChangeset() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestChangeset
-}
-
-// GetLatestChangesetOk returns a tuple with the LatestChangeset field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestChangeset, true
-}
-
-// SetLatestChangeset sets field value
-func (o *Branch) SetLatestChangeset(v string) {
-	o.LatestChangeset = v
-}
-
-// GetIsDefault returns the IsDefault field value
-func (o *Branch) GetIsDefault() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.IsDefault
-}
-
-// GetIsDefaultOk returns a tuple with the IsDefault field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetIsDefaultOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IsDefault, true
-}
-
-// SetIsDefault sets field value
-func (o *Branch) SetIsDefault(v bool) {
-	o.IsDefault = v
-}
-
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Branch) GetMetadata() BranchMetadata {
-	if o == nil || o.Metadata == nil {
-		var ret BranchMetadata
-		return ret
-	}
-	return *o.Metadata
-}
-
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Branch) GetMetadataOk() (*BranchMetadata, bool) {
-	if o == nil || o.Metadata == nil {
-		return nil, false
-	}
-	return o.Metadata, true
-}
-
-// HasMetadata returns a boolean if a field has been set.
-func (o *Branch) HasMetadata() bool {
-	if o != nil && o.Metadata != nil {
+// HasId returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasId() bool {
+	if o != nil && o.Id != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetMetadata gets a reference to the given BranchMetadata and assigns it to the Metadata field.
-func (o *Branch) SetMetadata(v BranchMetadata) {
-	o.Metadata = &v
+// SetId gets a reference to the given int32 and assigns it to the Id field.
+func (o *PullRequestUpdate) SetId(v int32) {
+	o.Id = &v
 }
 
-func (o Branch) MarshalJSON() ([]byte, error) {
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetVersion() int32 {
+	if o == nil || o.Version == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PullRequestUpdate) GetVersionOk() (*int32, bool) {
+	if o == nil || o.Version == nil {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasVersion() bool {
+	if o != nil && o.Version != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given int32 and assigns it to the Version field.
+func (o *PullRequestUpdate) SetVersion(v int32) {
+	o.Version = &v
+}
+
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetTitle() string {
+	if o == nil || o.Title == nil {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PullRequestUpdate) GetTitleOk() (*string, bool) {
+	if o == nil || o.Title == nil {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasTitle() bool {
+	if o != nil && o.Title != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *PullRequestUpdate) SetTitle(v string) {
+	o.Title = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetDescription() string {
+	if o == nil || o.Description == nil {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PullRequestUpdate) GetDescriptionOk() (*string, bool) {
+	if o == nil || o.Description == nil {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasDescription() bool {
+	if o != nil && o.Description != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *PullRequestUpdate) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetReviewers returns the Reviewers field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetReviewers() []UserRole {
+	if o == nil || o.Reviewers == nil {
+		var ret []UserRole
+		return ret
+	}
+	return *o.Reviewers
+}
+
+// GetReviewersOk returns a tuple with the Reviewers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PullRequestUpdate) GetReviewersOk() (*[]UserRole, bool) {
+	if o == nil || o.Reviewers == nil {
+		return nil, false
+	}
+	return o.Reviewers, true
+}
+
+// HasReviewers returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasReviewers() bool {
+	if o != nil && o.Reviewers != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetReviewers gets a reference to the given []UserRole and assigns it to the Reviewers field.
+func (o *PullRequestUpdate) SetReviewers(v []UserRole) {
+	o.Reviewers = &v
+}
+
+// GetToRef returns the ToRef field value if set, zero value otherwise.
+func (o *PullRequestUpdate) GetToRef() RepositoryRef {
+	if o == nil || o.ToRef == nil {
+		var ret RepositoryRef
+		return ret
+	}
+	return *o.ToRef
+}
+
+// GetToRefOk returns a tuple with the ToRef field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PullRequestUpdate) GetToRefOk() (*RepositoryRef, bool) {
+	if o == nil || o.ToRef == nil {
+		return nil, false
+	}
+	return o.ToRef, true
+}
+
+// HasToRef returns a boolean if a field has been set.
+func (o *PullRequestUpdate) HasToRef() bool {
+	if o != nil && o.ToRef != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetToRef gets a reference to the given RepositoryRef and assigns it to the ToRef field.
+func (o *PullRequestUpdate) SetToRef(v RepositoryRef) {
+	o.ToRef = &v
+}
+
+func (o PullRequestUpdate) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
+	if o.Id != nil {
 		toSerialize["id"] = o.Id
 	}
-	if true {
-		toSerialize["displayId"] = o.DisplayId
+	if o.Version != nil {
+		toSerialize["version"] = o.Version
 	}
-	if true {
-		toSerialize["type"] = o.Type
+	if o.Title != nil {
+		toSerialize["title"] = o.Title
 	}
-	if true {
-		toSerialize["latestCommit"] = o.LatestCommit
+	if o.Description != nil {
+		toSerialize["description"] = o.Description
 	}
-	if true {
-		toSerialize["latestChangeset"] = o.LatestChangeset
+	if o.Reviewers != nil {
+		toSerialize["reviewers"] = o.Reviewers
 	}
-	if true {
-		toSerialize["isDefault"] = o.IsDefault
-	}
-	if o.Metadata != nil {
-		toSerialize["metadata"] = o.Metadata
+	if o.ToRef != nil {
+		toSerialize["toRef"] = o.ToRef
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableBranch struct {
-	value *Branch
+type NullablePullRequestUpdate struct {
+	value *PullRequestUpdate
 	isSet bool
 }
 
-func (v NullableBranch) Get() *Branch {
+func (v NullablePullRequestUpdate) Get() *PullRequestUpdate {
 	return v.value
 }
 
-func (v *NullableBranch) Set(val *Branch) {
+func (v *NullablePullRequestUpdate) Set(val *PullRequestUpdate) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranch) IsSet() bool {
+func (v NullablePullRequestUpdate) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranch) Unset() {
+func (v *NullablePullRequestUpdate) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranch(val *Branch) *NullableBranch {
-	return &NullableBranch{value: val, isSet: true}
+func NewNullablePullRequestUpdate(val *PullRequestUpdate) *NullablePullRequestUpdate {
+	return &NullablePullRequestUpdate{value: val, isSet: true}
 }
 
-func (v NullableBranch) MarshalJSON() ([]byte, error) {
+func (v NullablePullRequestUpdate) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranch) UnmarshalJSON(src []byte) error {
+func (v *NullablePullRequestUpdate) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

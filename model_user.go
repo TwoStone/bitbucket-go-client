@@ -16,18 +16,22 @@ import (
 
 // User struct for User
 type User struct {
-	Name         string `json:"name"`
-	EmailAddress string `json:"emailAddress"`
+	Id           *int32  `json:"id,omitempty"`
+	Name         string  `json:"name"`
+	EmailAddress *string `json:"emailAddress,omitempty"`
+	DisplayName  *string `json:"displayName,omitempty"`
+	Active       *bool   `json:"active,omitempty"`
+	Slug         *string `json:"slug,omitempty"`
+	Type         *string `json:"type,omitempty"`
 }
 
 // NewUser instantiates a new User object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(name string, emailAddress string) *User {
+func NewUser(name string) *User {
 	this := User{}
 	this.Name = name
-	this.EmailAddress = emailAddress
 	return &this
 }
 
@@ -37,6 +41,38 @@ func NewUser(name string, emailAddress string) *User {
 func NewUserWithDefaults() *User {
 	this := User{}
 	return &this
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *User) GetId() int32 {
+	if o == nil || o.Id == nil {
+		var ret int32
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetIdOk() (*int32, bool) {
+	if o == nil || o.Id == nil {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *User) HasId() bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given int32 and assigns it to the Id field.
+func (o *User) SetId(v int32) {
+	o.Id = &v
 }
 
 // GetName returns the Name field value
@@ -63,37 +99,188 @@ func (o *User) SetName(v string) {
 	o.Name = v
 }
 
-// GetEmailAddress returns the EmailAddress field value
+// GetEmailAddress returns the EmailAddress field value if set, zero value otherwise.
 func (o *User) GetEmailAddress() string {
-	if o == nil {
+	if o == nil || o.EmailAddress == nil {
 		var ret string
 		return ret
 	}
-
-	return o.EmailAddress
+	return *o.EmailAddress
 }
 
-// GetEmailAddressOk returns a tuple with the EmailAddress field value
+// GetEmailAddressOk returns a tuple with the EmailAddress field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetEmailAddressOk() (*string, bool) {
-	if o == nil {
+	if o == nil || o.EmailAddress == nil {
 		return nil, false
 	}
-	return &o.EmailAddress, true
+	return o.EmailAddress, true
 }
 
-// SetEmailAddress sets field value
+// HasEmailAddress returns a boolean if a field has been set.
+func (o *User) HasEmailAddress() bool {
+	if o != nil && o.EmailAddress != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetEmailAddress gets a reference to the given string and assigns it to the EmailAddress field.
 func (o *User) SetEmailAddress(v string) {
-	o.EmailAddress = v
+	o.EmailAddress = &v
+}
+
+// GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+func (o *User) GetDisplayName() string {
+	if o == nil || o.DisplayName == nil {
+		var ret string
+		return ret
+	}
+	return *o.DisplayName
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetDisplayNameOk() (*string, bool) {
+	if o == nil || o.DisplayName == nil {
+		return nil, false
+	}
+	return o.DisplayName, true
+}
+
+// HasDisplayName returns a boolean if a field has been set.
+func (o *User) HasDisplayName() bool {
+	if o != nil && o.DisplayName != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+func (o *User) SetDisplayName(v string) {
+	o.DisplayName = &v
+}
+
+// GetActive returns the Active field value if set, zero value otherwise.
+func (o *User) GetActive() bool {
+	if o == nil || o.Active == nil {
+		var ret bool
+		return ret
+	}
+	return *o.Active
+}
+
+// GetActiveOk returns a tuple with the Active field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetActiveOk() (*bool, bool) {
+	if o == nil || o.Active == nil {
+		return nil, false
+	}
+	return o.Active, true
+}
+
+// HasActive returns a boolean if a field has been set.
+func (o *User) HasActive() bool {
+	if o != nil && o.Active != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetActive gets a reference to the given bool and assigns it to the Active field.
+func (o *User) SetActive(v bool) {
+	o.Active = &v
+}
+
+// GetSlug returns the Slug field value if set, zero value otherwise.
+func (o *User) GetSlug() string {
+	if o == nil || o.Slug == nil {
+		var ret string
+		return ret
+	}
+	return *o.Slug
+}
+
+// GetSlugOk returns a tuple with the Slug field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetSlugOk() (*string, bool) {
+	if o == nil || o.Slug == nil {
+		return nil, false
+	}
+	return o.Slug, true
+}
+
+// HasSlug returns a boolean if a field has been set.
+func (o *User) HasSlug() bool {
+	if o != nil && o.Slug != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetSlug gets a reference to the given string and assigns it to the Slug field.
+func (o *User) SetSlug(v string) {
+	o.Slug = &v
+}
+
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *User) GetType() string {
+	if o == nil || o.Type == nil {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetTypeOk() (*string, bool) {
+	if o == nil || o.Type == nil {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *User) HasType() bool {
+	if o != nil && o.Type != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *User) SetType(v string) {
+	o.Type = &v
 }
 
 func (o User) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Id != nil {
+		toSerialize["id"] = o.Id
+	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if true {
+	if o.EmailAddress != nil {
 		toSerialize["emailAddress"] = o.EmailAddress
+	}
+	if o.DisplayName != nil {
+		toSerialize["displayName"] = o.DisplayName
+	}
+	if o.Active != nil {
+		toSerialize["active"] = o.Active
+	}
+	if o.Slug != nil {
+		toSerialize["slug"] = o.Slug
+	}
+	if o.Type != nil {
+		toSerialize["type"] = o.Type
 	}
 	return json.Marshal(toSerialize)
 }
