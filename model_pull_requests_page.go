@@ -14,274 +14,245 @@ import (
 	"encoding/json"
 )
 
-// Branch struct for Branch
-type Branch struct {
-	Id              string          `json:"id"`
-	DisplayId       string          `json:"displayId"`
-	Type            string          `json:"type"`
-	LatestCommit    string          `json:"latestCommit"`
-	LatestChangeset string          `json:"latestChangeset"`
-	IsDefault       bool            `json:"isDefault"`
-	Metadata        *BranchMetadata `json:"metadata,omitempty"`
+// PullRequestsPage struct for PullRequestsPage
+type PullRequestsPage struct {
+	Size          int32         `json:"size"`
+	Limit         int32         `json:"limit"`
+	Start         int32         `json:"start"`
+	IsLastPage    bool          `json:"isLastPage"`
+	NextPageStart *int32        `json:"nextPageStart,omitempty"`
+	Values        []PullRequest `json:"values"`
 }
 
-// NewBranch instantiates a new Branch object
+// NewPullRequestsPage instantiates a new PullRequestsPage object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
-	this := Branch{}
-	this.Id = id
-	this.DisplayId = displayId
-	this.Type = type_
-	this.LatestCommit = latestCommit
-	this.LatestChangeset = latestChangeset
-	this.IsDefault = isDefault
+func NewPullRequestsPage(size int32, limit int32, start int32, isLastPage bool, values []PullRequest) *PullRequestsPage {
+	this := PullRequestsPage{}
+	this.Size = size
+	this.Limit = limit
+	this.Start = start
+	this.IsLastPage = isLastPage
+	this.Values = values
 	return &this
 }
 
-// NewBranchWithDefaults instantiates a new Branch object
+// NewPullRequestsPageWithDefaults instantiates a new PullRequestsPage object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBranchWithDefaults() *Branch {
-	this := Branch{}
+func NewPullRequestsPageWithDefaults() *PullRequestsPage {
+	this := PullRequestsPage{}
 	return &this
 }
 
-// GetId returns the Id field value
-func (o *Branch) GetId() string {
+// GetSize returns the Size field value
+func (o *PullRequestsPage) GetSize() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.Id
+	return o.Size
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIdOk() (*string, bool) {
+func (o *PullRequestsPage) GetSizeOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Id, true
+	return &o.Size, true
 }
 
-// SetId sets field value
-func (o *Branch) SetId(v string) {
-	o.Id = v
+// SetSize sets field value
+func (o *PullRequestsPage) SetSize(v int32) {
+	o.Size = v
 }
 
-// GetDisplayId returns the DisplayId field value
-func (o *Branch) GetDisplayId() string {
+// GetLimit returns the Limit field value
+func (o *PullRequestsPage) GetLimit() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.DisplayId
+	return o.Limit
 }
 
-// GetDisplayIdOk returns a tuple with the DisplayId field value
+// GetLimitOk returns a tuple with the Limit field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetDisplayIdOk() (*string, bool) {
+func (o *PullRequestsPage) GetLimitOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.DisplayId, true
+	return &o.Limit, true
 }
 
-// SetDisplayId sets field value
-func (o *Branch) SetDisplayId(v string) {
-	o.DisplayId = v
+// SetLimit sets field value
+func (o *PullRequestsPage) SetLimit(v int32) {
+	o.Limit = v
 }
 
-// GetType returns the Type field value
-func (o *Branch) GetType() string {
+// GetStart returns the Start field value
+func (o *PullRequestsPage) GetStart() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.Type
+	return o.Start
 }
 
-// GetTypeOk returns a tuple with the Type field value
+// GetStartOk returns a tuple with the Start field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetTypeOk() (*string, bool) {
+func (o *PullRequestsPage) GetStartOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Type, true
+	return &o.Start, true
 }
 
-// SetType sets field value
-func (o *Branch) SetType(v string) {
-	o.Type = v
+// SetStart sets field value
+func (o *PullRequestsPage) SetStart(v int32) {
+	o.Start = v
 }
 
-// GetLatestCommit returns the LatestCommit field value
-func (o *Branch) GetLatestCommit() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestCommit
-}
-
-// GetLatestCommitOk returns a tuple with the LatestCommit field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestCommit, true
-}
-
-// SetLatestCommit sets field value
-func (o *Branch) SetLatestCommit(v string) {
-	o.LatestCommit = v
-}
-
-// GetLatestChangeset returns the LatestChangeset field value
-func (o *Branch) GetLatestChangeset() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestChangeset
-}
-
-// GetLatestChangesetOk returns a tuple with the LatestChangeset field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestChangeset, true
-}
-
-// SetLatestChangeset sets field value
-func (o *Branch) SetLatestChangeset(v string) {
-	o.LatestChangeset = v
-}
-
-// GetIsDefault returns the IsDefault field value
-func (o *Branch) GetIsDefault() bool {
+// GetIsLastPage returns the IsLastPage field value
+func (o *PullRequestsPage) GetIsLastPage() bool {
 	if o == nil {
 		var ret bool
 		return ret
 	}
 
-	return o.IsDefault
+	return o.IsLastPage
 }
 
-// GetIsDefaultOk returns a tuple with the IsDefault field value
+// GetIsLastPageOk returns a tuple with the IsLastPage field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIsDefaultOk() (*bool, bool) {
+func (o *PullRequestsPage) GetIsLastPageOk() (*bool, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.IsDefault, true
+	return &o.IsLastPage, true
 }
 
-// SetIsDefault sets field value
-func (o *Branch) SetIsDefault(v bool) {
-	o.IsDefault = v
+// SetIsLastPage sets field value
+func (o *PullRequestsPage) SetIsLastPage(v bool) {
+	o.IsLastPage = v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Branch) GetMetadata() BranchMetadata {
-	if o == nil || o.Metadata == nil {
-		var ret BranchMetadata
+// GetNextPageStart returns the NextPageStart field value if set, zero value otherwise.
+func (o *PullRequestsPage) GetNextPageStart() int32 {
+	if o == nil || o.NextPageStart == nil {
+		var ret int32
 		return ret
 	}
-	return *o.Metadata
+	return *o.NextPageStart
 }
 
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// GetNextPageStartOk returns a tuple with the NextPageStart field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Branch) GetMetadataOk() (*BranchMetadata, bool) {
-	if o == nil || o.Metadata == nil {
+func (o *PullRequestsPage) GetNextPageStartOk() (*int32, bool) {
+	if o == nil || o.NextPageStart == nil {
 		return nil, false
 	}
-	return o.Metadata, true
+	return o.NextPageStart, true
 }
 
-// HasMetadata returns a boolean if a field has been set.
-func (o *Branch) HasMetadata() bool {
-	if o != nil && o.Metadata != nil {
+// HasNextPageStart returns a boolean if a field has been set.
+func (o *PullRequestsPage) HasNextPageStart() bool {
+	if o != nil && o.NextPageStart != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetMetadata gets a reference to the given BranchMetadata and assigns it to the Metadata field.
-func (o *Branch) SetMetadata(v BranchMetadata) {
-	o.Metadata = &v
+// SetNextPageStart gets a reference to the given int32 and assigns it to the NextPageStart field.
+func (o *PullRequestsPage) SetNextPageStart(v int32) {
+	o.NextPageStart = &v
 }
 
-func (o Branch) MarshalJSON() ([]byte, error) {
+// GetValues returns the Values field value
+func (o *PullRequestsPage) GetValues() []PullRequest {
+	if o == nil {
+		var ret []PullRequest
+		return ret
+	}
+
+	return o.Values
+}
+
+// GetValuesOk returns a tuple with the Values field value
+// and a boolean to check if the value has been set.
+func (o *PullRequestsPage) GetValuesOk() (*[]PullRequest, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Values, true
+}
+
+// SetValues sets field value
+func (o *PullRequestsPage) SetValues(v []PullRequest) {
+	o.Values = v
+}
+
+func (o PullRequestsPage) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if true {
-		toSerialize["id"] = o.Id
+		toSerialize["size"] = o.Size
 	}
 	if true {
-		toSerialize["displayId"] = o.DisplayId
+		toSerialize["limit"] = o.Limit
 	}
 	if true {
-		toSerialize["type"] = o.Type
+		toSerialize["start"] = o.Start
 	}
 	if true {
-		toSerialize["latestCommit"] = o.LatestCommit
+		toSerialize["isLastPage"] = o.IsLastPage
+	}
+	if o.NextPageStart != nil {
+		toSerialize["nextPageStart"] = o.NextPageStart
 	}
 	if true {
-		toSerialize["latestChangeset"] = o.LatestChangeset
-	}
-	if true {
-		toSerialize["isDefault"] = o.IsDefault
-	}
-	if o.Metadata != nil {
-		toSerialize["metadata"] = o.Metadata
+		toSerialize["values"] = o.Values
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableBranch struct {
-	value *Branch
+type NullablePullRequestsPage struct {
+	value *PullRequestsPage
 	isSet bool
 }
 
-func (v NullableBranch) Get() *Branch {
+func (v NullablePullRequestsPage) Get() *PullRequestsPage {
 	return v.value
 }
 
-func (v *NullableBranch) Set(val *Branch) {
+func (v *NullablePullRequestsPage) Set(val *PullRequestsPage) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranch) IsSet() bool {
+func (v NullablePullRequestsPage) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranch) Unset() {
+func (v *NullablePullRequestsPage) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranch(val *Branch) *NullableBranch {
-	return &NullableBranch{value: val, isSet: true}
+func NewNullablePullRequestsPage(val *PullRequestsPage) *NullablePullRequestsPage {
+	return &NullablePullRequestsPage{value: val, isSet: true}
 }
 
-func (v NullableBranch) MarshalJSON() ([]byte, error) {
+func (v NullablePullRequestsPage) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranch) UnmarshalJSON(src []byte) error {
+func (v *NullablePullRequestsPage) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

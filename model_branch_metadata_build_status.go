@@ -14,274 +14,151 @@ import (
 	"encoding/json"
 )
 
-// Branch struct for Branch
-type Branch struct {
-	Id              string          `json:"id"`
-	DisplayId       string          `json:"displayId"`
-	Type            string          `json:"type"`
-	LatestCommit    string          `json:"latestCommit"`
-	LatestChangeset string          `json:"latestChangeset"`
-	IsDefault       bool            `json:"isDefault"`
-	Metadata        *BranchMetadata `json:"metadata,omitempty"`
+// BranchMetadataBuildStatus struct for BranchMetadataBuildStatus
+type BranchMetadataBuildStatus struct {
+	Successful int32 `json:"successful"`
+	InProgress int32 `json:"inProgress"`
+	Failed     int32 `json:"failed"`
 }
 
-// NewBranch instantiates a new Branch object
+// NewBranchMetadataBuildStatus instantiates a new BranchMetadataBuildStatus object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
-	this := Branch{}
-	this.Id = id
-	this.DisplayId = displayId
-	this.Type = type_
-	this.LatestCommit = latestCommit
-	this.LatestChangeset = latestChangeset
-	this.IsDefault = isDefault
+func NewBranchMetadataBuildStatus(successful int32, inProgress int32, failed int32) *BranchMetadataBuildStatus {
+	this := BranchMetadataBuildStatus{}
+	this.Successful = successful
+	this.InProgress = inProgress
+	this.Failed = failed
 	return &this
 }
 
-// NewBranchWithDefaults instantiates a new Branch object
+// NewBranchMetadataBuildStatusWithDefaults instantiates a new BranchMetadataBuildStatus object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBranchWithDefaults() *Branch {
-	this := Branch{}
+func NewBranchMetadataBuildStatusWithDefaults() *BranchMetadataBuildStatus {
+	this := BranchMetadataBuildStatus{}
 	return &this
 }
 
-// GetId returns the Id field value
-func (o *Branch) GetId() string {
+// GetSuccessful returns the Successful field value
+func (o *BranchMetadataBuildStatus) GetSuccessful() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.Id
+	return o.Successful
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetSuccessfulOk returns a tuple with the Successful field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIdOk() (*string, bool) {
+func (o *BranchMetadataBuildStatus) GetSuccessfulOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Id, true
+	return &o.Successful, true
 }
 
-// SetId sets field value
-func (o *Branch) SetId(v string) {
-	o.Id = v
+// SetSuccessful sets field value
+func (o *BranchMetadataBuildStatus) SetSuccessful(v int32) {
+	o.Successful = v
 }
 
-// GetDisplayId returns the DisplayId field value
-func (o *Branch) GetDisplayId() string {
+// GetInProgress returns the InProgress field value
+func (o *BranchMetadataBuildStatus) GetInProgress() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.DisplayId
+	return o.InProgress
 }
 
-// GetDisplayIdOk returns a tuple with the DisplayId field value
+// GetInProgressOk returns a tuple with the InProgress field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetDisplayIdOk() (*string, bool) {
+func (o *BranchMetadataBuildStatus) GetInProgressOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.DisplayId, true
+	return &o.InProgress, true
 }
 
-// SetDisplayId sets field value
-func (o *Branch) SetDisplayId(v string) {
-	o.DisplayId = v
+// SetInProgress sets field value
+func (o *BranchMetadataBuildStatus) SetInProgress(v int32) {
+	o.InProgress = v
 }
 
-// GetType returns the Type field value
-func (o *Branch) GetType() string {
+// GetFailed returns the Failed field value
+func (o *BranchMetadataBuildStatus) GetFailed() int32 {
 	if o == nil {
-		var ret string
+		var ret int32
 		return ret
 	}
 
-	return o.Type
+	return o.Failed
 }
 
-// GetTypeOk returns a tuple with the Type field value
+// GetFailedOk returns a tuple with the Failed field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetTypeOk() (*string, bool) {
+func (o *BranchMetadataBuildStatus) GetFailedOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Type, true
+	return &o.Failed, true
 }
 
-// SetType sets field value
-func (o *Branch) SetType(v string) {
-	o.Type = v
+// SetFailed sets field value
+func (o *BranchMetadataBuildStatus) SetFailed(v int32) {
+	o.Failed = v
 }
 
-// GetLatestCommit returns the LatestCommit field value
-func (o *Branch) GetLatestCommit() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestCommit
-}
-
-// GetLatestCommitOk returns a tuple with the LatestCommit field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestCommit, true
-}
-
-// SetLatestCommit sets field value
-func (o *Branch) SetLatestCommit(v string) {
-	o.LatestCommit = v
-}
-
-// GetLatestChangeset returns the LatestChangeset field value
-func (o *Branch) GetLatestChangeset() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestChangeset
-}
-
-// GetLatestChangesetOk returns a tuple with the LatestChangeset field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestChangeset, true
-}
-
-// SetLatestChangeset sets field value
-func (o *Branch) SetLatestChangeset(v string) {
-	o.LatestChangeset = v
-}
-
-// GetIsDefault returns the IsDefault field value
-func (o *Branch) GetIsDefault() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.IsDefault
-}
-
-// GetIsDefaultOk returns a tuple with the IsDefault field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetIsDefaultOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IsDefault, true
-}
-
-// SetIsDefault sets field value
-func (o *Branch) SetIsDefault(v bool) {
-	o.IsDefault = v
-}
-
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Branch) GetMetadata() BranchMetadata {
-	if o == nil || o.Metadata == nil {
-		var ret BranchMetadata
-		return ret
-	}
-	return *o.Metadata
-}
-
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Branch) GetMetadataOk() (*BranchMetadata, bool) {
-	if o == nil || o.Metadata == nil {
-		return nil, false
-	}
-	return o.Metadata, true
-}
-
-// HasMetadata returns a boolean if a field has been set.
-func (o *Branch) HasMetadata() bool {
-	if o != nil && o.Metadata != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetMetadata gets a reference to the given BranchMetadata and assigns it to the Metadata field.
-func (o *Branch) SetMetadata(v BranchMetadata) {
-	o.Metadata = &v
-}
-
-func (o Branch) MarshalJSON() ([]byte, error) {
+func (o BranchMetadataBuildStatus) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if true {
-		toSerialize["id"] = o.Id
+		toSerialize["successful"] = o.Successful
 	}
 	if true {
-		toSerialize["displayId"] = o.DisplayId
+		toSerialize["inProgress"] = o.InProgress
 	}
 	if true {
-		toSerialize["type"] = o.Type
-	}
-	if true {
-		toSerialize["latestCommit"] = o.LatestCommit
-	}
-	if true {
-		toSerialize["latestChangeset"] = o.LatestChangeset
-	}
-	if true {
-		toSerialize["isDefault"] = o.IsDefault
-	}
-	if o.Metadata != nil {
-		toSerialize["metadata"] = o.Metadata
+		toSerialize["failed"] = o.Failed
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableBranch struct {
-	value *Branch
+type NullableBranchMetadataBuildStatus struct {
+	value *BranchMetadataBuildStatus
 	isSet bool
 }
 
-func (v NullableBranch) Get() *Branch {
+func (v NullableBranchMetadataBuildStatus) Get() *BranchMetadataBuildStatus {
 	return v.value
 }
 
-func (v *NullableBranch) Set(val *Branch) {
+func (v *NullableBranchMetadataBuildStatus) Set(val *BranchMetadataBuildStatus) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranch) IsSet() bool {
+func (v NullableBranchMetadataBuildStatus) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranch) Unset() {
+func (v *NullableBranchMetadataBuildStatus) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranch(val *Branch) *NullableBranch {
-	return &NullableBranch{value: val, isSet: true}
+func NewNullableBranchMetadataBuildStatus(val *BranchMetadataBuildStatus) *NullableBranchMetadataBuildStatus {
+	return &NullableBranchMetadataBuildStatus{value: val, isSet: true}
 }
 
-func (v NullableBranch) MarshalJSON() ([]byte, error) {
+func (v NullableBranchMetadataBuildStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranch) UnmarshalJSON(src []byte) error {
+func (v *NullableBranchMetadataBuildStatus) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

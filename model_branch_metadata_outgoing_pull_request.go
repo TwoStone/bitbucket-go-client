@@ -14,274 +14,93 @@ import (
 	"encoding/json"
 )
 
-// Branch struct for Branch
-type Branch struct {
-	Id              string          `json:"id"`
-	DisplayId       string          `json:"displayId"`
-	Type            string          `json:"type"`
-	LatestCommit    string          `json:"latestCommit"`
-	LatestChangeset string          `json:"latestChangeset"`
-	IsDefault       bool            `json:"isDefault"`
-	Metadata        *BranchMetadata `json:"metadata,omitempty"`
+// BranchMetadataOutgoingPullRequest struct for BranchMetadataOutgoingPullRequest
+type BranchMetadataOutgoingPullRequest struct {
+	PullRequest PullRequest `json:"pullRequest"`
 }
 
-// NewBranch instantiates a new Branch object
+// NewBranchMetadataOutgoingPullRequest instantiates a new BranchMetadataOutgoingPullRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
-	this := Branch{}
-	this.Id = id
-	this.DisplayId = displayId
-	this.Type = type_
-	this.LatestCommit = latestCommit
-	this.LatestChangeset = latestChangeset
-	this.IsDefault = isDefault
+func NewBranchMetadataOutgoingPullRequest(pullRequest PullRequest) *BranchMetadataOutgoingPullRequest {
+	this := BranchMetadataOutgoingPullRequest{}
+	this.PullRequest = pullRequest
 	return &this
 }
 
-// NewBranchWithDefaults instantiates a new Branch object
+// NewBranchMetadataOutgoingPullRequestWithDefaults instantiates a new BranchMetadataOutgoingPullRequest object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBranchWithDefaults() *Branch {
-	this := Branch{}
+func NewBranchMetadataOutgoingPullRequestWithDefaults() *BranchMetadataOutgoingPullRequest {
+	this := BranchMetadataOutgoingPullRequest{}
 	return &this
 }
 
-// GetId returns the Id field value
-func (o *Branch) GetId() string {
+// GetPullRequest returns the PullRequest field value
+func (o *BranchMetadataOutgoingPullRequest) GetPullRequest() PullRequest {
 	if o == nil {
-		var ret string
+		var ret PullRequest
 		return ret
 	}
 
-	return o.Id
+	return o.PullRequest
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetPullRequestOk returns a tuple with the PullRequest field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIdOk() (*string, bool) {
+func (o *BranchMetadataOutgoingPullRequest) GetPullRequestOk() (*PullRequest, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Id, true
+	return &o.PullRequest, true
 }
 
-// SetId sets field value
-func (o *Branch) SetId(v string) {
-	o.Id = v
+// SetPullRequest sets field value
+func (o *BranchMetadataOutgoingPullRequest) SetPullRequest(v PullRequest) {
+	o.PullRequest = v
 }
 
-// GetDisplayId returns the DisplayId field value
-func (o *Branch) GetDisplayId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.DisplayId
-}
-
-// GetDisplayIdOk returns a tuple with the DisplayId field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetDisplayIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.DisplayId, true
-}
-
-// SetDisplayId sets field value
-func (o *Branch) SetDisplayId(v string) {
-	o.DisplayId = v
-}
-
-// GetType returns the Type field value
-func (o *Branch) GetType() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Type
-}
-
-// GetTypeOk returns a tuple with the Type field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Type, true
-}
-
-// SetType sets field value
-func (o *Branch) SetType(v string) {
-	o.Type = v
-}
-
-// GetLatestCommit returns the LatestCommit field value
-func (o *Branch) GetLatestCommit() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestCommit
-}
-
-// GetLatestCommitOk returns a tuple with the LatestCommit field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestCommit, true
-}
-
-// SetLatestCommit sets field value
-func (o *Branch) SetLatestCommit(v string) {
-	o.LatestCommit = v
-}
-
-// GetLatestChangeset returns the LatestChangeset field value
-func (o *Branch) GetLatestChangeset() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestChangeset
-}
-
-// GetLatestChangesetOk returns a tuple with the LatestChangeset field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestChangeset, true
-}
-
-// SetLatestChangeset sets field value
-func (o *Branch) SetLatestChangeset(v string) {
-	o.LatestChangeset = v
-}
-
-// GetIsDefault returns the IsDefault field value
-func (o *Branch) GetIsDefault() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.IsDefault
-}
-
-// GetIsDefaultOk returns a tuple with the IsDefault field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetIsDefaultOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IsDefault, true
-}
-
-// SetIsDefault sets field value
-func (o *Branch) SetIsDefault(v bool) {
-	o.IsDefault = v
-}
-
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Branch) GetMetadata() BranchMetadata {
-	if o == nil || o.Metadata == nil {
-		var ret BranchMetadata
-		return ret
-	}
-	return *o.Metadata
-}
-
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Branch) GetMetadataOk() (*BranchMetadata, bool) {
-	if o == nil || o.Metadata == nil {
-		return nil, false
-	}
-	return o.Metadata, true
-}
-
-// HasMetadata returns a boolean if a field has been set.
-func (o *Branch) HasMetadata() bool {
-	if o != nil && o.Metadata != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetMetadata gets a reference to the given BranchMetadata and assigns it to the Metadata field.
-func (o *Branch) SetMetadata(v BranchMetadata) {
-	o.Metadata = &v
-}
-
-func (o Branch) MarshalJSON() ([]byte, error) {
+func (o BranchMetadataOutgoingPullRequest) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if true {
-		toSerialize["id"] = o.Id
-	}
-	if true {
-		toSerialize["displayId"] = o.DisplayId
-	}
-	if true {
-		toSerialize["type"] = o.Type
-	}
-	if true {
-		toSerialize["latestCommit"] = o.LatestCommit
-	}
-	if true {
-		toSerialize["latestChangeset"] = o.LatestChangeset
-	}
-	if true {
-		toSerialize["isDefault"] = o.IsDefault
-	}
-	if o.Metadata != nil {
-		toSerialize["metadata"] = o.Metadata
+		toSerialize["pullRequest"] = o.PullRequest
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableBranch struct {
-	value *Branch
+type NullableBranchMetadataOutgoingPullRequest struct {
+	value *BranchMetadataOutgoingPullRequest
 	isSet bool
 }
 
-func (v NullableBranch) Get() *Branch {
+func (v NullableBranchMetadataOutgoingPullRequest) Get() *BranchMetadataOutgoingPullRequest {
 	return v.value
 }
 
-func (v *NullableBranch) Set(val *Branch) {
+func (v *NullableBranchMetadataOutgoingPullRequest) Set(val *BranchMetadataOutgoingPullRequest) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranch) IsSet() bool {
+func (v NullableBranchMetadataOutgoingPullRequest) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranch) Unset() {
+func (v *NullableBranchMetadataOutgoingPullRequest) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranch(val *Branch) *NullableBranch {
-	return &NullableBranch{value: val, isSet: true}
+func NewNullableBranchMetadataOutgoingPullRequest(val *BranchMetadataOutgoingPullRequest) *NullableBranchMetadataOutgoingPullRequest {
+	return &NullableBranchMetadataOutgoingPullRequest{value: val, isSet: true}
 }
 
-func (v NullableBranch) MarshalJSON() ([]byte, error) {
+func (v NullableBranchMetadataOutgoingPullRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranch) UnmarshalJSON(src []byte) error {
+func (v *NullableBranchMetadataOutgoingPullRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

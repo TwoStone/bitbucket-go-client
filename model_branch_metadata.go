@@ -14,274 +14,244 @@ import (
 	"encoding/json"
 )
 
-// Branch struct for Branch
-type Branch struct {
-	Id              string          `json:"id"`
-	DisplayId       string          `json:"displayId"`
-	Type            string          `json:"type"`
-	LatestCommit    string          `json:"latestCommit"`
-	LatestChangeset string          `json:"latestChangeset"`
-	IsDefault       bool            `json:"isDefault"`
-	Metadata        *BranchMetadata `json:"metadata,omitempty"`
+// BranchMetadata struct for BranchMetadata
+type BranchMetadata struct {
+	ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider      *BranchMetadataAheadBehind         `json:"com.atlassian.bitbucket.server.bitbucket-branch:ahead-behind-metadata-provider,omitempty"`
+	ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata             *Commit                            `json:"com.atlassian.bitbucket.server.bitbucket-branch:latest-commit-metadata,omitempty"`
+	ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata               *BranchMetadataBuildStatus         `json:"com.atlassian.bitbucket.server.bitbucket-build:build-status-metadata,omitempty"`
+	ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata *BranchMetadataOutgoingPullRequest `json:"com.atlassian.bitbucket.server.bitbucket-ref-metadata:outgoing-pull-request-metadata,omitempty"`
+	ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues               *[]BranchMetadataJiraIssue         `json:"com.atlassian.bitbucket.server.bitbucket-jira:branch-list-jira-issues,omitempty"`
 }
 
-// NewBranch instantiates a new Branch object
+// NewBranchMetadata instantiates a new BranchMetadata object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(id string, displayId string, type_ string, latestCommit string, latestChangeset string, isDefault bool) *Branch {
-	this := Branch{}
-	this.Id = id
-	this.DisplayId = displayId
-	this.Type = type_
-	this.LatestCommit = latestCommit
-	this.LatestChangeset = latestChangeset
-	this.IsDefault = isDefault
+func NewBranchMetadata() *BranchMetadata {
+	this := BranchMetadata{}
 	return &this
 }
 
-// NewBranchWithDefaults instantiates a new Branch object
+// NewBranchMetadataWithDefaults instantiates a new BranchMetadata object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBranchWithDefaults() *Branch {
-	this := Branch{}
+func NewBranchMetadataWithDefaults() *BranchMetadata {
+	this := BranchMetadata{}
 	return &this
 }
 
-// GetId returns the Id field value
-func (o *Branch) GetId() string {
-	if o == nil {
-		var ret string
+// GetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider returns the ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider field value if set, zero value otherwise.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider() BranchMetadataAheadBehind {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider == nil {
+		var ret BranchMetadataAheadBehind
 		return ret
 	}
-
-	return o.Id
+	return *o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProviderOk returns a tuple with the ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Branch) GetIdOk() (*string, bool) {
-	if o == nil {
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProviderOk() (*BranchMetadataAheadBehind, bool) {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider == nil {
 		return nil, false
 	}
-	return &o.Id, true
+	return o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider, true
 }
 
-// SetId sets field value
-func (o *Branch) SetId(v string) {
-	o.Id = v
-}
-
-// GetDisplayId returns the DisplayId field value
-func (o *Branch) GetDisplayId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.DisplayId
-}
-
-// GetDisplayIdOk returns a tuple with the DisplayId field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetDisplayIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.DisplayId, true
-}
-
-// SetDisplayId sets field value
-func (o *Branch) SetDisplayId(v string) {
-	o.DisplayId = v
-}
-
-// GetType returns the Type field value
-func (o *Branch) GetType() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Type
-}
-
-// GetTypeOk returns a tuple with the Type field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Type, true
-}
-
-// SetType sets field value
-func (o *Branch) SetType(v string) {
-	o.Type = v
-}
-
-// GetLatestCommit returns the LatestCommit field value
-func (o *Branch) GetLatestCommit() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestCommit
-}
-
-// GetLatestCommitOk returns a tuple with the LatestCommit field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestCommitOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestCommit, true
-}
-
-// SetLatestCommit sets field value
-func (o *Branch) SetLatestCommit(v string) {
-	o.LatestCommit = v
-}
-
-// GetLatestChangeset returns the LatestChangeset field value
-func (o *Branch) GetLatestChangeset() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.LatestChangeset
-}
-
-// GetLatestChangesetOk returns a tuple with the LatestChangeset field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetLatestChangesetOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.LatestChangeset, true
-}
-
-// SetLatestChangeset sets field value
-func (o *Branch) SetLatestChangeset(v string) {
-	o.LatestChangeset = v
-}
-
-// GetIsDefault returns the IsDefault field value
-func (o *Branch) GetIsDefault() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.IsDefault
-}
-
-// GetIsDefaultOk returns a tuple with the IsDefault field value
-// and a boolean to check if the value has been set.
-func (o *Branch) GetIsDefaultOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IsDefault, true
-}
-
-// SetIsDefault sets field value
-func (o *Branch) SetIsDefault(v bool) {
-	o.IsDefault = v
-}
-
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *Branch) GetMetadata() BranchMetadata {
-	if o == nil || o.Metadata == nil {
-		var ret BranchMetadata
-		return ret
-	}
-	return *o.Metadata
-}
-
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Branch) GetMetadataOk() (*BranchMetadata, bool) {
-	if o == nil || o.Metadata == nil {
-		return nil, false
-	}
-	return o.Metadata, true
-}
-
-// HasMetadata returns a boolean if a field has been set.
-func (o *Branch) HasMetadata() bool {
-	if o != nil && o.Metadata != nil {
+// HasComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider returns a boolean if a field has been set.
+func (o *BranchMetadata) HasComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider() bool {
+	if o != nil && o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetMetadata gets a reference to the given BranchMetadata and assigns it to the Metadata field.
-func (o *Branch) SetMetadata(v BranchMetadata) {
-	o.Metadata = &v
+// SetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider gets a reference to the given BranchMetadataAheadBehind and assigns it to the ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider field.
+func (o *BranchMetadata) SetComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider(v BranchMetadataAheadBehind) {
+	o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider = &v
 }
 
-func (o Branch) MarshalJSON() ([]byte, error) {
+// GetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata returns the ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata field value if set, zero value otherwise.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata() Commit {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata == nil {
+		var ret Commit
+		return ret
+	}
+	return *o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata
+}
+
+// GetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadataOk returns a tuple with the ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadataOk() (*Commit, bool) {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata == nil {
+		return nil, false
+	}
+	return o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata, true
+}
+
+// HasComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata returns a boolean if a field has been set.
+func (o *BranchMetadata) HasComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata() bool {
+	if o != nil && o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata gets a reference to the given Commit and assigns it to the ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata field.
+func (o *BranchMetadata) SetComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata(v Commit) {
+	o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata = &v
+}
+
+// GetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata returns the ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata field value if set, zero value otherwise.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata() BranchMetadataBuildStatus {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata == nil {
+		var ret BranchMetadataBuildStatus
+		return ret
+	}
+	return *o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata
+}
+
+// GetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadataOk returns a tuple with the ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadataOk() (*BranchMetadataBuildStatus, bool) {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata == nil {
+		return nil, false
+	}
+	return o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata, true
+}
+
+// HasComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata returns a boolean if a field has been set.
+func (o *BranchMetadata) HasComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata() bool {
+	if o != nil && o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata gets a reference to the given BranchMetadataBuildStatus and assigns it to the ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata field.
+func (o *BranchMetadata) SetComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata(v BranchMetadataBuildStatus) {
+	o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata = &v
+}
+
+// GetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata returns the ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata field value if set, zero value otherwise.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata() BranchMetadataOutgoingPullRequest {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata == nil {
+		var ret BranchMetadataOutgoingPullRequest
+		return ret
+	}
+	return *o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata
+}
+
+// GetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadataOk returns a tuple with the ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadataOk() (*BranchMetadataOutgoingPullRequest, bool) {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata == nil {
+		return nil, false
+	}
+	return o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata, true
+}
+
+// HasComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata returns a boolean if a field has been set.
+func (o *BranchMetadata) HasComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata() bool {
+	if o != nil && o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata gets a reference to the given BranchMetadataOutgoingPullRequest and assigns it to the ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata field.
+func (o *BranchMetadata) SetComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata(v BranchMetadataOutgoingPullRequest) {
+	o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata = &v
+}
+
+// GetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues returns the ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues field value if set, zero value otherwise.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues() []BranchMetadataJiraIssue {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues == nil {
+		var ret []BranchMetadataJiraIssue
+		return ret
+	}
+	return *o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues
+}
+
+// GetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssuesOk returns a tuple with the ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BranchMetadata) GetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssuesOk() (*[]BranchMetadataJiraIssue, bool) {
+	if o == nil || o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues == nil {
+		return nil, false
+	}
+	return o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues, true
+}
+
+// HasComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues returns a boolean if a field has been set.
+func (o *BranchMetadata) HasComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues() bool {
+	if o != nil && o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues gets a reference to the given []BranchMetadataJiraIssue and assigns it to the ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues field.
+func (o *BranchMetadata) SetComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues(v []BranchMetadataJiraIssue) {
+	o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues = &v
+}
+
+func (o BranchMetadata) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["id"] = o.Id
+	if o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider != nil {
+		toSerialize["com.atlassian.bitbucket.server.bitbucket-branch:ahead-behind-metadata-provider"] = o.ComAtlassianBitbucketServerBitbucketBranchaheadBehindMetadataProvider
 	}
-	if true {
-		toSerialize["displayId"] = o.DisplayId
+	if o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata != nil {
+		toSerialize["com.atlassian.bitbucket.server.bitbucket-branch:latest-commit-metadata"] = o.ComAtlassianBitbucketServerBitbucketBranchlatestCommitMetadata
 	}
-	if true {
-		toSerialize["type"] = o.Type
+	if o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata != nil {
+		toSerialize["com.atlassian.bitbucket.server.bitbucket-build:build-status-metadata"] = o.ComAtlassianBitbucketServerBitbucketBuildbuildStatusMetadata
 	}
-	if true {
-		toSerialize["latestCommit"] = o.LatestCommit
+	if o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata != nil {
+		toSerialize["com.atlassian.bitbucket.server.bitbucket-ref-metadata:outgoing-pull-request-metadata"] = o.ComAtlassianBitbucketServerBitbucketRefMetadataoutgoingPullRequestMetadata
 	}
-	if true {
-		toSerialize["latestChangeset"] = o.LatestChangeset
-	}
-	if true {
-		toSerialize["isDefault"] = o.IsDefault
-	}
-	if o.Metadata != nil {
-		toSerialize["metadata"] = o.Metadata
+	if o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues != nil {
+		toSerialize["com.atlassian.bitbucket.server.bitbucket-jira:branch-list-jira-issues"] = o.ComAtlassianBitbucketServerBitbucketJirabranchListJiraIssues
 	}
 	return json.Marshal(toSerialize)
 }
 
-type NullableBranch struct {
-	value *Branch
+type NullableBranchMetadata struct {
+	value *BranchMetadata
 	isSet bool
 }
 
-func (v NullableBranch) Get() *Branch {
+func (v NullableBranchMetadata) Get() *BranchMetadata {
 	return v.value
 }
 
-func (v *NullableBranch) Set(val *Branch) {
+func (v *NullableBranchMetadata) Set(val *BranchMetadata) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranch) IsSet() bool {
+func (v NullableBranchMetadata) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranch) Unset() {
+func (v *NullableBranchMetadata) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranch(val *Branch) *NullableBranch {
-	return &NullableBranch{value: val, isSet: true}
+func NewNullableBranchMetadata(val *BranchMetadata) *NullableBranchMetadata {
+	return &NullableBranchMetadata{value: val, isSet: true}
 }
 
-func (v NullableBranch) MarshalJSON() ([]byte, error) {
+func (v NullableBranchMetadata) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranch) UnmarshalJSON(src []byte) error {
+func (v *NullableBranchMetadata) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

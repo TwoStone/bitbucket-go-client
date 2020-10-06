@@ -1,4 +1,4 @@
-API_VERSION=hotfix/1.1.2
+API_VERSION=v1.2.0
 
 OPENAPI_GENERATOR_VERSION=4.3.1
 JAVA=$(shell which java)

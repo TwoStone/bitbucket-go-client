@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**BrowseRepositoryPaged**](RepositoriesApi.md#BrowseRepositoryPaged) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse | browseRepository
 [**BrowseRepositoryPathPaged**](RepositoriesApi.md#BrowseRepositoryPathPaged) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path} | browseRepositoryPath
 [**CreateRepository**](RepositoriesApi.md#CreateRepository) | **Post** /rest/api/1.0/projects/{projectKey}/repos | Create repository
+[**GetConfiguredDefaultBranch**](RepositoriesApi.md#GetConfiguredDefaultBranch) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/default-branch | Get default branch
 [**GetRepositoriesPaged**](RepositoriesApi.md#GetRepositoriesPaged) | **Get** /rest/api/1.0/projects/{projectKey}/repos | Get Repositories
 [**GetRepository**](RepositoriesApi.md#GetRepository) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug} | Get Repository
 [**SearchRepositoriesPaged**](RepositoriesApi.md#SearchRepositoriesPaged) | **Get** /rest/api/1.0/repos | Search repositories
@@ -239,6 +240,79 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetConfiguredDefaultBranch
+
+> DefaultBranch GetConfiguredDefaultBranch(ctx, projectKey, repositorySlug).Execute()
+
+Get default branch
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.RepositoriesApi.GetConfiguredDefaultBranch(context.Background(), projectKey, repositorySlug).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RepositoriesApi.GetConfiguredDefaultBranch``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetConfiguredDefaultBranch`: DefaultBranch
+    fmt.Fprintf(os.Stdout, "Response from `RepositoriesApi.GetConfiguredDefaultBranch`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetConfiguredDefaultBranchRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**DefaultBranch**](defaultBranch.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
