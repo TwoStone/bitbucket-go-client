@@ -3,14 +3,19 @@ package bitbucket
 import "context"
 
 func (a CommitsApiService) GetCommits(ctx context.Context, projectKey string, repositorySlug string) ([]Commit, error) {
+	return a.GetCommitsPaged(ctx, projectKey, repositorySlug).GetAllPages()
+}
+
+func (r apiGetCommitsPagedRequest) GetAllPages() ([]Commit, error) {
 	commits := []Commit{}
 
+	r.limitOrDefault()
+
 	start := int32(0)
-	limit := DefaultPageLimit
 	morePages := true
 
 	for morePages {
-		result, _, err := a.GetCommitsPaged(ctx, projectKey, repositorySlug).Limit(limit).Start(start).Execute()
+		result, _, err := r.Start(start).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -25,3 +30,12 @@ func (a CommitsApiService) GetCommits(ctx context.Context, projectKey string, re
 
 	return commits, nil
 }
+
+
+func (r apiGetCommitsPagedRequest) limitOrDefault() {
+	if r.limit == nil {
+		r.limit = PtrInt32(DefaultPageLimit)
+	}
+}
+
+
