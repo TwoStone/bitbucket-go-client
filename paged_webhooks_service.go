@@ -3,14 +3,19 @@ package bitbucket
 import "context"
 
 func (a WebhookApiService) GetWebhooks(ctx context.Context, projectKey, repositorySlug string) ([]Webhook, error) {
+	return a.GetWebhooksPaged(ctx, projectKey, repositorySlug).GetAllPages()
+}
+
+func (r apiGetWebhooksPagedRequest) GetAllPages() ([]Webhook, error) {
 	webhooks := []Webhook{}
 
+	r.limitOrDefault()
+
 	start := int32(0)
-	limit := DefaultPageLimit
 	morePages := true
 
 	for morePages {
-		result, _, err := a.GetWebhooksPaged(ctx, projectKey, repositorySlug).Start(start).Limit(limit).Execute()
+		result, _, err := r.Start(start).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -24,4 +29,10 @@ func (a WebhookApiService) GetWebhooks(ctx context.Context, projectKey, reposito
 	}
 
 	return webhooks, nil
+}
+
+func (r apiGetWebhooksPagedRequest) limitOrDefault()  {
+	if r.limit == nil {
+		r.limit = PtrInt32(DefaultPageLimit)
+	}
 }

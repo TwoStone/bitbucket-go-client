@@ -3,14 +3,19 @@ package bitbucket
 import "context"
 
 func (a *ProjectsApiService) GetProjects(ctx context.Context) ([]Project, error) {
+	return a.GetProjectsPaged(ctx).GetAllPages()
+}
+
+func (r apiGetProjectsPagedRequest) GetAllPages() ([]Project, error)  {
 	projects := []Project{}
 
+	r.limitOrDefault()
+
 	start := int32(0)
-	limit := DefaultPageLimit
 	morePages := true
 
 	for morePages {
-		result, _, err := a.GetProjectsPaged(ctx).Limit(limit).Start(start).Execute()
+		result, _, err := r.Start(start).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -24,4 +29,10 @@ func (a *ProjectsApiService) GetProjects(ctx context.Context) ([]Project, error)
 	}
 
 	return projects, nil
+}
+
+func (r apiGetProjectsPagedRequest) limitOrDefault()  {
+	if r.limit == nil {
+		r.limit = PtrInt32(DefaultPageLimit)
+	}
 }

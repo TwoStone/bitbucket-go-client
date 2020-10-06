@@ -3,14 +3,19 @@ package bitbucket
 import "context"
 
 func (a *RepositoriesApiService) SearchRepositories(ctx context.Context) ([]Repository, error) {
+	return a.SearchRepositoriesPaged(ctx).GetAllPages()
+}
+
+func (r apiSearchRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  {
 	repositories := []Repository{}
 
+	r.limitOrDefault()
+
 	start := int32(0)
-	limit := DefaultPageLimit
 	morePages := true
 
 	for morePages {
-		result, _, err := a.SearchRepositoriesPaged(ctx).Limit(limit).Start(start).Execute()
+		result, _, err := r.Start(start).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -26,15 +31,26 @@ func (a *RepositoriesApiService) SearchRepositories(ctx context.Context) ([]Repo
 	return repositories, nil
 }
 
+func (r apiSearchRepositoriesPagedRequest) limitOrDefault()  {
+	if r.limit == nil {
+		r.limit = PtrInt32(DefaultPageLimit)
+	}
+}
+
 func (a *RepositoriesApiService) GetRepositories(ctx context.Context, projectKey string) ([]Repository, error) {
+	return a.GetRepositoriesPaged(ctx, projectKey).GetAllPages()
+}
+
+func (r apiGetRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  {
 	repositories := []Repository{}
 
+	r.limitOrDefault()
+
 	start := int32(0)
-	limit := DefaultPageLimit
 	morePages := true
 
 	for morePages {
-		result, _, err := a.GetRepositoriesPaged(ctx, projectKey).Limit(limit).Start(start).Execute()
+		result, _, err := r.Start(start).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -48,4 +64,10 @@ func (a *RepositoriesApiService) GetRepositories(ctx context.Context, projectKey
 	}
 
 	return repositories, nil
+}
+
+func (r apiGetRepositoriesPagedRequest) limitOrDefault()  {
+	if r.limit == nil {
+		r.limit = PtrInt32(DefaultPageLimit)
+	}
 }
