@@ -1,4 +1,4 @@
-API_VERSION=v1.2.0
+API_VERSION=v1.3.0
 
 OPENAPI_GENERATOR_VERSION=4.3.1
 JAVA=$(shell which java)
@@ -7,7 +7,7 @@ BINDIR=hack/bin
 fmt:
 	go fmt ./...
 
-generate: openapi-generator
+generate: update-version openapi-generator
 	GO_POST_PROCESS_FILE="go fmt" \
 	$(JAVA) -jar $(OPENAPI_GENERATOR_JAR) generate \
 	--git-user-id TwoStone \
@@ -26,6 +26,10 @@ validate: openapi-generator
 build: generate fmt
 	go mod download
 	go build -v ./
+
+
+update-version:
+	sed -i '' 's/packageVersion:.*/packageVersion: $(API_VERSION:v%=%)/g' ./hack/generator-config.yaml
 
 openapi-generator:
 ifeq (,$(wildcard $(BINDIR)/openapitools/$(OPENAPI_GENERATOR_VERSION)/openapi-generator-cli.jar))

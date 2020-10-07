@@ -2173,6 +2173,102 @@ paths:
       summary: Get default branch
       tags:
       - repositories
+  /rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches:
+    delete:
+      description: |-
+        Deletes a branch in the specified repository.
+
+        If the branch does not exist, this operation will not raise an error. In other words after calling this resource and receiving a 204 response the branch provided in the request is guaranteed to not exist in the specified repository any more, regardless of its existence beforehand.
+
+        The optional 'endPoint' parameter of the request may contain a commit ID that the provided ref name is expected to point to. Should the ref point to a different commit ID, a 400 response will be returned with appropriate error details.
+
+        The authenticated user must have an effective REPO_WRITE permission to call this resource. If branch permissions are set up in the repository, the authenticated user must also have access to the branch name that is to be deleted.
+      operationId: deleteBranch
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteBranch'
+      responses:
+        "204":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+      tags:
+      - branches
+    post:
+      description: |-
+        Creates a branch in the specified repository.
+
+        The authenticated user must have an effective REPO_WRITE permission to call this resource. If branch permissions are set up in the repository, the authenticated user must also have access to the branch name that is to be created.
+      operationId: createBranch
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createBranch'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/branch'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Unauthorized
+      summary: Delete branch
+      tags:
+      - branches
 components:
   schemas:
     page:
@@ -3479,6 +3575,37 @@ components:
       - pullRequest
       title: branchMetadataOutgoingPullRequest
       type: object
+    createBranch:
+      properties:
+        name:
+          type: string
+        startPoint:
+          type: string
+        message:
+          type: string
+      required:
+      - name
+      - startPoint
+      title: createBranch
+      type: object
+    deleteBranch:
+      properties:
+        name:
+          type: string
+        dryRun:
+          type: boolean
+        endPoint:
+          type: string
+      required:
+      - dryRun
+      - name
+      title: deleteBranch
+      type: object
+      x-examples:
+        example-1:
+          name: refs/heads/my-branch
+          dryRun: false
+          endPoint: master
     project_links:
       example:
         self:

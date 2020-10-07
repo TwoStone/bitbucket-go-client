@@ -26,6 +26,266 @@ var (
 // BranchesApiService BranchesApi service
 type BranchesApiService service
 
+type apiCreateBranchRequest struct {
+	ctx            _context.Context
+	apiService     *BranchesApiService
+	projectKey     string
+	repositorySlug string
+	createBranch   *CreateBranch
+}
+
+func (r apiCreateBranchRequest) CreateBranch(createBranch CreateBranch) apiCreateBranchRequest {
+	r.createBranch = &createBranch
+	return r
+}
+
+/*
+CreateBranch Delete branch
+Creates a branch in the specified repository.
+
+The authenticated user must have an effective REPO_WRITE permission to call this resource. If branch permissions are set up in the repository, the authenticated user must also have access to the branch name that is to be created.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiCreateBranchRequest
+*/
+func (a *BranchesApiService) CreateBranch(ctx _context.Context, projectKey string, repositorySlug string) apiCreateBranchRequest {
+	return apiCreateBranchRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return Branch
+*/
+func (r apiCreateBranchRequest) Execute() (Branch, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  Branch
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.CreateBranch")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.createBranch
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type apiDeleteBranchRequest struct {
+	ctx            _context.Context
+	apiService     *BranchesApiService
+	projectKey     string
+	repositorySlug string
+	deleteBranch   *DeleteBranch
+}
+
+func (r apiDeleteBranchRequest) DeleteBranch(deleteBranch DeleteBranch) apiDeleteBranchRequest {
+	r.deleteBranch = &deleteBranch
+	return r
+}
+
+/*
+DeleteBranch Method for DeleteBranch
+Deletes a branch in the specified repository.
+
+If the branch does not exist, this operation will not raise an error. In other words after calling this resource and receiving a 204 response the branch provided in the request is guaranteed to not exist in the specified repository any more, regardless of its existence beforehand.
+
+The optional 'endPoint' parameter of the request may contain a commit ID that the provided ref name is expected to point to. Should the ref point to a different commit ID, a 400 response will be returned with appropriate error details.
+
+The authenticated user must have an effective REPO_WRITE permission to call this resource. If branch permissions are set up in the repository, the authenticated user must also have access to the branch name that is to be deleted.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiDeleteBranchRequest
+*/
+func (a *BranchesApiService) DeleteBranch(ctx _context.Context, projectKey string, repositorySlug string) apiDeleteBranchRequest {
+	return apiDeleteBranchRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+
+*/
+func (r apiDeleteBranchRequest) Execute() (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "BranchesApiService.DeleteBranch")
+	if err != nil {
+		return nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.deleteBranch
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type apiGetBranchesPagedRequest struct {
 	ctx            _context.Context
 	apiService     *BranchesApiService

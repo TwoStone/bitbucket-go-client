@@ -6,7 +6,7 @@ func (a *ProjectsApiService) GetProjects(ctx context.Context) ([]Project, error)
 	return a.GetProjectsPaged(ctx).GetAllPages()
 }
 
-func (r apiGetProjectsPagedRequest) GetAllPages() ([]Project, error)  {
+func (r apiGetProjectsPagedRequest) GetAllPages() ([]Project, error) {
 	projects := []Project{}
 
 	r.limitOrDefault()
@@ -31,7 +31,7 @@ func (r apiGetProjectsPagedRequest) GetAllPages() ([]Project, error)  {
 	return projects, nil
 }
 
-func (r apiGetProjectsPagedRequest) limitOrDefault()  {
+func (r apiGetProjectsPagedRequest) limitOrDefault() {
 	if r.limit == nil {
 		r.limit = PtrInt32(DefaultPageLimit)
 	}
