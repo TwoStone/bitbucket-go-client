@@ -31,11 +31,8 @@ func (r apiGetCommitsPagedRequest) GetAllPages() ([]Commit, error) {
 	return commits, nil
 }
 
-
 func (r apiGetCommitsPagedRequest) limitOrDefault() {
 	if r.limit == nil {
 		r.limit = PtrInt32(DefaultPageLimit)
 	}
 }
-
-

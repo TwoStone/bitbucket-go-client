@@ -6,7 +6,7 @@ func (a *RepositoriesApiService) SearchRepositories(ctx context.Context) ([]Repo
 	return a.SearchRepositoriesPaged(ctx).GetAllPages()
 }
 
-func (r apiSearchRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  {
+func (r apiSearchRepositoriesPagedRequest) GetAllPages() ([]Repository, error) {
 	repositories := []Repository{}
 
 	r.limitOrDefault()
@@ -31,7 +31,7 @@ func (r apiSearchRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  
 	return repositories, nil
 }
 
-func (r apiSearchRepositoriesPagedRequest) limitOrDefault()  {
+func (r apiSearchRepositoriesPagedRequest) limitOrDefault() {
 	if r.limit == nil {
 		r.limit = PtrInt32(DefaultPageLimit)
 	}
@@ -41,7 +41,7 @@ func (a *RepositoriesApiService) GetRepositories(ctx context.Context, projectKey
 	return a.GetRepositoriesPaged(ctx, projectKey).GetAllPages()
 }
 
-func (r apiGetRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  {
+func (r apiGetRepositoriesPagedRequest) GetAllPages() ([]Repository, error) {
 	repositories := []Repository{}
 
 	r.limitOrDefault()
@@ -66,7 +66,7 @@ func (r apiGetRepositoriesPagedRequest) GetAllPages() ([]Repository, error)  {
 	return repositories, nil
 }
 
-func (r apiGetRepositoriesPagedRequest) limitOrDefault()  {
+func (r apiGetRepositoriesPagedRequest) limitOrDefault() {
 	if r.limit == nil {
 		r.limit = PtrInt32(DefaultPageLimit)
 	}

@@ -31,7 +31,7 @@ func (r apiGetWebhooksPagedRequest) GetAllPages() ([]Webhook, error) {
 	return webhooks, nil
 }
 
-func (r apiGetWebhooksPagedRequest) limitOrDefault()  {
+func (r apiGetWebhooksPagedRequest) limitOrDefault() {
 	if r.limit == nil {
 		r.limit = PtrInt32(DefaultPageLimit)
 	}
