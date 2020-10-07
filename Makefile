@@ -27,9 +27,15 @@ build: generate fmt
 	go mod download
 	go build -v ./
 
+version_regex := ^v([0-9]{1,}\.){2}[0-9]{1,}$
 
 update-version:
-	sed -i '' 's/packageVersion:.*/packageVersion: $(API_VERSION:v%=%)/g' ./hack/generator-config.yaml
+ifeq ($(shell echo ${API_VERSION} | egrep "${version_regex}"),)
+	@echo "No release version"
+else
+	@echo "Setting release version ${API_VERSION}"
+	@sed -i '' 's/packageVersion:.*/packageVersion: $(API_VERSION:v%=%)/g' ./hack/generator-config.yaml
+endif
 
 openapi-generator:
 ifeq (,$(wildcard $(BINDIR)/openapitools/$(OPENAPI_GENERATOR_VERSION)/openapi-generator-cli.jar))
