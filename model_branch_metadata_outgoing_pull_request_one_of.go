@@ -12,67 +12,100 @@ package bitbucket
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
-// BranchMetadataOutgoingPullRequest struct for BranchMetadataOutgoingPullRequest
-type BranchMetadataOutgoingPullRequest struct {
-	BranchMetadataOutgoingPullRequestInterface interface{}
+// BranchMetadataOutgoingPullRequestOneOf struct for BranchMetadataOutgoingPullRequestOneOf
+type BranchMetadataOutgoingPullRequestOneOf struct {
+	PullRequest PullRequest `json:"pullRequest"`
 }
 
-func (s BranchMetadataOutgoingPullRequest) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.BranchMetadataOutgoingPullRequestInterface)
+// NewBranchMetadataOutgoingPullRequestOneOf instantiates a new BranchMetadataOutgoingPullRequestOneOf object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewBranchMetadataOutgoingPullRequestOneOf(pullRequest PullRequest) *BranchMetadataOutgoingPullRequestOneOf {
+	this := BranchMetadataOutgoingPullRequestOneOf{}
+	this.PullRequest = pullRequest
+	return &this
 }
 
-func (s *BranchMetadataOutgoingPullRequest) UnmarshalJSON(src []byte) error {
-	var err error
-	var unmarshaledBranchMetadataOutgoingPullRequestOneOf *BranchMetadataOutgoingPullRequestOneOf = &BranchMetadataOutgoingPullRequestOneOf{}
-	err = json.Unmarshal(src, unmarshaledBranchMetadataOutgoingPullRequestOneOf)
-	if err == nil {
-		s.BranchMetadataOutgoingPullRequestInterface = unmarshaledBranchMetadataOutgoingPullRequestOneOf
-		return nil
+// NewBranchMetadataOutgoingPullRequestOneOfWithDefaults instantiates a new BranchMetadataOutgoingPullRequestOneOf object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewBranchMetadataOutgoingPullRequestOneOfWithDefaults() *BranchMetadataOutgoingPullRequestOneOf {
+	this := BranchMetadataOutgoingPullRequestOneOf{}
+	return &this
+}
+
+// GetPullRequest returns the PullRequest field value
+func (o *BranchMetadataOutgoingPullRequestOneOf) GetPullRequest() PullRequest {
+	if o == nil {
+		var ret PullRequest
+		return ret
 	}
-	var unmarshaledBranchMetadataOutgoingPullRequestOneOf1 *BranchMetadataOutgoingPullRequestOneOf1 = &BranchMetadataOutgoingPullRequestOneOf1{}
-	err = json.Unmarshal(src, unmarshaledBranchMetadataOutgoingPullRequestOneOf1)
-	if err == nil {
-		s.BranchMetadataOutgoingPullRequestInterface = unmarshaledBranchMetadataOutgoingPullRequestOneOf1
-		return nil
-	}
-	return fmt.Errorf("No oneOf model could be deserialized from payload: %s", string(src))
+
+	return o.PullRequest
 }
 
-type NullableBranchMetadataOutgoingPullRequest struct {
-	value *BranchMetadataOutgoingPullRequest
+// GetPullRequestOk returns a tuple with the PullRequest field value
+// and a boolean to check if the value has been set.
+func (o *BranchMetadataOutgoingPullRequestOneOf) GetPullRequestOk() (*PullRequest, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PullRequest, true
+}
+
+// SetPullRequest sets field value
+func (o *BranchMetadataOutgoingPullRequestOneOf) SetPullRequest(v PullRequest) {
+	o.PullRequest = v
+}
+
+func (o BranchMetadataOutgoingPullRequestOneOf) MarshalJSON() ([]byte, error) {
+	toSerialize := map[string]interface{}{}
+	if true {
+		toSerialize["pullRequest"] = o.PullRequest
+	}
+	return json.Marshal(toSerialize)
+}
+
+// AsBranchMetadataOutgoingPullRequest wraps this instance of BranchMetadataOutgoingPullRequestOneOf in BranchMetadataOutgoingPullRequest
+func (s *BranchMetadataOutgoingPullRequestOneOf) AsBranchMetadataOutgoingPullRequest() BranchMetadataOutgoingPullRequest {
+	return BranchMetadataOutgoingPullRequest{BranchMetadataOutgoingPullRequestInterface: s}
+}
+
+type NullableBranchMetadataOutgoingPullRequestOneOf struct {
+	value *BranchMetadataOutgoingPullRequestOneOf
 	isSet bool
 }
 
-func (v NullableBranchMetadataOutgoingPullRequest) Get() *BranchMetadataOutgoingPullRequest {
+func (v NullableBranchMetadataOutgoingPullRequestOneOf) Get() *BranchMetadataOutgoingPullRequestOneOf {
 	return v.value
 }
 
-func (v *NullableBranchMetadataOutgoingPullRequest) Set(val *BranchMetadataOutgoingPullRequest) {
+func (v *NullableBranchMetadataOutgoingPullRequestOneOf) Set(val *BranchMetadataOutgoingPullRequestOneOf) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBranchMetadataOutgoingPullRequest) IsSet() bool {
+func (v NullableBranchMetadataOutgoingPullRequestOneOf) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBranchMetadataOutgoingPullRequest) Unset() {
+func (v *NullableBranchMetadataOutgoingPullRequestOneOf) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBranchMetadataOutgoingPullRequest(val *BranchMetadataOutgoingPullRequest) *NullableBranchMetadataOutgoingPullRequest {
-	return &NullableBranchMetadataOutgoingPullRequest{value: val, isSet: true}
+func NewNullableBranchMetadataOutgoingPullRequestOneOf(val *BranchMetadataOutgoingPullRequestOneOf) *NullableBranchMetadataOutgoingPullRequestOneOf {
+	return &NullableBranchMetadataOutgoingPullRequestOneOf{value: val, isSet: true}
 }
 
-func (v NullableBranchMetadataOutgoingPullRequest) MarshalJSON() ([]byte, error) {
+func (v NullableBranchMetadataOutgoingPullRequestOneOf) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBranchMetadataOutgoingPullRequest) UnmarshalJSON(src []byte) error {
+func (v *NullableBranchMetadataOutgoingPullRequestOneOf) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

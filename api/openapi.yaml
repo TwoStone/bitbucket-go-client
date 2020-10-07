@@ -2454,93 +2454,6 @@ components:
         latestCommit: latestCommit
         isDefault: true
         metadata:
-          com.atlassian.bitbucket.server.bitbucket-ref-metadata:outgoing-pull-request-metadata:
-            pullRequest:
-              author:
-                approved: true
-                role: PARTICIPANT
-                user:
-                  emailAddress: emailAddress
-                  displayName: displayName
-                  name: name
-                  active: true
-                  id: 1
-                  type: type
-                  slug: slug
-                status: UNAPPROVED
-              description: description
-              updatedDate: 7
-              title: title
-              version: 2
-              reviewers:
-              - approved: true
-                role: PARTICIPANT
-                user:
-                  emailAddress: emailAddress
-                  displayName: displayName
-                  name: name
-                  active: true
-                  id: 1
-                  type: type
-                  slug: slug
-                status: UNAPPROVED
-              - approved: true
-                role: PARTICIPANT
-                user:
-                  emailAddress: emailAddress
-                  displayName: displayName
-                  name: name
-                  active: true
-                  id: 1
-                  type: type
-                  slug: slug
-                status: UNAPPROVED
-              toRef:
-                id: id
-                repository:
-                  name: name
-                  project:
-                    key: key
-                  slug: slug
-              createdDate: 4
-              closed: true
-              fromRef:
-                id: id
-                repository:
-                  name: name
-                  project:
-                    key: key
-                  slug: slug
-              links:
-                self:
-                  name: name
-                  href: href
-              id: 3
-              locked: true
-              open: true
-              participants:
-              - approved: true
-                role: PARTICIPANT
-                user:
-                  emailAddress: emailAddress
-                  displayName: displayName
-                  name: name
-                  active: true
-                  id: 1
-                  type: type
-                  slug: slug
-                status: UNAPPROVED
-              - approved: true
-                role: PARTICIPANT
-                user:
-                  emailAddress: emailAddress
-                  displayName: displayName
-                  name: name
-                  active: true
-                  id: 1
-                  type: type
-                  slug: slug
-                status: UNAPPROVED
           com.atlassian.bitbucket.server.bitbucket-build:build-status-metadata:
             inProgress: 7
             failed: 9
@@ -3009,93 +2922,6 @@ components:
       title: buildStatusPage
     branchMetadata:
       example:
-        com.atlassian.bitbucket.server.bitbucket-ref-metadata:outgoing-pull-request-metadata:
-          pullRequest:
-            author:
-              approved: true
-              role: PARTICIPANT
-              user:
-                emailAddress: emailAddress
-                displayName: displayName
-                name: name
-                active: true
-                id: 1
-                type: type
-                slug: slug
-              status: UNAPPROVED
-            description: description
-            updatedDate: 7
-            title: title
-            version: 2
-            reviewers:
-            - approved: true
-              role: PARTICIPANT
-              user:
-                emailAddress: emailAddress
-                displayName: displayName
-                name: name
-                active: true
-                id: 1
-                type: type
-                slug: slug
-              status: UNAPPROVED
-            - approved: true
-              role: PARTICIPANT
-              user:
-                emailAddress: emailAddress
-                displayName: displayName
-                name: name
-                active: true
-                id: 1
-                type: type
-                slug: slug
-              status: UNAPPROVED
-            toRef:
-              id: id
-              repository:
-                name: name
-                project:
-                  key: key
-                slug: slug
-            createdDate: 4
-            closed: true
-            fromRef:
-              id: id
-              repository:
-                name: name
-                project:
-                  key: key
-                slug: slug
-            links:
-              self:
-                name: name
-                href: href
-            id: 3
-            locked: true
-            open: true
-            participants:
-            - approved: true
-              role: PARTICIPANT
-              user:
-                emailAddress: emailAddress
-                displayName: displayName
-                name: name
-                active: true
-                id: 1
-                type: type
-                slug: slug
-              status: UNAPPROVED
-            - approved: true
-              role: PARTICIPANT
-              user:
-                emailAddress: emailAddress
-                displayName: displayName
-                name: name
-                active: true
-                id: 1
-                type: type
-                slug: slug
-              status: UNAPPROVED
         com.atlassian.bitbucket.server.bitbucket-build:build-status-metadata:
           inProgress: 7
           failed: 9
@@ -3218,9 +3044,9 @@ components:
             slug: slug
           status: UNAPPROVED
         description: description
-        updatedDate: 7
+        updatedDate: 5
         title: title
-        version: 2
+        version: 6
         reviewers:
         - approved: true
           role: PARTICIPANT
@@ -3251,7 +3077,7 @@ components:
             project:
               key: key
             slug: slug
-        createdDate: 4
+        createdDate: 1
         closed: true
         fromRef:
           id: id
@@ -3264,7 +3090,7 @@ components:
           self:
             name: name
             href: href
-        id: 3
+        id: 0
         locked: true
         open: true
         participants:
@@ -3481,100 +3307,12 @@ components:
       title: defaultBranch
       type: object
     branchMetadataOutgoingPullRequest:
-      example:
-        pullRequest:
-          author:
-            approved: true
-            role: PARTICIPANT
-            user:
-              emailAddress: emailAddress
-              displayName: displayName
-              name: name
-              active: true
-              id: 1
-              type: type
-              slug: slug
-            status: UNAPPROVED
-          description: description
-          updatedDate: 7
-          title: title
-          version: 2
-          reviewers:
-          - approved: true
-            role: PARTICIPANT
-            user:
-              emailAddress: emailAddress
-              displayName: displayName
-              name: name
-              active: true
-              id: 1
-              type: type
-              slug: slug
-            status: UNAPPROVED
-          - approved: true
-            role: PARTICIPANT
-            user:
-              emailAddress: emailAddress
-              displayName: displayName
-              name: name
-              active: true
-              id: 1
-              type: type
-              slug: slug
-            status: UNAPPROVED
-          toRef:
-            id: id
-            repository:
-              name: name
-              project:
-                key: key
-              slug: slug
-          createdDate: 4
-          closed: true
-          fromRef:
-            id: id
-            repository:
-              name: name
-              project:
-                key: key
-              slug: slug
-          links:
-            self:
-              name: name
-              href: href
-          id: 3
-          locked: true
-          open: true
-          participants:
-          - approved: true
-            role: PARTICIPANT
-            user:
-              emailAddress: emailAddress
-              displayName: displayName
-              name: name
-              active: true
-              id: 1
-              type: type
-              slug: slug
-            status: UNAPPROVED
-          - approved: true
-            role: PARTICIPANT
-            user:
-              emailAddress: emailAddress
-              displayName: displayName
-              name: name
-              active: true
-              id: 1
-              type: type
-              slug: slug
-            status: UNAPPROVED
-      properties:
-        pullRequest:
-          $ref: '#/components/schemas/pullRequest'
-      required:
-      - pullRequest
+      oneOf:
+      - $ref: '#/components/schemas/branchMetadataOutgoingPullRequest_oneOf'
+      - $ref: '#/components/schemas/branchMetadataOutgoingPullRequest_oneOf_1'
       title: branchMetadataOutgoingPullRequest
       type: object
+      x-one-of-name: BranchMetadataOutgoingPullRequest
     createBranch:
       properties:
         name:
@@ -3782,6 +3520,24 @@ components:
       required:
       - project
       - slug
+    branchMetadataOutgoingPullRequest_oneOf:
+      properties:
+        pullRequest:
+          $ref: '#/components/schemas/pullRequest'
+      required:
+      - pullRequest
+    branchMetadataOutgoingPullRequest_oneOf_1:
+      properties:
+        open:
+          type: integer
+        merged:
+          type: integer
+        declined:
+          type: integer
+      required:
+      - declined
+      - merged
+      - open
   securitySchemes:
     usernamePassword:
       scheme: basic
