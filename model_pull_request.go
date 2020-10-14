@@ -31,7 +31,7 @@ type PullRequest struct {
 	Author       *UserRole         `json:"author,omitempty"`
 	Reviewers    *[]UserRole       `json:"reviewers,omitempty"`
 	Participants *[]UserRole       `json:"participants,omitempty"`
-	Links        *PullRequestLinks `json:"links,omitempty"`
+	Links        *ProjectLinks     `json:"links,omitempty"`
 }
 
 // NewPullRequest instantiates a new PullRequest object
@@ -504,9 +504,9 @@ func (o *PullRequest) SetParticipants(v []UserRole) {
 }
 
 // GetLinks returns the Links field value if set, zero value otherwise.
-func (o *PullRequest) GetLinks() PullRequestLinks {
+func (o *PullRequest) GetLinks() ProjectLinks {
 	if o == nil || o.Links == nil {
-		var ret PullRequestLinks
+		var ret ProjectLinks
 		return ret
 	}
 	return *o.Links
@@ -514,7 +514,7 @@ func (o *PullRequest) GetLinks() PullRequestLinks {
 
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PullRequest) GetLinksOk() (*PullRequestLinks, bool) {
+func (o *PullRequest) GetLinksOk() (*ProjectLinks, bool) {
 	if o == nil || o.Links == nil {
 		return nil, false
 	}
@@ -530,8 +530,8 @@ func (o *PullRequest) HasLinks() bool {
 	return false
 }
 
-// SetLinks gets a reference to the given PullRequestLinks and assigns it to the Links field.
-func (o *PullRequest) SetLinks(v PullRequestLinks) {
+// SetLinks gets a reference to the given ProjectLinks and assigns it to the Links field.
+func (o *PullRequest) SetLinks(v ProjectLinks) {
 	o.Links = &v
 }
 
