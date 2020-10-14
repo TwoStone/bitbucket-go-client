@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 **Author** | Pointer to [**UserRole**](userRole.md) |  | [optional] 
 **Reviewers** | Pointer to [**[]UserRole**](userRole.md) |  | [optional] 
 **Participants** | Pointer to [**[]UserRole**](userRole.md) |  | [optional] 
-**Links** | Pointer to [**PullRequestLinks**](pullRequest_links.md) |  | [optional] 
+**Links** | Pointer to [**ProjectLinks**](project_links.md) |  | [optional] 
 
 ## Methods
 
@@ -397,20 +397,20 @@ HasParticipants returns a boolean if a field has been set.
 
 ### GetLinks
 
-`func (o *PullRequest) GetLinks() PullRequestLinks`
+`func (o *PullRequest) GetLinks() ProjectLinks`
 
 GetLinks returns the Links field if non-nil, zero value otherwise.
 
 ### GetLinksOk
 
-`func (o *PullRequest) GetLinksOk() (*PullRequestLinks, bool)`
+`func (o *PullRequest) GetLinksOk() (*ProjectLinks, bool)`
 
 GetLinksOk returns a tuple with the Links field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLinks
 
-`func (o *PullRequest) SetLinks(v PullRequestLinks)`
+`func (o *PullRequest) SetLinks(v ProjectLinks)`
 
 SetLinks sets Links field to given value.
 

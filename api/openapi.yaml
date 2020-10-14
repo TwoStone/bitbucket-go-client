@@ -3088,7 +3088,9 @@ components:
             slug: slug
         links:
           self:
-            name: name
+          - name: name
+            href: href
+          - name: name
             href: href
         id: 0
         locked: true
@@ -3154,7 +3156,7 @@ components:
             $ref: '#/components/schemas/userRole'
           type: array
         links:
-          $ref: '#/components/schemas/pullRequest_links'
+          $ref: '#/components/schemas/project_links'
       required:
       - description
       - fromRef
@@ -3488,14 +3490,6 @@ components:
           type: array
       required:
       - values
-    pullRequest_links:
-      example:
-        self:
-          name: name
-          href: href
-      properties:
-        self:
-          $ref: '#/components/schemas/link'
     repositoryRef_repository_project:
       example:
         key: key
