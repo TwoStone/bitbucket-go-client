@@ -2269,6 +2269,78 @@ paths:
       summary: Delete branch
       tags:
       - branches
+  /rest/default-reviewers/1.0/projects/{projectKey}/repos/{repositorySlug}/reviewers:
+    get:
+      description: Return a set of users who are required reviewers for pull requests
+        created from the given source repository and ref to the given target ref in
+        this repository.
+      operationId: getDefaultReviewers
+      parameters:
+      - explode: false
+        in: path
+        name: projectKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: repositorySlug
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the repository in which the source ref exists
+        explode: true
+        in: query
+        name: sourceRepoId
+        required: true
+        schema:
+          type: integer
+        style: form
+      - description: The ID of the repository in which the target ref exists
+        explode: true
+        in: query
+        name: targetRepoId
+        required: true
+        schema:
+          type: integer
+        style: form
+      - description: The ID of the source ref
+        explode: true
+        in: query
+        name: sourceRefId
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: |
+          The ID of the target ref
+        explode: true
+        in: query
+        name: targetRefId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/user'
+                type: array
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+          description: Bad Request
+      summary: Get default reviewers
+      tags:
+      - pullRequests
 components:
   schemas:
     page:

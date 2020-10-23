@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreatePullRequest**](PullRequestsApi.md#CreatePullRequest) | **Post** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests | Create Pull Request
 [**DeletePullRequest**](PullRequestsApi.md#DeletePullRequest) | **Delete** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId} | Delete pull request
+[**GetDefaultReviewers**](PullRequestsApi.md#GetDefaultReviewers) | **Get** /rest/default-reviewers/1.0/projects/{projectKey}/repos/{repositorySlug}/reviewers | Get default reviewers
 [**GetDiff**](PullRequestsApi.md#GetDiff) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}.diff | Get PR Diff
 [**GetPullRequest**](PullRequestsApi.md#GetPullRequest) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId} | Get pull request
 [**GetPullRequestsPaged**](PullRequestsApi.md#GetPullRequestsPaged) | **Get** /rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests | Get Pull Request Page
@@ -158,6 +159,87 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetDefaultReviewers
+
+> []User GetDefaultReviewers(ctx, projectKey, repositorySlug).SourceRepoId(sourceRepoId).TargetRepoId(targetRepoId).SourceRefId(sourceRefId).TargetRefId(targetRefId).Execute()
+
+Get default reviewers
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    projectKey := "projectKey_example" // string | 
+    repositorySlug := "repositorySlug_example" // string | 
+    sourceRepoId := 987 // int32 | The ID of the repository in which the source ref exists
+    targetRepoId := 987 // int32 | The ID of the repository in which the target ref exists
+    sourceRefId := "sourceRefId_example" // string | The ID of the source ref
+    targetRefId := "targetRefId_example" // string | The ID of the target ref  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PullRequestsApi.GetDefaultReviewers(context.Background(), projectKey, repositorySlug, sourceRepoId, targetRepoId, sourceRefId).TargetRefId(targetRefId).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `PullRequestsApi.GetDefaultReviewers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetDefaultReviewers`: []User
+    fmt.Fprintf(os.Stdout, "Response from `PullRequestsApi.GetDefaultReviewers`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**projectKey** | **string** |  | 
+**repositorySlug** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDefaultReviewersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **sourceRepoId** | **int32** | The ID of the repository in which the source ref exists | 
+ **targetRepoId** | **int32** | The ID of the repository in which the target ref exists | 
+ **sourceRefId** | **string** | The ID of the source ref | 
+ **targetRefId** | **string** | The ID of the target ref  | 
+
+### Return type
+
+[**[]User**](user.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
