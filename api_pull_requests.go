@@ -314,6 +314,161 @@ func (r apiDeletePullRequestRequest) Execute() (*_nethttp.Response, error) {
 	return localVarHTTPResponse, nil
 }
 
+type apiGetDefaultReviewersRequest struct {
+	ctx            _context.Context
+	apiService     *PullRequestsApiService
+	projectKey     string
+	repositorySlug string
+	sourceRepoId   *int32
+	targetRepoId   *int32
+	sourceRefId    *string
+	targetRefId    *string
+}
+
+func (r apiGetDefaultReviewersRequest) SourceRepoId(sourceRepoId int32) apiGetDefaultReviewersRequest {
+	r.sourceRepoId = &sourceRepoId
+	return r
+}
+
+func (r apiGetDefaultReviewersRequest) TargetRepoId(targetRepoId int32) apiGetDefaultReviewersRequest {
+	r.targetRepoId = &targetRepoId
+	return r
+}
+
+func (r apiGetDefaultReviewersRequest) SourceRefId(sourceRefId string) apiGetDefaultReviewersRequest {
+	r.sourceRefId = &sourceRefId
+	return r
+}
+
+func (r apiGetDefaultReviewersRequest) TargetRefId(targetRefId string) apiGetDefaultReviewersRequest {
+	r.targetRefId = &targetRefId
+	return r
+}
+
+/*
+GetDefaultReviewers Get default reviewers
+Return a set of users who are required reviewers for pull requests created from the given source repository and ref to the given target ref in this repository.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param projectKey
+ * @param repositorySlug
+@return apiGetDefaultReviewersRequest
+*/
+func (a *PullRequestsApiService) GetDefaultReviewers(ctx _context.Context, projectKey string, repositorySlug string) apiGetDefaultReviewersRequest {
+	return apiGetDefaultReviewersRequest{
+		apiService:     a,
+		ctx:            ctx,
+		projectKey:     projectKey,
+		repositorySlug: repositorySlug,
+	}
+}
+
+/*
+Execute executes the request
+ @return []User
+*/
+func (r apiGetDefaultReviewersRequest) Execute() ([]User, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  []User
+	)
+
+	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "PullRequestsApiService.GetDefaultReviewers")
+	if err != nil {
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/rest/default-reviewers/1.0/projects/{projectKey}/repos/{repositorySlug}/reviewers"
+	localVarPath = strings.Replace(localVarPath, "{"+"projectKey"+"}", _neturl.QueryEscape(parameterToString(r.projectKey, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"repositorySlug"+"}", _neturl.QueryEscape(parameterToString(r.repositorySlug, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	if r.sourceRepoId == nil {
+		return localVarReturnValue, nil, reportError("sourceRepoId is required and must be specified")
+	}
+
+	if r.targetRepoId == nil {
+		return localVarReturnValue, nil, reportError("targetRepoId is required and must be specified")
+	}
+
+	if r.sourceRefId == nil {
+		return localVarReturnValue, nil, reportError("sourceRefId is required and must be specified")
+	}
+
+	localVarQueryParams.Add("sourceRepoId", parameterToString(*r.sourceRepoId, ""))
+	localVarQueryParams.Add("targetRepoId", parameterToString(*r.targetRepoId, ""))
+	localVarQueryParams.Add("sourceRefId", parameterToString(*r.sourceRefId, ""))
+	if r.targetRefId != nil {
+		localVarQueryParams.Add("targetRefId", parameterToString(*r.targetRefId, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Errors
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type apiGetDiffRequest struct {
 	ctx            _context.Context
 	apiService     *PullRequestsApiService
